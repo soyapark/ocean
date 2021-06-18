@@ -83,9 +83,9 @@ window.addEventListener('DOMContentLoaded', () => {
       let banner;
       // if user is working on a bridge
       if($bridge_start) {
-        banner = `<span class='banner'><button onclick='addAnchor(${paragraph_id}, "${sentence_id}")'>⚓</button> <button onclick='$bridge_start = null;addBridge("${sentence_id}", "${text}")'>🌉start</button> <button onclick='addBridge("${sentence_id}", "${text}")'>🌉end</button></span>`;
+        banner = `<span class='banner'><button type="button" onclick='addAnchor(${paragraph_id}, "${sentence_id}")'>⚓</button> <button type="button" onclick='$bridge_start = null;addBridge("${sentence_id}", "${text}")'>🌉start</button> <button type="button" onclick='addBridge("${sentence_id}", "${text}")'>🌉end</button></span>`;
       } else {
-        banner = `<span class='banner'><button onclick='addAnchor(${paragraph_id}, ${sentence_id})'>⚓+</button> <button onclick='addBridge("${sentence_id}", "${text}")'>🌉+</button></span>`
+        banner = `<span class='banner'><button type="button" onclick='addAnchor(${paragraph_id}, ${sentence_id})'>⚓+</button> <button type="button" onclick='addBridge("${sentence_id}", "${text}")'>🌉+</button></span>`
       }
       
       $(".sidebar").append(banner);
@@ -98,7 +98,7 @@ window.addEventListener('DOMContentLoaded', () => {
     
     let s = $( e.target.parentElement ).attr("id");
     $("#bib-bridge")
-      .append(`<a href="#${s}">${BRIDGE_ICON}</a>`);
+      .append(`<a role="button" href="#${s}">${BRIDGE_ICON}</a>`);
   })
 });
 
@@ -219,7 +219,7 @@ function showViewer(current_pid) {
            // show existing bridges and anchors in this paragraph
            bridges.filter(b => [b[0]["p-id"], b[1]["p-id"]].includes(current_pid)) 
              .map((b) => {
-               let new_bridge = $(`<a href="#${b[0]["p-id"] == current_pid ? b[1]["p-id"] : b[0]["p-id"]}">🌉</a>`);
+               let new_bridge = $(`<a role="button" href="#${b[0]["p-id"] == current_pid ? b[1]["p-id"] : b[0]["p-id"]}">🌉</a>`);
                new_bridge.mouseover(function() {
                  $(document.getElementById( b[0]["p-id"] == current_pid ? b[0]["s-id"] : b[1]["s-id"] )).addClass("bridge-hl");                 
               }).mouseout(function() {

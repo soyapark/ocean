@@ -5,6 +5,7 @@ let bridges = [];
 let anchors = [{"p-id": "", "text-start": "", "text-end": ""}];
 let currentFocusedParagraph = null;
 let db;
+let FB_DOCNAME = ""
 // let bridge_store=[{"bridge-id": "", "link": ""}];
 // TODO 
 
@@ -23,7 +24,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
   db = firebase.firestore();
 
-  var docRef = db.collection("papers").doc("lorem");
+  FB_DOCNAME = window.location.pathname.split("/").slice(-1)[0].split(".html")[0];
+  var docRef = db.collection("papers").doc( FB_DOCNAME );
   
   docRef.get().then((doc) => {
       if (doc.exists) {
@@ -70,7 +72,7 @@ window.addEventListener('DOMContentLoaded', () => {
     
     var text = getSelectedText();
     var node = getSelectedNode();
-    if (node) {
+    if (node && text.length) {
       let paragraph_id = $(node.parentElement).attr("id");
       let sentence_id = $(node).attr("id");
       
@@ -112,7 +114,7 @@ function addBridge(in_s_id, in_selected_text) {
     
     showViewer( $(b.parent()).attr("id") );
 
-    db.collection("papers").doc("lorem").set({
+    db.collection("papers").doc(FB_DOCNAME).set({
       bridges: bridges
     })
     .then(() => {

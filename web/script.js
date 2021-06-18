@@ -148,6 +148,16 @@ function addBridge(in_s_id, in_selected_text) {
   console.log(bridges);
 }
 
+function blurText(e) {
+  debugger;
+  if(e.target.checked) {
+    $("p").css("filter", 'blur(4px)');
+  }
+  else {
+    $("p").css("filter", 'blur(0px)');
+  }
+}
+
 function cancelBridge() {
   if (confirm("Would you loke to go back?")) {
     // move back to original bridge start

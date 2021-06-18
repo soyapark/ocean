@@ -6,6 +6,8 @@ let anchors = [{"p-id": "", "text-start": "", "text-end": ""}];
 let currentFocusedParagraph = null;
 let db;
 let FB_DOCNAME = ""
+
+let BRIDGE_ICON = "🌉";
 // let bridge_store=[{"bridge-id": "", "link": ""}];
 // TODO 
 
@@ -69,6 +71,8 @@ window.addEventListener('DOMContentLoaded', () => {
   
   $('p').mouseup(function(e) {
     $(".banner").remove();
+
+    if(e.target.nodeName == "A") return;
     
     var text = getSelectedText();
     var node = getSelectedNode();
@@ -88,6 +92,14 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     
   });
+
+  // citation bridge
+  $('a.bib').click(function(e) {
+    
+    let s = $( e.target.parentElement ).attr("id");
+    $("#bib-bridge")
+      .append(`<a href="#${s}">${BRIDGE_ICON}</a>`);
+  })
 });
 
 function addAnchor(in_part_id, in_subpart_id) {
@@ -152,6 +164,7 @@ function detectCurrentParagraph(entries, observer, header)  {
          $("p").removeClass("focused");
           $(".sidebar .viewer").empty();
          if (entry.isIntersecting) {
+              $("#bib-bridge").empty();
              currentFocusedParagraph = entry.target.parentElement;
              // show existing anchors and bridges at this paragraph and append it at $(".viewer") 
          }

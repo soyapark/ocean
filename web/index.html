@@ -1,0 +1,63 @@
+<html>
+  <head>
+      <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+      
+      <!-- TODO: Add SDKs for Firebase products that you want to use
+           https://firebase.google.com/docs/web/setup#available-libraries -->
+      
+      <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+          apiKey: "AIzaSyCTua642g885yQ_lqck4F7fwTwqlrYKfF4",
+          authDomain: "ocean-78725.firebaseapp.com",
+          projectId: "ocean-78725",
+          storageBucket: "ocean-78725.appspot.com",
+          messagingSenderId: "109351838437",
+          appId: "1:109351838437:web:a96c9d256173e20d63ea0c"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+      </script>
+
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+      <script type="text/javascript" src="script.js"></script>
+
+      <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="navbar">
+      <div id="move-container"><select name="cars" id="cars">
+      <option value="volvo">⚓</option>
+      <option value="saab">Section</option>
+      <option value="mercedes">⚓ & Section</option>
+    </select> ⬅️ ➡️</div>
+      <div id="bridge-container">🌉 <span class='bridge-snippet'>hello world</span>
+      <button class="close" onclick="cancelBridge()">X</button> </div>
+      
+    </div>
+
+    <div class="sidebar">
+      <div class="viewer"></div>
+    </div>
+
+    <div id="container"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas convallis tincidunt neque eleifend ultrices. Sed luctus nibh eget risus luctus venenatis. Integer urna massa, tincidunt vel metus non, pulvinar gravida mauris. Mauris ut ex ac dolor feugiat pulvinar <a href="#citation0" class="bib">[1]</a>. Phasellus commodo dapibus quam. In sit amet cursus massa. Pellentesque non sapien id libero iaculis faucibus quis nec tellus. Aenean commodo faucibus ex quis convallis. Maecenas eu finibus urna. Mauris eu sem laoreet, euismod diam sed, rhoncus ligula. Proin scelerisque dictum justo, quis bibendum urna faucibus quis. Nulla enim ante, ultricies in dapibus sit amet, pretium in nisl.</p>
+      
+    <h2 id="section-0">Introduction</h2>
+    <p>
+    Nullam eget vehicula augue. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras vel eleifend metus, id ultricies nunc. Donec rutrum lobortis nulla, eu luctus massa cursus in. Duis eleifend lacus odio, sit amet viverra diam aliquet eu. Phasellus laoreet vel nisi placerat semper. Curabitur consectetur ex nulla, et vestibulum nisi convallis a. Fusce id dolor risus. Donec eros tellus, venenatis non arcu sed, vestibulum tincidunt quam. Nunc dapibus aliquet hendrerit.</p>
+      
+    <h2 id="section-1">Related Work</h2>
+    <p>
+    Nullam imperdiet non libero eget eleifend. Vestibulum commodo ac justo ac malesuada. Aliquam mollis ac tellus ac lacinia. Suspendisse quam leo, vulputate sit amet turpis et, feugiat congue est. Maecenas at enim sit amet ipsum ultrices auctor at porttitor nisi. Maecenas ut massa eu quam dapibus euismod. Vivamus tincidunt neque non lobortis varius. Nam nec erat at leo eleifend pretium eget sit amet lectus. Phasellus id ultrices magna, vitae blandit velit. Praesent euismod ullamcorper iaculis. Fusce a sagittis justo. Duis a felis at nunc porttitor facilisis in vel purus. Donec viverra diam justo, sit amet dignissim eros aliquam vel. Etiam nunc turpis, faucibus ut varius vitae, lobortis ut eros.<br/>
+
+    Suspendisse consequat in turpis non lacinia. Aliquam nec rutrum felis. Nullam efficitur ultrices leo eget porta. Mauris et nisi sagittis, vulputate lorem id, semper arcu. Duis eu velit et lectus maximus porttitor non eget tellus. Etiam sit amet enim quis tortor finibus laoreet. Fusce mattis tristique ex nec tempus. Praesent sapien dui, blandit non lobortis porta, mattis in nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec aliquam efficitur leo, ac ornare neque posuere ut. In ac est nunc. Quisque euismod venenatis mattis. Phasellus eget eros pretium, gravida libero et, ultrices massa. Nam consectetur arcu sit amet metus auctor, hendrerit dignissim orci gravida. Sed blandit pulvinar nunc et commodo.<br/>
+
+    Aenean vel sapien arcu. Cras convallis, justo vel pellentesque luctus, dolor eros pellentesque elit, luctus bibendum est lectus eget nunc. Morbi lacinia semper nunc. Duis ipsum quam, porttitor nec purus ut, lobortis convallis lacus. Donec id accumsan ex. Aliquam elit ex, tempus quis imperdiet eget, laoreet a lacus. Nunc libero ipsum, tristique ut maximus non, luctus nec orci. In suscipit, lacus in malesuada fermentum, neque arcu tempor odio, ut rhoncus nunc nibh commodo dui.</p>
+      
+    <p><li id="citation0" label="[1]">[1] Soya Park et al. Hello World</li></p>  
+    
+    <img src="https://s3.amazonaws.com/cdn-origin-etr.akc.org/wp-content/uploads/2020/07/09151754/Golden-Retriever-puppy-standing-outdoors-500x486.jpg"/>
+      
+    </div>  
+  </body>
+</html>

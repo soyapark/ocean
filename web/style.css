@@ -1,0 +1,112 @@
+body {
+  font-size: 50px;
+}
+
+/* handle margin since there is a fixed header */
+p:before, li:before { content: ''; display: block; position: relative; width: 0; height: 4em; margin-top: -4em }
+
+#move-container {
+  float:left;
+  margin-right: 50px;
+}
+
+.banner {
+/*   background: yellow; */
+/*   border: 0.5rem solid; */
+}
+
+.banner button {
+  padding: 0;
+  font-size: 70%;
+}
+
+#panel {
+  margin: 100px;
+  padding: 20px;
+  border: 1px solid red;
+  width:300px;
+  text-align:center;
+}
+
+.bottom {
+  position: fixed;
+  bottom: 0;
+}
+
+pre {
+  background-color: lightgrey;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.navbar {
+  overflow: hidden;
+  background-color: white;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  border-bottom: 5px solid black;
+}
+
+.navbar select {
+  font-size: 50px;
+}
+
+.navbar.closed {
+  visibility: hidden;
+}
+
+.navbar a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.navbar a:hover {
+  background: #ddd;
+  color: black;
+}
+
+.navbar .close {
+  font-size: 70%;
+/*   float:right; */
+}
+
+#bridge-container {
+  display: none;
+}
+
+#container {
+  margin-right: 150px;
+  padding-top: 50px;
+}
+
+.sidebar {
+height: 200px;
+width: 150px;
+position: fixed;
+top: 0;
+right: 0;
+padding-top: 40px;
+background-color: lightblue;
+margin-top: 100px;
+}
+
+.sidebar div {
+padding: 8px;
+font-size: 24px;
+display: block;
+
+}
+
+p.focused {
+  border: 1rem solid pink;
+}
+
+span.bridge-hl {
+  text-decoration: underline;
+}

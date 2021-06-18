@@ -4,10 +4,39 @@ let $bridge_start;
 let bridges = [];
 let anchors = [{"p-id": "", "text-start": "", "text-end": ""}];
 let currentFocusedParagraph = null;
+let db;
 // let bridge_store=[{"bridge-id": "", "link": ""}];
 // TODO 
 
 window.addEventListener('DOMContentLoaded', () => {
+  // Your web app's Firebase configuration
+    var firebaseConfig = {
+        apiKey: "AIzaSyCTua642g885yQ_lqck4F7fwTwqlrYKfF4",
+        authDomain: "ocean-78725.firebaseapp.com",
+        projectId: "ocean-78725",
+        storageBucket: "ocean-78725.appspot.com",
+        messagingSenderId: "109351838437",
+        appId: "1:109351838437:web:a96c9d256173e20d63ea0c"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+
+  db = firebase.firestore();
+
+  var docRef = db.collection("papers").doc("lorem");
+  
+  docRef.get().then((doc) => {
+      if (doc.exists) {
+          console.log("Document data:", doc.data());
+          bridges = doc.data()["bridges"];
+      } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
+      }
+  }).catch((error) => {
+      console.log("Error getting document:", error);
+  });
+
   let index = 0; 
   
   document.querySelectorAll('p').forEach(el => {
@@ -73,13 +102,25 @@ function addBridge(in_s_id, in_selected_text) {
   
   if($bridge_start) {
     
-    bridges.push([{"p-id": $($bridge_start.parent()).attr("id"), "s-id": $bridge_start.attr("id")}, 
-                 {"p-id": $(b.parent()).attr("id"), "s-id": in_s_id}]);
+    bridges.push({
+      0: {"p-id": $($bridge_start.parent()).attr("id"), "s-id": $bridge_start.attr("id")},
+      1: {"p-id": $(b.parent()).attr("id"), "s-id": in_s_id}
+    });
     $("#bridge-container").hide();
     $bridge_start = null;
     $( ".banner" ).remove();
     
     showViewer( $(b.parent()).attr("id") );
+
+    db.collection("papers").doc("lorem").set({
+      bridges: bridges
+    })
+    .then(() => {
+        console.log("Document successfully written!");
+    })
+    .catch((error) => {
+        console.error("Error writing document: ", error);
+    });
   }
   else {
     $("#bridge-container").show();

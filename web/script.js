@@ -7,7 +7,7 @@ let currentFocusedParagraph = null;
 let db;
 let FB_DOCNAME = ""
 
-let BRIDGE_ICON = "🌉";
+let BRIDGE_ICON = `<img src="imgs/bridge.jpeg" width="50" alt="bridge"/>`;
 // let bridge_store=[{"bridge-id": "", "link": ""}];
 // TODO 
 
@@ -83,9 +83,9 @@ window.addEventListener('DOMContentLoaded', () => {
       let banner;
       // if user is working on a bridge
       if($bridge_start) {
-        banner = `<span class='banner'><button type="button" onclick='addAnchor(${paragraph_id}, "${sentence_id}")'>⚓</button> <button type="button" onclick='$bridge_start = null;addBridge("${sentence_id}", "${text}")'>🌉start</button> <button type="button" onclick='addBridge("${sentence_id}", "${text}")'>🌉end</button></span>`;
+        banner = `<span class='banner'><button type="button" onclick='addAnchor(${paragraph_id}, "${sentence_id}")'>⚓</button> <button type="button" onclick='$bridge_start = null;addBridge("${sentence_id}", "${text}")'>${BRIDGE_ICON}start</button> <button type="button" onclick='addBridge("${sentence_id}", "${text}")'>${BRIDGE_ICON}end</button></span>`;
       } else {
-        banner = `<span class='banner'><button type="button" onclick='addAnchor(${paragraph_id}, ${sentence_id})'>⚓+</button> <button type="button" onclick='addBridge("${sentence_id}", "${text}")'>🌉+</button></span>`
+        banner = `<span class='banner'><button type="button" onclick='addAnchor(${paragraph_id}, ${sentence_id})'>⚓+</button> <button type="button" onclick='addBridge("${sentence_id}", "${text}")'>${BRIDGE_ICON}+</button></span>`
       }
       
       $(".sidebar").append(banner);
@@ -219,7 +219,7 @@ function showViewer(current_pid) {
            // show existing bridges and anchors in this paragraph
            bridges.filter(b => [b[0]["p-id"], b[1]["p-id"]].includes(current_pid)) 
              .map((b) => {
-               let new_bridge = $(`<a role="button" href="#${b[0]["p-id"] == current_pid ? b[1]["p-id"] : b[0]["p-id"]}">🌉</a>`);
+               let new_bridge = $(`<a role="button" href="#${b[0]["p-id"] == current_pid ? b[1]["p-id"] : b[0]["p-id"]}">${BRIDGE_ICON}</a>`);
                new_bridge.mouseover(function() {
                  $(document.getElementById( b[0]["p-id"] == current_pid ? b[0]["s-id"] : b[1]["s-id"] )).addClass("bridge-hl");                 
               }).mouseout(function() {
@@ -280,7 +280,7 @@ $("body").on("click", "p", function (e) {
           });
           let selected_section = prompt("Where to? \n" + t);
           let bridge_id = "bridge-id" + Math.random().toString(36).substring(7);
-          $($("h2")[parseInt(selected_section)]).append(`<a href='#${bridge_id}'>🌉</a>`);
+          $($("h2")[parseInt(selected_section)]).append(`<a href='#${bridge_id}'>${BRIDGE_ICON}</a>`);
 
           jumpTo("section-" + selected_section);
   

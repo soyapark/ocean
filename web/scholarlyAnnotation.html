@@ -1,0 +1,547 @@
+<html>
+  <head>
+      <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+      
+      <!-- TODO: Add SDKs for Firebase products that you want to use
+           https://firebase.google.com/docs/web/setup#available-libraries -->
+      
+      <script>
+        
+      </script>
+
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+      <script type="text/javascript" src="script.js"></script>
+
+      <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="navbar">
+      <div id="move-container"><select name="cars" id="cars">
+      <option value="volvo">⚓</option>
+      <option value="saab">Section</option>
+      <option value="mercedes">⚓ & Section</option>
+    </select> ⬅️ ➡️</div>
+      <div id="bridge-container">🌉 <span class='bridge-snippet'>hello world</span>
+      <button class="close" onclick="cancelBridge()">X</button> </div>
+      
+    </div>
+
+    <div class="sidebar">
+      <div id="bib-bridge"></div>
+      <div class="viewer"></div>
+    </div>
+
+    <div id="container">
+        Blur text <input type="checkbox" id="myCheck" onclick="blurText(event)">
+        <main> 
+            <section class="front-matter"> 
+             <section> 
+              <header class="title-info"> 
+               <div class="journal-title"> 
+                <h1> <span class="title">Crowdsourcing Scholarly Discourse Annotations</span> <br /> <span class="subTitle"></span> </h1> 
+               </div> 
+              </header> 
+              <div class="authorGroup"> 
+               <div class="author"> 
+                <span class="givenName">Allard</span> 
+                <span class="surName">Oelen</span>, L3S Research Center, Germany, 
+                <a href="mailto:oelen@l3s.de">oelen@l3s.de</a> 
+               </div> 
+               <div class="author"> 
+                <span class="givenName">Markus</span> 
+                <span class="surName">Stocker</span>, TIB Leibniz Information Centre for Science and Technology, Germany, 
+                <a href="mailto:markus.stocker@tib.eu">markus.stocker@tib.eu</a> 
+               </div> 
+               <div class="author"> 
+                <span class="givenName">S&ouml;ren</span> 
+                <span class="surName">Auer</span>, TIB Leibniz Information Centre for Science and Technology, Germany, 
+                <a href="mailto:soeren.auer@tib.eu">soeren.auer@tib.eu</a> 
+               </div> 
+              </div> 
+              <br /> 
+              <div class="pubInfo"> 
+               <p>DOI: <a href="https://doi-org.libproxy.mit.edu/10.1145/3397481.3450685" target="_blank">https://doi-org.libproxy.mit.edu/10.1145/3397481.3450685</a> <br />IUI '21: <a href="https://doi-org.libproxy.mit.edu/10.1145/3397481" target="_blank">26th International Conference on Intelligent User Interfaces</a>, College Station, TX, USA, April 2021</p> 
+              </div> 
+              <div class="abstract"> 
+               <p>The number of scholarly publications grows steadily every year and it becomes harder to find, assess and compare scholarly knowledge effectively. Scholarly knowledge graphs have the potential to address these challenges. However, creating such graphs remains a complex task. We propose a method to crowdsource structured scholarly knowledge from paper authors with a web-based user interface supported by artificial intelligence. The interface enables authors to select key sentences for annotation. It integrates multiple machine learning algorithms to assist authors during the annotation, including class recommendation and key sentence highlighting. We envision that the interface is integrated in paper submission processes for which we define three main task requirements: The task has to be (1) straightforward (2) time efficient (3) well-defined. We evaluated the interface with a user study in which participants were assigned the task to annotate one of their own articles. With the resulting data, we determined whether the participants were successfully able to perform the task. Furthermore, we evaluated the interface's usability and the participant's attitude towards the interface with a survey. The results suggest that sentence annotation is a feasible task for researchers and that they do not object to annotate their articles during the submission process.</p> 
+              </div> 
+              <div class="CCSconcepts"> 
+               <ccs2012>
+                <small> <span style="font-weight:bold;">CCS Concepts:</span> • <strong>Human-centered computing → Web-based interaction</strong>; • <strong>Information systems → Web interfaces</strong>; <em>Crowdsourcing;</em> </small>
+               </ccs2012> 
+              </div> 
+              <br /> 
+              <div class="classifications"> 
+               <div class="author"> 
+                <span style="font-weight:bold;"><small>Keywords:</small></span> 
+                <span class="keyword"><small>Crowdsourcing Text Annotations</small>, </span> 
+                <span class="keyword"> <small>Intelligent User Interface</small>, </span> 
+                <span class="keyword"> <small>Knowledge Graph Construction</small>, </span> 
+                <span class="keyword"> <small>Structured Scholarly Knowledge</small>, </span> 
+                <span class="keyword"> <small>Web-based Annotation Interface</small></span> 
+               </div> 
+               <br /> 
+               <div class="AcmReferenceFormat"> 
+                <p><small> <span style="font-weight:bold;">ACM Reference Format:</span> <br />Allard Oelen, Markus Stocker, and S&ouml;ren Auer. 2021. Crowdsourcing Scholarly Discourse Annotations. In <em>26th International Conference on Intelligent User Interfaces (IUI '21), April 14–17, 2021, College Station, TX, USA.</em> ACM, New York, NY, USA, 11 pages. <a href="https://doi-org.libproxy.mit.edu/10.1145/3397481.3450685" class="link-inline force-break" target="_blank">https://doi-org.libproxy.mit.edu/10.1145/3397481.3450685</a></small></p> 
+               </div> 
+              </div> 
+             </section> 
+            </section> 
+            <section class="body"> 
+             <section id="sec-2"> 
+              <header> 
+               <div class="title-info"> 
+                <h2> <span class="section-number">1</span> INTRODUCTION</h2> 
+               </div> 
+              </header> 
+              <p>The number of published scholarly articles continues to grow every year&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0027">27</a>]. However, scholarly communication remains largely document-based. Scholarly articles are mostly published in PDF format, which is specifically designed for human readability&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0038">38</a>] and portability across systems. With this form of publishing, scholarly knowledge is not machine actionable&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0009">9</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0041">41</a>]. Knowledge graphs can be employed to represent scientific contributions semantically, render scholarly knowledge more machine actionable, and thus making it easier to find, compare and process knowledge. Knowledge graphs are defined as semantic networks describing entities and their interrelations&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0042">42</a>]. Prominent examples of openly available knowledge graphs include DBpedia&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0004">4</a>], YAGO&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0051">51</a>] and Wikidata&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0056">56</a>]. With projects such as Semantic Scholar&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0003">3</a>], Microsoft Academic Graph&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0047">47</a>] and Open Research Knowledge Graph (ORKG)&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0026">26</a>], knowledge graphs are gaining popularity in the scholarly domain to structure scholarly knowledge. Except for ORKG, these graphs only capture metadata about research articles and do not describe the content of reported research work, including research contributions&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0044">44</a>]. </p>
+              <figure id="fig1"> 
+               <img src="https://dl-acm-org.libproxy.mit.edu/cms/attachment/15128833-26cd-4f94-99bb-3b90475c014d/iui21-50-fig1.jpg" class="img-responsive" alt="Screenshot of the article annotation tool" aria-describedby="fig002" /> 
+               <p style="display:none" id="fig002">This screenshot provides an overview of the annotation tool. A sidebar is positioned on the left, which lists the annotated sentences. The right displays the paper and supports annotating sentences inline by selecting them within the text.</p> 
+               <figcaption> 
+                <span class="figure-number">Figure 1:</span> 
+                <span class="figure-title">Screenshot of the annotation interface. Numbers indicate system components that are explained in detail in Section <a class="sec" href="#sec-9">4.2</a>. Legend: 1. Completion indicator 2. Automatic sentence highlighting 3. User annotations 4. Annotation class selector 5. Automatic class suggestions 6. Automatically highlighted sentence.</span> 
+               </figcaption> 
+              </figure> 
+              <p></p> 
+              <p>Populating knowledge graphs with scholarly metadata is a relatively straightforward task due to the low task complexity and high accuracy of automated parsing tools (such as GROBID&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0033">33</a>]). In contrast, generating graphs of the contents of research articles (i.e. research contributions) is a considerably more complex task which can currently hardly be performed by Natural Language Processing (NLP) tools alone. Crowdsourcing can be a solution: By including paper authors in the process of creating structured knowledge, it is possible to leverage human intelligence. However, crowdsourcing also comes with its challenges. Firstly, crowdworkers have to decide <em>what</em> to model, which requires a thorough understanding of the research topic. Secondly, crowdworkers have to decide <em>how</em> to model the knowledge, which is a cognitively demanding task that also relies on skill in conceptual modeling and possibly relevant technologies.</p> 
+              <p>We present a methodology and web-based graphical user interface that serves as a first step towards intertwining human intelligence (via crowdsourcing) and machine intelligence (via machine learning) for the creation of a scholarly knowledge graph. The interface is designed to perform the task of annotating key sentences within scholarly PDF articles. This task focuses specifically on the aforementioned challenge of <em>what</em> to model. The user has to select a sentence and afterwards annotate this sentence with an appropriate class. The set of classes consists of a predefined set of 25 discourse elements (e.g., background, contribution and methods). During the annotation process, the user is supported by Artificial Intelligence (AI) tools. With this machine-in-the-loop approach&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0023">23</a>] synergy is achieved between crowdsourcing and autonomous NLP extraction. The AI components are available for the tasks that require human judgement and provide support during the decision process. For example, selecting important sentences is supported by automated sentence highlighting. Additionally, selecting suitable classes for sentences is supported by a class recommendation tool. We envision that this interface is integrated in paper submission systems to produce a more structured description of the paper's content. Having annotated sentences is a crucial step towards generating truly structured semantic scholarly knowledge. Among other things, it is possible to further process the annotated sentence to create better structured and more semantic data.</p> 
+              <p>We address the following research questions: 1) How to design an intelligent user interface to populate a scholarly knowledge graph using crowdsourcing? 2) How to employ a machine-in-the-loop approach to assist users in this process? These questions are addressed by devising use cases which are used to determine the requirements. Based on the requirements, system components are designed that address those requirements. Finally, to evaluate whether the requirements are met, a user evaluation is conducted.</p> 
+             </section> 
+             <section id="sec-3"> 
+              <header> 
+               <div class="title-info"> 
+                <h2> <span class="section-number">2</span> BACKGROUND AND RELATED WORK</h2> 
+               </div> 
+              </header> 
+              <p>Text annotation tools are widely used in the Natural Language Processing (NLP) community to visualize automatically generated annotations by NLP tools, such as&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0050">50</a>]. Additionally, some of these tools focus on corpus annotation and support the generation of complex corpora&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0007">7</a>]. Such annotation tools have proven to be valuable for the collaborative creation of datasets. Due to the popularity of the PDF format, PDF annotation has received considerable attention (e.g.,&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0018">18</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0046">46</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0052">52</a>]). PDF documents are widely used among various domains, for example, in government data&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0013">13</a>], legal documents&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0030">30</a>], patents&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0005">5</a>] and product datasheets&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0054">54</a>]. However, the PDF format hinders access and reuse of the data presented within the documents&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0014">14</a>]. Eriksson [<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0018">18</a>] presents a tool to directly generate semantic descriptions from PDF documents. This tool requires annotators to have data modeling knowledge since the annotator is responsible for the modeling aspect. Shindo et&nbsp;al. [<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0046">46</a>] integrates multiple linguistic technologies in the annotation tool. More similar to our approach, Takis et&nbsp;al. [<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0052">52</a>] presents a crowdsourcing approach for creating semantic annotations in scientific publications. In contrast to our approach, Takis et&nbsp;al. focus on entity annotation rather than full sentence annotation. Furthermore, the integration of ontologies in their approach is prominently present. In our work, we focus on task separation and design an interface that can be used without requiring any modeling knowledge. In addition, we aim for task simplicity to make the interface suitable for paper submission integration. Capadisli et&nbsp;al. created a tool Dokieli that enables authors to create semantic annotations within the authoring tool itself&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0010">10</a>]. This differs from our approach, where we present a tool to create annotations retrospectively (i.e., after writing an article). Related to our approach, Snow et&nbsp;al. [<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0048">48</a>] has demonstrated that crowdsourcing can be successfully employed to generate labeled datasets. Such crowdsourcing approaches rely on comprehensive task descriptions and guidelines to ensure high-quality results&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0011">11</a>]. With respect to our interface, this means that we have to make a clear task description and leave no room for ambiguity.</p> 
+             </section> 
+             <section id="sec-4"> 
+              <header> 
+               <div class="title-info"> 
+                <h2> <span class="section-number">3</span> USE CASES</h2> 
+               </div> 
+              </header> 
+              <p>We now discuss multiple use cases supported by illustrative examples from the literature. We begin with two use cases in which the annotation interface is used to generate structured data (<em>data entry</em>). The four use cases that follow outline the usefulness of the generated annotations (<em>data consumption</em>).</p> 
+              <section id="sec-5"> 
+               <header> 
+                <div class="title-info"> 
+                 <h3> <span class="section-number">3.1</span> Data Entry</h3> 
+                </div> 
+               </header> 
+               <p><em>Paper submission.</em> The annotation interface is mainly designed to be used as part of paper submission processes. More specifically, when the camera-ready article is uploaded. This prevents additional workload when uploading the paper for review. The interface can be integrated in open-access platforms such as arXiv&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0021">21</a>] or CEUR Workshop Proceedings (CEUR-WS)<a class="fn" href="#fn1" id="foot-fn1"><sup>1</sup></a>. A similar approach has been taken by arXiv, which integrated the ScienceWISE&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0001">1</a>] platform where authors can add automatically generated entity annotations to their uploaded articles. Additionally, CEUR-WS has been frequently used as data source for semantic publishing approaches (e.g., [<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0029">29</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0032">32</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0044">44</a>]).</p> 
+               <p><em>Literature review.</em> Sentence annotations can also be generated while reading articles. In this case, not only authors but also other researchers can create annotations. Compared to the <em>paper submission</em> approach, this will most likely produce less complete and possibly lower quality results. Less complete results are expected because readers will presumably only annotate what is of interest to them at the time of reading the article. Lower quality results are likely because readers are less familiar with the article's content than the authors. However, due to the scalability of this approach the generated annotations combined are still valuable. Although our interface is not designed to support this use case directly, it could be adopted easily.</p> 
+              </section> 
+              <section id="sec-6"> 
+               <header> 
+                <div class="title-info"> 
+                 <h3> <span class="section-number">3.2</span> Data Consumption</h3> 
+                </div> 
+               </header> 
+               <p><em>Further semantification.</em> The result of the annotation task is a set of sentences annotated with a relevant discourse class. These sentences must be transformed into more machine-readable descriptions. This can be done automatically using Named Entity Recognition and Classification (NERC)&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0039">39</a>]. The resulting recognized entities can leverage the already determined discourse class. For example, if a method is recognized in a discourse element with the <em>Background</em> class, this means that the method is discussed within the paper. However, it does not necessarily mean that this method has been employed, since it is discussed as background information. Furthermore, the sentence can be modeled using existing ontologies. However, this task relies on domain experts with knowledge of data modeling.</p> 
+               <p><em>Structured abstract.</em> Based on the annotated sentences a structured abstract can be generated automatically. Structured abstracts have a long history&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0019">19</a>] and are commonly used in certain domains, most prominently in life sciences. Research shows that structured abstracts make it easier for researchers to select appropriate articles more quickly&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0040">40</a>]. Within our user interface, the annotator is urged to only annotate the most important sentences. This results in an abstract that provides a relevant summary of the article.</p> 
+               <p><em>Effective search.</em> With annotated sentences, search can be improved in two ways, by more effectively finding papers and by enhanced navigation within the paper. It is possible to more effectively look for concepts that are related to specific discourse elements. This can be further enhanced with additional semantification. Based on an experiment, de&nbsp;Ribaupierre and Falquet [<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0016">16</a>] reported that the participants found more useful results using faceted search compared to keyword based search. The facets were generated by extracting discourse elements and using annotations. Additionally, annotations can help in navigating the paper, displaying the highlighted sentences and their classes to readers. Highlighting sentences within a text has proven to increase information comprehension and retention&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0020">20</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0034">34</a>].</p> 
+               <p><em>NLP training data.</em> Finally, annotations can serve as gold standard for NLP related tasks. A frequently recurring task in dataset generation is human annotation of the data. After the data is annotated (or labeled) it can be used to train and test machine learning algorithms. Labeling of datasets is oftentimes done manually by expert users (cf. [<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0053">53</a>]). This is an expensive and time-consuming task and therefore other methods have been proposed, for example, leveraging crowdsourcing for dataset labeling&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0011">11</a>]. The resulting data from our annotation system can be used to train NLP systems in multiple ways. Among other tasks, this includes the task of recognizing various discourse elements within a scholarly article.</p> 
+              </section> 
+             </section> 
+             <section id="sec-7"> 
+              <header> 
+               <div class="title-info"> 
+                <h2> <span class="section-number">4</span> SYSTEM DESIGN</h2> 
+               </div> 
+              </header> 
+              <p>In this section we discuss requirements, present the system architecture and its components and outline the technical implementation. The annotation interface is integrated in the Open Research Knowledge Graph (ORKG) and is available online.<a class="fn" href="#fn2" id="foot-fn2"><sup>2</sup></a> </p>
+              <figure id="fig2"> 
+               <img src="https://dl-acm-org.libproxy.mit.edu/cms/attachment/0180e681-21bc-49a4-933b-055eb96a2f9e/iui21-50-fig2.jpg" class="img-responsive" alt="Figure illustrating the system design" aria-describedby="fig003" /> 
+               <p style="display:none" id="fig003">This figure shows how the presented use cases (data entry and data consumption) fit in the overall system design. The system has a research paper as input. Afterwards, a human annotator makes annotations, supported by machine-assisted components. The output of this process is a knowledge graph.</p> 
+               <figcaption> 
+                <span class="figure-number">Figure 2:</span> 
+                <span class="figure-title">Overview on the system design illustrating the intertwining of human and machine intelligence for the scholarly article annotation.</span> 
+               </figcaption> 
+              </figure> 
+              <p></p> 
+              <section id="sec-8"> 
+               <header> 
+                <div class="title-info"> 
+                 <h3> <span class="section-number">4.1</span> System Requirements</h3> 
+                </div> 
+               </header> 
+               <p>Based on the use cases described in Section <a class="sec" href="#sec-4">3</a>, we determined the system requirements from which the most essential ones are listed below. Additionally, we used the findings of a previously conducted user study where we asked seminar students (n&nbsp;=&nbsp;14) to generate structured descriptions from papers they read. For this task, they had to use a tool that was designed to populate a scholarly knowledge graph by creating entities and the relations between them. In contrast to the annotation tool presented in this work, the tool did not rely on text annotation but on manual structured data creation. It was designed in such a way that it did not require any technical skills to perform the task.</p> 
+               <p>The interface must adhere to the following functional requirements:</p> 
+               <ul class="list-no-style"> 
+                <li id="uid11" label="FR1"><strong>Sentence annotation.</strong> The interface should provide a method that enables users to select sentences within scholarly articles in PDF format. The selected sentences are annotated with an appropriate discourse class.<br /></li> 
+                <li id="uid12" label="FR2"><strong>Task separation.</strong> The task should focus on <em>what</em> to model and not <em>how</em> to model it. According to the seminar user study, 71% of the students indicated that the data modeling aspect is the most time-consuming aspect. By separating the task of data selection and data modeling, we provide a task that is more feasible for crowdsourcing during a paper submission process.<br /></li> 
+                <li id="uid13" label="FR3"><strong>Machine assistance.</strong> Users should be supported by machine assistance during the annotation process. The machine assistance should provide guidance during the user's decision process. This includes guidance for which sentences to annotate and help deciding which class to annotate the sentence with.<br /></li> 
+               </ul> 
+               <p>Furthermore, we defined the following non-functional requirements:</p> 
+               <ul class="list-no-style"> 
+                <li id="uid14" label="NFR1"><strong>Straightforward.</strong> The task should be easy to perform. This means that the task is not cognitively demanding, has a low complexity and takes little time to complete, which are typical characteristics used in crowdsourcing tasks&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0028">28</a>]. The task easiness should not be confused with the usability of the system. In the seminar user study, the tool was evaluated with a System Usability Scale (SUS)&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0008">8</a>] score of 67, which is average. Still, the task of modeling scholarly data in a structured way was a complicated endeavor.<br /></li> 
+                <li id="uid15" label="NFR2"><strong>Time efficient.</strong> To convince paper authors to annotate their papers during the submission process, the task should not be time consuming. We consider less than 10 minutes as time efficient.<br /></li> 
+                <li id="uid16" label="NFR3"><strong>Well defined.</strong> The task definition has to be unambiguous. This contributes positively to the quality and consistency of the generated data&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0002">2</a>]. If the resulting annotations are according the task description, it means the task is well understood and we consider the interface well defined.<br /></li> 
+               </ul> 
+              </section> 
+              <section id="sec-9"> 
+               <header> 
+                <div class="title-info"> 
+                 <h3> <span class="section-number">4.2</span> Architecture and Components</h3> 
+                </div> 
+               </header> 
+               <p>The overall system architecture is shown in Figure <a class="fig" href="#fig2">2</a>. A key concept is to intertwine human and machine intelligence. A core component is the human user-driving sentence selection, which is facilitated by the two machine intelligence components, Extractive Summarizer and Sentence Tokenizer. Similarly, the second step Sentence Annotation using the Discourse Elements Ontology is facilitated by automatic class suggestions of the zero-shot classifier. We now discuss the individual system components. For each component we explain how its design ensures that the system requirements are met.</p> 
+               <section id="sec-10"> 
+                <p><em>4.2.1 Discourse Knowledge Representation.</em> Users can choose between a predefined set of discourse classes to annotate a selected sentence (Figure <a class="fig" href="#fig1">1</a>, node 4). To support interoperability with other systems, we build on the existing Discourse Elements Ontology (DEO)&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0012">12</a>] to model the data. This ontology is part of the Semantic Publishing and Referencing (SPAR) ontologies which are designed to describe the scholarly publishing domain&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0043">43</a>]. Our discourse knowledge representation model is illustrated in Figure&nbsp;<a class="fig" href="#fig4">4</a>. We omitted five classes as they are irrelevant for this annotation task (either because it is straightforward to extract this data automatically or because the data is not useful for the data consumption use cases). The omitted classes are:</p> 
+                <ol class="list-no-style"> 
+                 <li id="list4" label="(1)">Author contribution,<br /></li> 
+                 <li id="list5" label="(2)">Bibliographic reference,<br /></li> 
+                 <li id="list6" label="(3)">Biography,<br /></li> 
+                 <li id="list7" label="(4)">Dedication and<br /></li> 
+                 <li id="list8" label="(5)">Reference<br /></li> 
+                </ol> 
+                <p>. The resulting set of discourse elements consists of 25 classes. These classes are listed in Figure <a class="fig" href="#fig3">3</a>. This component is part of FR1. Additionally, by limiting the number of classes it also contributes to NFR1 and NFR2. </p>
+                <figure id="fig3"> 
+                 <img src="https://dl-acm-org.libproxy.mit.edu/cms/attachment/bb62846b-005c-4200-a276-4b62400c666c/iui21-50-fig3.jpg" class="img-responsive" alt="Figure showing discourse annotation classes" aria-describedby="fig004" /> 
+                 <p style="display:none" id="fig004">This figure lists the classes from the Discourse Elements Ontology and how they are used in the system. Five classes are marked as recommended and an additional five classes are omitted.</p> 
+                 <figcaption> 
+                  <span class="figure-number">Figure 3:</span> 
+                  <span class="figure-title">Discourse annotation classes. Green boxes indicate the recommended classes, red the omitted classes and grey the remaining classes. In total, our model uses 25 classes.</span> 
+                 </figcaption> 
+                </figure> 
+                <figure id="fig4"> 
+                 <img src="https://dl-acm-org.libproxy.mit.edu/cms/attachment/1c361c9a-cd36-4250-a1ca-05aeb12a320d/iui21-50-fig4.jpg" class="img-responsive" alt="Example of generated knowledge graph" aria-describedby="fig005" /> 
+                 <p style="display:none" id="fig005">This figure shows an example of the resulting knowledge graph. Nodes and edges are used to display the graph. Paper metadata is displayed on the left and annotations are displayed on the right.</p> 
+                 <figcaption> 
+                  <span class="figure-number">Figure 4:</span> 
+                  <span class="figure-title">Example of the resulting knowledge graph obtained from the annotation task. The red nodes on the left depict the automatically fetched metadata (metadata types are omitted for simplicity). The white nodes are system concepts related to our internal data model. The blue nodes on the right depict two annotated sentences.<a class="fn" href="#fn3" id="foot-fn3"><sup>3</sup></a> </span> 
+                 </figcaption> 
+                </figure> 
+                <p></p> 
+               </section> 
+               <section id="sec-11"> 
+                <p><em>4.2.2 Automatic Sentence Highlighting.</em> To guide users during sentence selection, automatic sentence highlighting is applied. This is displayed in Figure <a class="fig" href="#fig1">1</a>, where node 2 and 6 respectively refer to activation and visualisation of highlights. The highlights aim to ease the annotation task and are implemented for FR3 and NFR1. The highlights are generated by applying automatic sentence summarization to the full text of the article. The resulting summary sentences are highlighted within the text. For sentence summarization, we adopted BERT embeddings&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0017">17</a>] for extractive text summarization inspired by the approach in&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0037">37</a>]. Compared to abstractive summarization, where vocabulary is used beyond the specified text, extractive summarization uses the exact structures and sentences from the original text&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0036">36</a>]. Extractive summarization is thus more suitable as it allows for tracing back and highlighting the original sentence.</p> 
+                <p>Since summarization tools specifically focus on extracting key sentences from a text, we leverage this technique to highlight key sentences within the original text. Automatic text summarization techniques are not always accurate and therefore not commonly used. This is not an issue in our use case, since the highlights appear in context and can be ignored when not relevant, which contrasts to a self-contained summary where the quality of the summary plays a crucial role&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0049">49</a>]. Furthermore, the user has the possibility to hide all automatically generated highlights (Figure <a class="fig" href="#fig1">1</a>, node 2). </p> 
+               </section> 
+               <section id="sec-12"> 
+                <p><em>4.2.3 Automatic Class Suggestions.</em> The class suggestions help users to choose from the 25 discourse classes (Figure <a class="fig" href="#fig1">1</a>, node 5), thus addressing FR3 and NFR2. The class recommendations can save time during the annotation and are generated using a zero-shot classifier from Hugging Face&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0015">15</a>]. A zero-shot text classifier is able to predict classes for text without requiring training data&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0058">58</a>]. This makes such a classifier suitable for our task, since the selected sentences can be classified according to the DEO ontology. The accuracy of the recommendations depends on the text structure. When certain key phrases are present in the text (e.g., “In the future...” for future work or “In the presented use case...” for a scenario) the classifier is able to make accurate suggestions. However, the accuracy drops when such key phrases are not present. A maximum of five suggestions ranked above an empirically determined threshold are displayed to the user.</p> 
+               </section> 
+               <section id="sec-13"> 
+                <p><em>4.2.4 Completion and Recommended Classes.</em> The task completion bar indicates how complete the annotations are (Figure <a class="fig" href="#fig1">1</a>, node 1). It helps defining the task by providing guidance on the progress, which relates to NFR3. The completion rate only provides an indication, users do not have to reach 100% in order to finish the task. Completion is based on recommended classes, namely:</p> 
+                <ol class="list-no-style"> 
+                 <li id="list9" label="(1)">Background<br /></li> 
+                 <li id="list10" label="(2)">Contribution<br /></li> 
+                 <li id="list11" label="(3)">Methods<br /></li> 
+                 <li id="list12" label="(4)">Problem statement<br /></li> 
+                 <li id="list13" label="(5)">Results<br /></li> 
+                </ol> 
+                <p>. The classes are selected based on the literature and the importance of these classes is argued as follows. Firstly, the classes are closely related to the elements from the IMRAD (Introduction, Methods, Results, Discussion and Conclusion) structured abstract style which are considered important features of articles&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0035">35</a>]. Furthermore, findings from de&nbsp;Ribaupierre and Falquet show that researchers are mainly looking for findings, hypothesis, methods and definitions when reading scholarly literature&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0016">16</a>]. These concepts are largely covered by the five recommended classes we selected. The completion rate indicator determines whether at least two annotations per recommended annotation class are created, which results in a completion rate of 100%. </p>
+                <figure id="fig5"> 
+                 <img src="https://dl-acm-org.libproxy.mit.edu/cms/attachment/81618015-4b1f-4c01-a425-0263fee463b4/iui21-50-fig5.jpg" class="img-responsive" alt="Demographics of participants" aria-describedby="fig006" /> 
+                 <p style="display:none" id="fig006">This chart shows the demographics of the participants, including their age, degree and academic experience.</p> 
+                 <figcaption> 
+                  <span class="figure-number">Figure 5:</span> 
+                  <span class="figure-title">Participants’ demographics (n = 23).</span> 
+                 </figcaption> 
+                </figure> 
+                <p></p> 
+               </section> 
+               <section id="sec-14"> 
+                <p><em>4.2.5 Miscellaneous Guidance Functions.</em> The following components further guide users during the annotation task.</p> 
+                <ol class="list-no-style"> 
+                 <li id="list14" label="(1)"><strong>Annotation limit.</strong> A maximum of three annotations per class can be created, thus maintaining the scope of the annotations (NFR3). It forces users to distribute the annotations across multiple classes which consequently contributes to higher data quality. The annotation limit (indicated by a warning) is not strictly enforced; hence, it is possible to deliberately cross the limit.<br /></li> 
+                 <li id="list15" label="(2)"><strong>Maximum sentences per annotation.</strong> An annotation can only contain a maximum of two sentences. The selected text is tokenized by sentences. This also contributes to NFR3. It prevents users from annotating full paragraphs and forces them to select only key sentences within the article. As with the annotation limit, a warning is displayed as the limit is a suggestion and not enforced.<br /></li> 
+                 <li id="list16" label="(3)"><strong>Tooltips and guidance.</strong> Tooltips are displayed throughout the interface. This contributes to NFR1. The tooltips explain system functionalities and the DEO classes. For each class, a description explains the purpose of the class. Furthermore, a guided help tour automatically appears when using the interface. The tour explains the goal of the annotation task and provides an overview of the main functionalities.<br /></li> 
+                </ol> 
+               </section> 
+              </section> 
+              <section id="sec-15"> 
+               <header> 
+                <div class="title-info"> 
+                 <h3> <span class="section-number">4.3</span> Technical Implementation</h3> 
+                </div> 
+               </header> 
+               <p>The interface has been implemented in JavaScript using React<a class="fn" href="#fn4" id="foot-fn4"><sup>4</sup></a>, the source code and its documentation are available online<a class="fn" href="#fn5" id="foot-fn5"><sup>5</sup></a>. For displaying PDF files, we used an extended version of PDF.js<a class="fn" href="#fn6" id="foot-fn6"><sup>6</sup></a>, which is a JavaScript library for parsing and rendering PDF files developed by Mozilla. Since PDF.js is used as default PDF viewer within the Firefox web browser it is able to correctly display PDF files within a browser environment. Additionally, PDF.js has been used successfully in other PDF annotation tools (e.g., [<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0046">46</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0052">52</a>]). The default PDF search functionality is leveraged and extended to support multiple search queries at once. The endpoints for the machine learning components are implemented in Python. The data is stored in a Neo4j<a class="fn" href="#fn7" id="foot-fn7"><sup>7</sup></a> graph database which is using the Neosemantics<a class="fn" href="#fn8" id="foot-fn8"><sup>8</sup></a> plugin for improved ontology support.</p> 
+               <p>For saving the annotations, users are requested to provide a paper title or a Digital Object Identifier (DOI) to save the data. In case a DOI is provided, additional metadata related to the article is automatically fetched via Crossref&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0031">31</a>]. Among others, this includes the article's title, authors and publication date. Users do not have to provide this data manually, which makes the annotation task more time efficient (NFR2). Figure&nbsp;<a class="fig" href="#fig4">4</a> visualizes an example of the data structure for a saved paper. Various external ontologies are used to improve data interoperability.</p> 
+              </section> 
+             </section> 
+             <section id="sec-16"> 
+              <header> 
+               <div class="title-info"> 
+                <h2> <span class="section-number">5</span> EVALUATION</h2> 
+               </div> 
+              </header> 
+              <p>The interface is evaluated to determine whether the paper annotation task is indeed a feasible task to be performed by academics. Additionally, we want to obtain insights in the attitudes towards machine-assisted paper annotation in general. We focus specifically on evaluating the individual components discussed in Section&nbsp;<a class="sec" href="#sec-9">4.2</a>. The evaluation also provides insights into whether or not the functional requirements are met and thus if the functionalities were indeed designed as envisioned, as well as non-functional requirements and thus if the quality aspects are met. We evaluated the interface by means of a user study. Firstly, we evaluated the participants’ opinions about the usability and their attitudes towards our approach in general. Secondly, we analysed the data produced by the participants during the annotation task.</p> 
+              <section id="sec-17"> 
+               <header> 
+                <div class="title-info"> 
+                 <h3> <span class="section-number">5.1</span> Evaluation Setup and Data Collection</h3> 
+                </div> 
+               </header> 
+               <p>An online task description was circulated among academic communities. This task description provided a brief explanation of how to participate in the evaluation. Participants were asked to annotate a paper with the paper annotation interface described here. This could either be an article they authored themselves or an article they (recently) read. Afterwards, participants were asked to complete an online questionnaire. The task description did not provide any instructions regarding the functionalities of the interface nor did we instruct the participants regarding the annotation task. This ensures that the interface can be used without external assistance and matches the real-world setting in which authors are asked to annotate their articles during submission without further help. We communicated that the evaluation takes approximately 20 to 30 minutes in total. A total of 23 researchers participated in the user study. Figure&nbsp;<a class="fig" href="#fig5">5</a> displays the demographics of the participants, including data for the number of articles each participant reads and publishes, as a proxy for the level of expertise. Participants with more experience on reading and writing articles are presumably able to annotate more quickly and with a higher quality. As the demographics data shows, participants with varying levels of expertise participated in the study. </p>
+               <figure id="fig6"> 
+                <img src="https://dl-acm-org.libproxy.mit.edu/cms/attachment/3a2e4fa5-313b-45c7-8a40-54c4a69650f3/iui21-50-fig6.jpg" class="img-responsive" alt="System Usability Scale scores" aria-describedby="fig007" /> 
+                <p style="display:none" id="fig007">This chart shows the individual System Usability Scale scores per question in a centered stacked horizontal bar chart</p> 
+                <figcaption> 
+                 <span class="figure-number">Figure 6:</span> 
+                 <span class="figure-title">Individual System Usability Scale questions and answers, resulting in a mean score of 76.09 (SD = 14.38).</span> 
+                </figcaption> 
+               </figure> 
+               <p></p> 
+               <p>To determine the usability of the interface, we incorporated the System Usability Scale (SUS)&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0008">8</a>] in the questionnaire. Furthermore, to determine the workload of the task we included questions from the NASA Task Load Index (TLX)&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0025">25</a>]. This provides insights into the perceived workload by participants for the annotation task. To reduce the length of the questionnaire, we conducted the Raw TLX, which eliminates weighting the questions. Finally, we included additional questions to determine the participants’ attitude towards the interface and the overall task. This included a question asking for general feedback about the interface.</p> 
+              </section> 
+              <section id="sec-18"> 
+               <header> 
+                <div class="title-info"> 
+                 <h3> <span class="section-number">5.2</span> Evaluation Results</h3> 
+                </div> 
+               </header> 
+               <p>The System Usability Scale evaluation resulted in a score of 76.09 (out of 100) which is considered “good”. The individual questions and answers are displayed in Figure&nbsp;<a class="fig" href="#fig6">6</a>. Because of the format, text selection and extraction in PDF files remains a challenging task (see also&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0052">52</a>]). Various participants explained that the text selection should be improved. The question “I think that I would like to use this system frequently” is rated lowest. An explanation could be that the participants are not (yet) performing article annotation on a regular basis in daily work. Therefore, the question is answered based on their own situation rather than on the general usability of the system. A similar conclusion was suggested by&nbsp;Weber et&nbsp;al. [<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0057">57</a>].</p> 
+               <p>The results of the TLX evaluation are shown in Figure&nbsp;<a class="fig" href="#fig7">7</a>. The mean TLX score of 35.87 is considered low compared to the mean of 45.29 found in the meta-analysis from Grier&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0024">24</a>]. This indicates a low perceived workload by the participants. On average, the three highest scored questions are related to mental demand (52%), performance (45%) and effort required (46%). This means that the annotation task in general does require some mental effort. However, this is expected due to the various task constraints (e.g., annotate only the most important sentences or a maximum of three annotations per class) and will possibly be partially mitigated by increasing familiarization of users during regular use of the system. The frustration level was relatively low (28%), this is in line with the positive SUS score. </p>
+               <figure id="fig7"> 
+                <img src="https://dl-acm-org.libproxy.mit.edu/cms/attachment/d102d22d-3bb1-4a4e-8459-7117bc85064e/iui21-50-fig7.jpg" class="img-responsive" alt="TLX scores in box plot" aria-describedby="fig008" /> 
+                <p style="display:none" id="fig008">The scores for the six TLX dimensions are plotted in a box plot.</p> 
+                <figcaption> 
+                 <span class="figure-number">Figure 7:</span> 
+                 <span class="figure-title">Raw NASA Task Load Index results (lower is better). The mean TLX score is 35.87 (SD = 26.17). The middle line represents the median and a cross the mean. Vertical lines represent the minimum and maximum values and circles the individual points and outliers.</span> 
+                </figcaption> 
+               </figure> 
+               <figure id="fig8"> 
+                <img src="https://dl-acm-org.libproxy.mit.edu/cms/attachment/9cc6bf8e-4aad-4d64-9f4c-cd826edbbce4/iui21-50-fig8.jpg" class="img-responsive" alt="Participants attitudes in bar chart" aria-describedby="fig009" /> 
+                <p style="display:none" id="fig009">The questions regarding the participants attitudes are displayed in horizontal stacked bar charts.</p> 
+                <figcaption> 
+                 <span class="figure-number">Figure 8:</span> 
+                 <span class="figure-title">Participants attitudes towards the annotation task, specifically focused on the machine assistance perspective. Higher values in green represent more positive attitudes.</span> 
+                </figcaption> 
+               </figure> 
+               <p></p> 
+               <p>The participants’ attitudes towards the interface are visualized in Figure&nbsp;<a class="fig" href="#fig8">8</a>. Participants are split on the question whether the task is time consuming, most participants rate this as neutral. Most participants spent between five and 10 minutes to annotate their paper (52%). Of the remaining participants, 18% spent less than five minutes and 30% more than 10 minutes. No clear time difference could be observed between more experienced participants (i.e., participants with a PhD degree) and other participants. The majority of participants would be willing to annotate their paper in the submission process, given that the paper has been accepted already. The remaining questions in Figure&nbsp;<a class="fig" href="#fig8">8</a> relate to the machine-assisted aspects of the system. The vast majority of the participants has a positive attitude towards leveraging machine-assisted technologies during the annotation task as they would like to see more artificial intelligence technologies being integrated. Participants are also split on the quality of the automatic class suggestions (called smart type suggestions in the interface). However, the majority agrees that the functionality is useful, given that the suggested classes are more relevant. The results of the automatic sentence highlighting (called smart sentence detection in the interface) are not always helpful according to the participants. But also here, most of the participants agree that the functionality is useful in general. These relatively positive results indicate that the participants appreciate the integration of AI in a user interface, even though the individual performance of the machine learning components leaves room for improvement according to some participants. This is expected given that we did not focus on a particular scholarly domain. Overall, this confirms that our approach for sentence annotation interface is a promising direction.</p> 
+               <p>Furthermore, we determined whether the preselected recommended classes are indeed of interest to researchers. In the questionnaire, participants were asked to select five discourse classes they deem most important when reading scholarly literature. The 16 most selected classes are listed in Figure&nbsp;<a class="fig" href="#fig9">9</a>. As this figure indicates, four of the recommended classes are indeed considered most important. Ranked 10th, the background class is the only exception. Since the background class was included in the recommended classes, it was more prominently positioned in the interface. Therefore, it has a relatively high annotation frequency compared to the perceived class importance. Although not considered important by the participants, background information is valuable especially when creating structured abstracts. Therefore, we suggest to keep the background class in set of recommended classes. Furthermore, this figure displays the number of annotations per the listed discourse classes. As expected, the recommended classes are used most frequently, as they are prominently present in the interface. Interestingly, the related work class is used relatively frequently as well. This could be explained by the assumption that is it straightforward to recognize related work within an article. </p>
+               <figure id="fig9"> 
+                <img src="https://dl-acm-org.libproxy.mit.edu/cms/attachment/4ada03bb-3f84-4787-8a57-3ca458a01eab/iui21-50-fig9.jpg" class="img-responsive" alt="Class use and importance figure" aria-describedby="fig010" /> 
+                <p style="display:none" id="fig010">This figure displays the class important according to participants in a bar chart. Additionally, a line chart is used to display the annotation frequency for each class.</p> 
+                <figcaption> 
+                 <span class="figure-number">Figure 9:</span> 
+                 <span class="figure-title">Top 16 discourse classes ranked by importance according to the participants (in dark green the recommended classes). The orange line shows the annotation frequency per class.</span> 
+                </figcaption> 
+               </figure> 
+               <p></p> 
+               <div class="table-responsive" id="tab1"> 
+                <div class="table-caption"> 
+                 <span class="table-number">Table 1:</span> 
+                 <span class="table-title">Statistics of the generated annotations per article from the user evaluation.</span> 
+                </div> 
+                <table class="table"> 
+                 <thead> 
+                  <tr> 
+                   <th style="text-align:left;border-right: 2pt solid #000000;"></th> 
+                   <th style="text-align:left;border-right: 2pt solid #000000;">Mean</th> 
+                   <th style="text-align:left;border-right: 2pt solid #000000;">SD</th> 
+                   <th style="text-align:left;border-right: 2pt solid #000000;">Max</th> 
+                   <th style="text-align:right;">Min</th> 
+                  </tr> 
+                 </thead> 
+                 <tbody> 
+                  <tr style="border-bottom: 2pt solid #000000;"> 
+                   <td style="text-align:left;"><strong>General</strong></td> 
+                   <td style="text-align:right;"></td> 
+                   <td style="text-align:right;"></td> 
+                   <td></td> 
+                   <td></td> 
+                  </tr> 
+                  <tr style="border-bottom: 2pt solid #000000;"> 
+                   <td style="text-align:left;border-right: 2pt solid #000000;">Annotations per article</td> 
+                   <td style="text-align:right;border-right: 2pt solid #000000;">13.18</td> 
+                   <td style="text-align:right;border-right: 2pt solid #000000;">6.52</td> 
+                   <td style="text-align:right;border-right: 2pt solid #000000;">24</td> 
+                   <td style="text-align:right;">3</td> 
+                  </tr> 
+                  <tr style="border-bottom: 2pt solid #000000;"> 
+                   <td style="text-align:left;border-right: 2pt solid #000000;">Completion ratio</td> 
+                   <td style="text-align:right;border-right: 2pt solid #000000;">72.72</td> 
+                   <td style="text-align:right;border-right: 2pt solid #000000;">24.72</td> 
+                   <td style="text-align:right;border-right: 2pt solid #000000;">100</td> 
+                   <td style="text-align:right;">10</td> 
+                  </tr> 
+                  <tr style="border-bottom: 2pt solid #000000;"> 
+                   <td style="text-align:left;border-right: 2pt solid #000000;">Extra recommended classes</td> 
+                   <td style="text-align:right;border-right: 2pt solid #000000;">1.90</td> 
+                   <td style="text-align:right;border-right: 2pt solid #000000;">1.94</td> 
+                   <td style="text-align:right;border-right: 2pt solid #000000;">7</td> 
+                   <td style="text-align:right;">0</td> 
+                  </tr> 
+                  <tr> 
+                   <td style="text-align:left;border-right: 2pt solid #000000;">Non-recommended classes</td> 
+                   <td style="text-align:right;border-right: 2pt solid #000000;">3.91</td> 
+                   <td style="text-align:right;border-right: 2pt solid #000000;">4.42</td> 
+                   <td style="text-align:right;border-right: 2pt solid #000000;">14</td> 
+                   <td style="text-align:right;">0</td> 
+                  </tr> 
+                  <tr style="border-bottom: 2pt solid #000000;"> 
+                   <td style="text-align:left;"><strong>Machine-assisted components</strong></td> 
+                   <td style="text-align:right;"></td> 
+                   <td style="text-align:right;"></td> 
+                   <td></td> 
+                   <td></td> 
+                  </tr> 
+                  <tr style="border-bottom: 2pt solid #000000;"> 
+                   <td style="text-align:left;border-right: 2pt solid #000000;">Selected class in suggestions ratio</td> 
+                   <td style="text-align:right;border-right: 2pt solid #000000;">56.55</td> 
+                   <td style="text-align:right;border-right: 2pt solid #000000;">29.40</td> 
+                   <td style="text-align:right;border-right: 2pt solid #000000;">94.44</td> 
+                   <td style="text-align:right;">33.33</td> 
+                  </tr> 
+                  <tr style="border-bottom: 2pt solid #000000;"> 
+                   <td style="text-align:left;border-right: 2pt solid #000000;">Selected class as first suggestion ratio</td> 
+                   <td style="text-align:right;border-right: 2pt solid #000000;">17.24</td> 
+                   <td style="text-align:right;border-right: 2pt solid #000000;">14.65</td> 
+                   <td style="text-align:right;border-right: 2pt solid #000000;">50</td> 
+                   <td style="text-align:right;">0</td> 
+                  </tr> 
+                  <tr style="border-bottom: 2pt solid #000000;"> 
+                   <td style="text-align:left;border-right: 2pt solid #000000;">Annotations over two sentence limit</td> 
+                   <td style="text-align:right;border-right: 2pt solid #000000;">0.95</td> 
+                   <td style="text-align:right;border-right: 2pt solid #000000;">1.56</td> 
+                   <td style="text-align:right;border-right: 2pt solid #000000;">4</td> 
+                   <td style="text-align:right;">0</td> 
+                  </tr> 
+                  <tr style="border-bottom: 2pt solid #000000;"> 
+                   <td style="text-align:left;border-right: 2pt solid #000000;">Annotations over three class limit</td> 
+                   <td style="text-align:right;border-right: 2pt solid #000000;">0.82</td> 
+                   <td style="text-align:right;border-right: 2pt solid #000000;">1.97</td> 
+                   <td style="text-align:right;border-right: 2pt solid #000000;">9</td> 
+                   <td style="text-align:right;">0</td> 
+                  </tr> 
+                 </tbody> 
+                </table> 
+               </div> 
+               <p>Table <a class="tbl" href="#tab1">1</a> reports statistics for the generated annotations during the evaluation. An average completion rate of 73% has been reached. The completion rate only provided guidance and it was not mandatory for the participants to reach 100%. The relatively high completion rate indicates that participants were indeed guided by the completion bar, but did not feel obligated to reach the full completion. Per article, on average 3.9 non-recommended annotation classes were used. Indicating that the interface was successful in guiding users towards the recommended classes but also allowing other classes. With respect to the machine-assisted components, 57% of the suggested classes were indeed selected by the user. In 17% of the cases, this was the first suggestion in the list (i.e., the class with the highest certainty, as determined by the classifier). This leaves room for improvement which is in line with the results from the questionnaire (Figure <a class="fig" href="#fig8">8</a>). Finally, on average one annotation per article contained more than two sentences. In this case, a warning was shown to the user, which did however not hinder saving the annotation. The same applies to the maximum number of annotations, which was set to three. On average, an annotated article had one annotation class with more than three annotations. These relatively low numbers of crossing the limits indicate that warning participants about violations, but not enforcing them, is indeed effective.</p> 
+              </section> 
+             </section> 
+             <section id="sec-19"> 
+              <header> 
+               <div class="title-info"> 
+                <h2> <span class="section-number">6</span> DISCUSSION</h2> 
+               </div> 
+              </header> 
+              <p>In order to answer our first research question, “How to design an intelligent user interface to populate a scholarly knowledge graph using crowdsourcing”, we determined the system requirements based on several use cases. Our user evaluation focused on determining whether the requirements are met. Based on the functional requirements, we implemented a PDF sentence annotation component. The annotation task was focused towards what to model and not on how to model data. For example, users do not have to decide what ontologies to use or how to structure the data. Related to the second research question, “How to employ a machine-in-the-loop approach to assist users in this process”, we integrated multiple machine-assisted technologies. This includes machine learning based components, such as the automatic sentence highlighting and the automatic class suggestions. With respect to the non-functional requirements, we conclude that the task was indeed straightforward as suggested by the NASA Task Load Index (TLX) results. Furthermore, the evaluation shows that most participants spent less than 10 minutes for the task. We consider that as time efficient, although the results were divided for the question “It takes a lot of time to annotate a paper”. Despite that, most authors are willing to annotate their paper during the camera-ready submission. This suggests that a crowdsourcing approach, in which authors are included to generate structured paper data, is viable in practice. Finally, participants were able to perform the task without requiring additional help. They reported high levels of confidence and low frustration levels while using the system. This indicates that the task was well defined.</p> 
+              <p>Once the scholarly knowledge graph contains a sizeable number of articles it can potentially revolutionize scholarly communication. For example, by providing more effective search or as a tool to analyze scholarly knowledge more efficiently. Our annotation interface serves as a step towards more structured scholarly communication. Generally, the more structured the data in the graph is, the better machines can read and process this data. Specifically, the annotated sentences can be complemented with structured data to further improve the data's machine readability. This can be done in an automated fashion by leveraging techniques such a Named Entity Recognition (NER)&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0039">39</a>] to automatically detect concepts in a sentence. This results in additional structured data which in turn can be further enhanced by linking these concepts to other knowledge graphs, by means of Entity Linking&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0045">45</a>]. These technologies can be effectively employed by leveraging the annotated sentences, thus applying them targeted on a specific sentence rather than on the full text of an article. Future work will focus on applying these technologies on the annotated sentences.</p> 
+              <p>The evaluation results indicate that the usability of the system is “good” and that the workload is acceptable. With respect to the machine assistance, specifically the automatic sentence highlighting and automatic class suggestions, participants suggested that the quality of the recommendation could be improved. Improving these specific machine learning algorithms is out-of-scope here. More interestingly, participants indicated that they appreciate the overall integration of Artificially Intelligence (AI) within the user interface. Despite the quality of recommendations not being optimal, they would prefer more AI-powered support during the annotation. We conclude that the quality of the assistance does not have considerable negative impact on the user experience nor does it significantly influence the participants’ attitude towards such technologies. This contributes to the concept of machine assistance, whereby a machine could help a user but is not critical to complete the task. Participants were able to ignore class suggestions and to disable sentence highlights if they considered them to be irrelevant. Therefore, we argue that the possibility to dismiss machine assistance is crucial for a system's usability.</p> 
+              <p>The presented interface and the findings from this work are not exclusively applicable to the scholarly domain but can be transferred to other domains as well. As mentioned in Section&nbsp;<a class="sec" href="#sec-3">2</a>, the PDF format is widely used in various fields and applications (legal documents, patents etc.) where they dominate as a digital means to share knowledge. With minor adjustments, the presented interface can be adopted to annotate such documents and ultimately generate structured data from them. In principle, merely the ontology for annotation classes has to be changed to support other use cases. Furthermore, our findings related to users’ attitudes towards machine-assisted user interfaces are relevant to interface design in general.</p> 
+              <section id="sec-20"> 
+               <header> 
+                <div class="title-info"> 
+                 <h3> <span class="section-number">6.1</span> Limitations and Future Work</h3> 
+                </div> 
+               </header> 
+               <p>Arguably, our evaluation could be larger and include more participants, which would improve the validity of the results. We target participants with an academic research background, which are notoriously hard to recruit. Moreover, the task is not suitable for online crowdsourcing platforms such as Amazon Mechanical Turk. Additionally, a more thorough evaluation of the effectiveness of the intelligent system components is required. We acknowledge that the evaluation is limited in scope and are considering to conduct a broader evaluation with a more diverse audience for future research. Despite these limitations, the evaluation still provides helpful insights and clear indications on the participants’ attitudes towards the overall approach. Moreover, Tullis and Stetson [<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0055">55</a>] have shown that the System Usability Scale (SUS) provides reliable results even with relatively small sample sizes (e.g., n = 12).</p> 
+               <p>Most of the participants have a Computer Science related background (Figure&nbsp;<a class="fig" href="#fig5">5</a>). This could introduce a bias affecting the usability score and overall attitude towards intelligent technologies. Indeed, computer scientists are generally more experienced in adopting novel computer user interfaces. However, the interface was designed to also allow non-technical users to annotate papers. For example, technical jargon is avoided to make the interface understandable for users with different backgrounds. Furthermore, text annotation has been successfully employed in other domains (e.g.,&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0006">6</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0022">22</a>]), indicating that the task itself is generalizable across domains. The effectiveness of these measures and the generalizability of the method outside Computer Science will be further investigated in future work. Furthermore, the difference between annotations made by authors and by readers is a compelling future research direction.</p> 
+              </section> 
+             </section> 
+             <section id="sec-21"> 
+              <header> 
+               <div class="title-info"> 
+                <h2> <span class="section-number">7</span> CONCLUSION</h2> 
+               </div> 
+              </header> 
+              <p>We presented a web-based user interface to crowdsource scholarly discourse annotations. The interface integrates several machine-assisted components to guide users during the annotation process. This work is part of a larger research agenda and a corresponding open science infrastructure development. We deem that the integration of human and machine intelligence for creating a comprehensive knowledge graph representing research findings is a key prerequisite for solving scholarly communication deficiencies such as the proliferation of publications, the reproducibility crisis or the deterioration of peer-review. In particular, we envision that the interface is integrated in paper submission processes where paper authors are requested to annotate their own papers. A scholarly knowledge graph is created using the annotated sentences combined with the paper's metadata. Our user study results indicate that the annotation interface has a good usability and that the annotation task does not require significant cognitive workload. This suggests that sentence annotation is a feasible task to be performed by researchers. In future work, we will focus on implementing the use cases. Furthermore, future work includes the semi-automated extraction of entities from annotated sentences.</p> 
+             </section> 
+            </section> 
+            <section class="back-matter"> 
+             <section id="sec-22"> 
+              <header> 
+               <div class="title-info"> 
+                <h2>ACKNOWLEDGMENTS</h2> 
+               </div> 
+              </header> 
+              <p>This work was co-funded by the European Research Council for the project ScienceGRAPH (Grant agreement ID: 819536) and the TIB Leibniz Information Centre for Science and Technology. The publication of this article was funded by the Open Access Fund of Technische Informationsbibliothek (TIB). We want to thank our colleague Mohamad Yaser Jaradeh for his contributions to this work.</p> 
+             </section> 
+             <section id="ref-001"> 
+              <header> 
+               <div class="title-info"> 
+                <h2 class="page-brake-head">REFERENCES</h2> 
+               </div> 
+              </header> 
+              <ul class="bibUl"> 
+               <li id="BibPLXBIB0001" label="[1]">Karl Aberer and Alexey Boyarsky. 2011. ScienceWISE: a Web-based Interactive Semantic Platform for scientific collaboration. <em><em>10th International Semantic Web Conference (ISWC 2011-Demo)</em></em> (2011). <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1007/978-3-662-46641-4_33" target="_blank">https://doi-org.libproxy.mit.edu/10.1007/978-3-662-46641-4_33</a></li> 
+               <li id="BibPLXBIB0002" label="[2]">Mohammad Allahbakhsh, Boualem Benatallah, Aleksandar Ignjatovic, Hamid&nbsp;Reza Motahari-Nezhad, Elisa Bertino, and Schahram Dustdar. 2013. Quality control in crowdsourcing systems: Issues and directions. <em><em>IEEE Internet Computing</em></em> 17, 2 (2013), 76–81. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1109/MIC.2013.20" target="_blank">https://doi-org.libproxy.mit.edu/10.1109/MIC.2013.20</a></li> 
+               <li id="BibPLXBIB0003" label="[3]">Waleed Ammar, Dirk Groeneveld, Chandra Bhagavatula, Iz Beltagy, Miles Crawford, Doug Downey, Jason Dunkelberger, Ahmed Elgohary, Sergey Feldman, Vu Ha, Rodney Kinney, Sebastian Kohlmeier, Kyle Lo, Tyler Murray, Hsu&nbsp;Han Ooi, Matthew Peters, Joanna Power, Sam Skjonsberg, Lucy&nbsp;Lu Wang, Chris Wilhelm, Zheng Yuan, Madeleine Van&nbsp;Zuylen, and Oren Etzioni. 2018. Construction of the literature graph in semantic scholar. <em><em>NAACL HLT 2018 - 2018 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies - Proceedings of the Conference</em></em> 3(2018), 84–91. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.18653/v1/n18-3011" target="_blank">https://doi-org.libproxy.mit.edu/10.18653/v1/n18-3011</a></li> 
+               <li id="BibPLXBIB0004" label="[4]">S&ouml;ren Auer, Christian Bizer, Georgi Kobilarov, Jens Lehman, Richard Cyganiak, and Zachary Ives. 2007. DBpedia: A Nucleus for a Web of Open Data. <em><em>The semantic web</em></em> (2007), 722–735. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1007/978-3-540-76298-0_52" target="_blank">https://doi-org.libproxy.mit.edu/10.1007/978-3-540-76298-0_52</a></li> 
+               <li id="BibPLXBIB0005" label="[5]">Antonin Bergeaud, Yoann Potiron, and Juste Raimbault. 2017. Classifying patents based on their semantic content. <em><em>PLoS ONE</em></em> 12, 4 (2017), 1–22. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1371/journal.pone.0176310" target="_blank">https://doi-org.libproxy.mit.edu/10.1371/journal.pone.0176310</a></li> 
+               <li id="BibPLXBIB0006" label="[6]">Kalina Bontcheva, Hamish Cunningham, Ian Roberts, Angus Roberts, Valentin Tablan, Niraj Aswani, and Genevieve Gorrell. 2013. GATE Teamware: a web-based, collaborative text annotation framework. <em><em>Language Resources and Evaluation</em></em> 47, 4 (2013), 1007–1029. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1007/s10579-013-9215-6" target="_blank">https://doi-org.libproxy.mit.edu/10.1007/s10579-013-9215-6</a></li> 
+               <li id="BibPLXBIB0007" label="[7]">Kalina Bontcheva, Hamish Cunningham, Ian Roberts, and Valentin Tablan. 2010. Web-based collaborative corpus annotation: Requirements and a framework implementation. <em><em>New Challenges for NLP Frameworks</em></em>(2010), 20–27.</li> 
+               <li id="BibPLXBIB0008" label="[8]">John Brooke. 1996. SUS: a “quick and dirty'usability. <em><em>Usability evaluation in industry</em></em>(1996), 189.</li> 
+               <li id="BibPLXBIB0009" label="[9]">Cristina-Iulia Bucur, Tobias Kuhn, and Davide Ceolin. 2020. A Unified Nanopublication Model for Effective and User-Friendly Access to the Elements of Scientific Publishing. In <em>International Conference on Knowledge Engineering and Knowledge Management</em>. Springer, 104–119. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1007/978-3-030-61244-3_7" target="_blank">https://doi-org.libproxy.mit.edu/10.1007/978-3-030-61244-3_7</a></li> 
+               <li id="BibPLXBIB0010" label="[10]">Sarven Capadisli, Amy Guy, Ruben Verborgh, Christoph Lange, S&ouml;ren Auer, and Tim Berners-Lee. 2017. Decentralised authoring, annotations and notifications for a read-write web with dokieli. In <em>International Conference on Web Engineering</em>. Springer, 469–481. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1007/978-3-319-60131-1_33" target="_blank">https://doi-org.libproxy.mit.edu/10.1007/978-3-319-60131-1_33</a></li> 
+               <li id="BibPLXBIB0011" label="[11]">Joseph&nbsp;Chee Chang, Saleema Amershi, and Ece Kamar. 2017. Revolt: Collaborative crowdsourcing for labeling machine learning datasets. <em><em>Conference on Human Factors in Computing Systems - Proceedings</em></em> 2017-May (2017), 2334–2346. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1145/3025453.3026044" target="_blank">https://doi-org.libproxy.mit.edu/10.1145/3025453.3026044</a></li> 
+               <li id="BibPLXBIB0012" label="[12]">Alexandru Constantin, Silvio Peroni, Steve Pettifer, David Shotton, and Fabio Vitali. 2016. The Document Components Ontology (DoCO). <em><em>Semantic Web</em></em> 7, 2 (2016), 167–181. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.3233/SW-150177" target="_blank">https://doi-org.libproxy.mit.edu/10.3233/SW-150177</a></li> 
+               <li id="BibPLXBIB0013" label="[13]">Andreiwid&nbsp;Sheffer Corr&ecirc;a and P&auml;r-Ola Zander. 2017. Unleashing Tabular Content to Open Data. <em><em>Proceedings of the 18th Annual International Conference on Digital Government Research</em></em> (2017), 54–63. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1145/3085228.3085278" target="_blank">https://doi-org.libproxy.mit.edu/10.1145/3085228.3085278</a></li> 
+               <li id="BibPLXBIB0014" label="[14]">Bart Custers and Daniel Bachlechner. 2018. Advancing the EU Data Economy: Conditions for Realizing the Full of Potential of Data Reuse. <em><em>SSRN Electronic Journal</em></em>(2018), 1–19. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.2139/ssrn.3091038" target="_blank">https://doi-org.libproxy.mit.edu/10.2139/ssrn.3091038</a></li> 
+               <li id="BibPLXBIB0015" label="[15]">Joe Davison. 2020. Zero-Shot Learning in Modern NLP. <em><em>(accessed on 2020-09-30)</em></em>(2020). <a class="link-inline force-break" href="https://joeddav.github.io/blog/2020/05/29/ZSL.html">https://joeddav.github.io/blog/2020/05/29/ZSL.html</a></li> 
+               <li id="BibPLXBIB0016" label="[16]">H&eacute;l&egrave;ne de Ribaupierre and Gilles Falquet. 2018. Extracting discourse elements and annotating scientific documents using the SciAnnotDoc model: a use case in gender documents. <em><em>International Journal on Digital Libraries</em></em> 19, 2-3 (2018), 271–286. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1007/s00799-017-0227-5" target="_blank">https://doi-org.libproxy.mit.edu/10.1007/s00799-017-0227-5</a></li> 
+               <li id="BibPLXBIB0017" label="[17]">Jacob Devlin, Ming&nbsp;Wei Chang, Kenton Lee, and Kristina Toutanova. 2019. BERT: Pre-training of deep bidirectional transformers for language understanding. <em><em>NAACL HLT 2019 - 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies - Proceedings of the Conference</em></em> 1, Mlm (2019), 4171–4186.</li> 
+               <li id="BibPLXBIB0018" label="[18]">Henrik Eriksson. 2007. An Annotation Tool for Semantic Documents (System Description). <em><em>4th European Semantic Web Conference (ESWC)</em></em>(2007), 759–768. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1007/978-3-540-72667-8_54" target="_blank">https://doi-org.libproxy.mit.edu/10.1007/978-3-540-72667-8_54</a></li> 
+               <li id="BibPLXBIB0019" label="[19]">Ad&nbsp;Hoc Working&nbsp;Group for Critical Appraisal of&nbsp;the Medical&nbsp;Literature. 1987. A proposal for more informative abstracts of clinical articles. <em><em>Annals of Internal Medicine</em></em> 106, 4 (1987), 598–604.</li> 
+               <li id="BibPLXBIB0020" label="[20]">Robert&nbsp;L Fowler and Anne&nbsp;S Barker. 1974. Effectiveness of highlighting for retention of text material.<em><em>Journal of Applied Psychology</em></em> 59, 3 (1974), 358.</li> 
+               <li id="BibPLXBIB0021" label="[21]">Paul Ginsparg. 2011. ArXiv at 20. <em><em>Nature</em></em> 476, 7359 (2011), 145–147. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1038/476145a" target="_blank">https://doi-org.libproxy.mit.edu/10.1038/476145a</a></li> 
+               <li id="BibPLXBIB0022" label="[22]">Glenn&nbsp;T Gobbel, Jennifer Garvin, Ruth Reeves, Robert&nbsp;M Cronin, Julia Heavirland, Jenifer Williams, Allison Weaver, Shrimalini Jayaramaraja, Dario Giuse, Theodore Speroff, <em>et al.</em> 2014. Assisted annotation of medical free text using RapTAT. <em><em>Journal of the American Medical Informatics Association</em></em> 21, 5(2014), 833–841. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1136/amiajnl-2013-002255" target="_blank">https://doi-org.libproxy.mit.edu/10.1136/amiajnl-2013-002255</a></li> 
+               <li id="BibPLXBIB0023" label="[23]">Ben Green and Yiling Chen. 2019. The principles and limits of algorithm-in-the-loop decision making. <em><em>Proceedings of the ACM on Human-Computer Interaction</em></em> 3, CSCW(2019). <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1145/3359152" target="_blank">https://doi-org.libproxy.mit.edu/10.1145/3359152</a></li> 
+               <li id="BibPLXBIB0024" label="[24]">Rebecca Grier. 2015. How high is high? A metanalysis of NASA TLX global workload scores. <em><em>Proceedings of the Human Factors and Ergonomics Society Annual Meeting</em></em> 59. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1177/1541931215591373" target="_blank">https://doi-org.libproxy.mit.edu/10.1177/1541931215591373</a></li> 
+               <li id="BibPLXBIB0025" label="[25]">Sandra&nbsp;G. Hart. 2006. NASA-task load index (NASA-TLX); 20 years later. <em><em>Proceedings of the Human Factors and Ergonomics Society</em></em> (2006), 904–908. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1177/154193120605000909" target="_blank">https://doi-org.libproxy.mit.edu/10.1177/154193120605000909</a></li> 
+               <li id="BibPLXBIB0026" label="[26]">Mohamad&nbsp;Yaser Jaradeh, Allard Oelen, Kheir&nbsp;Eddine Farfar, Manuel Prinz, Jennifer D'Souza, G&aacute;bor Kismih&oacute;k, Markus Stocker, and S&ouml;ren Auer. 2019. Open research knowledge graph: Next generation infrastructure for semantic scholarly knowledge. <em><em>K-CAP 2019 - Proceedings of the 10th International Conference on Knowledge Capture</em></em> (2019), 243–246. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1145/3360901.3364435" target="_blank">https://doi-org.libproxy.mit.edu/10.1145/3360901.3364435</a></li> 
+               <li id="BibPLXBIB0027" label="[27]">Arif Jinha. 2010. Article 50 million: An estimate of the number of scholarly articles in existence. <em><em>Learned Publishing</em></em> 23, 3 (2010), 258–263. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1087/20100308" target="_blank">https://doi-org.libproxy.mit.edu/10.1087/20100308</a></li> 
+               <li id="BibPLXBIB0028" label="[28]">Aniket Kittur, Boris Smus, Susheel Khamkar, and Robert&nbsp;E Kraut. 2011. Crowdforge: Crowdsourcing complex work. In <em>Proceedings of the 24th annual ACM symposium on User interface software and technology</em>. 43–52. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1145/2047196.2047202" target="_blank">https://doi-org.libproxy.mit.edu/10.1145/2047196.2047202</a></li> 
+               <li id="BibPLXBIB0029" label="[29]">Maxim Kolchin, Eugene Cherny, Fedor Kozlov, Alexander Shipilo, and Liubov Kovriguina. 2015. CEUR-WS-LOD: Conversion of CEUR-WS Workshops to Linked Data. <em><em>Semantic Web Evaluation Challenges</em></em> 1, September 2016 (2015), 51–62. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1007/978-3-319-25518-7" target="_blank">https://doi-org.libproxy.mit.edu/10.1007/978-3-319-25518-7</a></li> 
+               <li id="BibPLXBIB0030" label="[30]">Marios Koniaris, George Papastefanatos, and Ioannis Anagnostopoulos. 2018. Solon: A holistic approach for modelling, managing and mining legal sources. <em><em>Algorithms</em></em> 11, 12 (2018), 1–22. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.3390/a11120196" target="_blank">https://doi-org.libproxy.mit.edu/10.3390/a11120196</a></li> 
+               <li id="BibPLXBIB0031" label="[31]">Rachael Lammey. 2014. CrossRef developments and initiatives: An update on services for the scholarly publishing community from CrossRef. <em><em>Science Editing</em></em> 1, 1 (2014), 13–18. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.6087/kcse.2014.1.13" target="_blank">https://doi-org.libproxy.mit.edu/10.6087/kcse.2014.1.13</a></li> 
+               <li id="BibPLXBIB0032" label="[32]">Christoph Lange and Angelo&nbsp;Di Iorio. 2014. Semantic Publishing Challenge – Assessing the Quality of Scientific Output. <em><em>Semantic Web Evaluation Challenge</em></em> 1 (2014), 61–76. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1007/978-3-319-12024-9" target="_blank">https://doi-org.libproxy.mit.edu/10.1007/978-3-319-12024-9</a></li> 
+               <li id="BibPLXBIB0033" label="[33]">Patrice Lopez. 2009. GROBID: Combining automatic bibliographic data recognition and term extraction for scholarship publications. <em><em>International conference on theory and practice of digital libraries</em></em> (2009), 473–474. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1007/978-3-642-04346-8_62" target="_blank">https://doi-org.libproxy.mit.edu/10.1007/978-3-642-04346-8_62</a></li> 
+               <li id="BibPLXBIB0034" label="[34]">Robert&nbsp;F. Lorch. 1989. Text-signaling devices and their effects on reading and memory processes. <em><em>Educational Psychology Review</em></em> 1, 3 (1989), 209–234. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1007/BF01320135" target="_blank">https://doi-org.libproxy.mit.edu/10.1007/BF01320135</a></li> 
+               <li id="BibPLXBIB0035" label="[35]">Domhnall MacAuley. 1995. Critical appraisal of medical literature: An aid to rational decision making. <em><em>Family Practice</em></em> 12, 1 (1995), 98–103. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1093/fampra/12.1.98" target="_blank">https://doi-org.libproxy.mit.edu/10.1093/fampra/12.1.98</a></li> 
+               <li id="BibPLXBIB0036" label="[36]">Inderjeet Mani. 2001. <em>Automatic summarization</em>. Vol.&nbsp;3. John Benjamins Publishing.</li> 
+               <li id="BibPLXBIB0037" label="[37]">Derek Miller. 2019. Leveraging BERT for Extractive Text Summarization on Lectures. (2019).</li> 
+               <li id="BibPLXBIB0038" label="[38]">Barend Mons and Jan Velterop. 2009. Nano-publication in the e-science era. <em><em>CEUR Workshop Proceedings</em></em> 523 (2009).</li> 
+               <li id="BibPLXBIB0039" label="[39]">David Nadeau and Satoshi Sekine. 2007. A Survey on Named Entity Recognition. <em><em>Lingvisticae Investigationes</em></em> 30, 1 (2007), 3–26. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1007/978-981-13-9409-6_218" target="_blank">https://doi-org.libproxy.mit.edu/10.1007/978-981-13-9409-6_218</a></li> 
+               <li id="BibPLXBIB0040" label="[40]">Takeo Nakayama, Nobuko Hirai, Shigeaki Yamazaki, and Mariko Naito. 2005. Adoption of structured abstracts by general medical journals and format for a structured abstract. <em><em>Journal of the Medical Library Association</em></em> 93, 2 (2005), 237–242.</li> 
+               <li id="BibPLXBIB0041" label="[41]">Allard Oelen, Mohamad&nbsp;Yaser Jaradeh, Markus Stocker, and S&ouml;ren Auer. 2020. Generate FAIR Literature Surveys with Scholarly Knowledge Graphs. <em><em>Proceedings of the ACM/IEEE Joint Conference on Digital Libraries in 2020</em></em> (2020), 97–106. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1145/3383583.3398520" target="_blank">https://doi-org.libproxy.mit.edu/10.1145/3383583.3398520</a></li> 
+               <li id="BibPLXBIB0042" label="[42]">Heiko Paulheim. 2017. Knowledge Graph Refinement: A Survey of Approaches and Evaluation Methods. <em><em>Semantic Web</em></em> 8, 3 (2017), 489–508. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.3233/SW-160218" target="_blank">https://doi-org.libproxy.mit.edu/10.3233/SW-160218</a></li> 
+               <li id="BibPLXBIB0043" label="[43]">Silvio Peroni and David Shotton. 2018. The SPAR Ontologies. <em><em>International Semantic Web Conference</em></em>(2018), 119–136. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1007/978-3-030-00668-6_8" target="_blank">https://doi-org.libproxy.mit.edu/10.1007/978-3-030-00668-6_8</a></li> 
+               <li id="BibPLXBIB0044" label="[44]">Francesco Ronzano, Gerard Casamayor&nbsp;del Bosque, and Horacio Saggion. 2014. Semantify CEUR-WS Proceedings: towards the automatic generation of highly descriptive scholarly publishing Linked Datasets. <em><em>Communications in Computer and Information Science</em></em> 475, June(2014), V–VI. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1007/978-3-319-12024-9" target="_blank">https://doi-org.libproxy.mit.edu/10.1007/978-3-319-12024-9</a></li> 
+               <li id="BibPLXBIB0045" label="[45]">Wei Shen, Jianyong Wang, and Jiawei Han. 2015. Entity linking with a knowledge base: Issues, techniques, and solutions. <em><em>IEEE Transactions on Knowledge and Data Engineering</em></em> 27, 2(2015), 443–460. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1109/TKDE.2014.2327028" target="_blank">https://doi-org.libproxy.mit.edu/10.1109/TKDE.2014.2327028</a></li> 
+               <li id="BibPLXBIB0046" label="[46]">Hiroyuki Shindo, Yohei Munesada, and Yuji Matsumoto. 2019. PDFanno: A web-based linguistic annotation tool for PDF documents. <em><em>LREC 2018 - 11th International Conference on Language Resources and Evaluation</em></em> (2019), 1082–1086.</li> 
+               <li id="BibPLXBIB0047" label="[47]">Arnab Sinha, Zhihong Shen, Yang Song, Hao Ma, Darrin Eide, Bo June&nbsp;Hsu, and Kuansan Wang. 2015. An overview of microsoft academic service (MAS) and applications. <em><em>WWW 2015 Companion - Proceedings of the 24th International Conference on World Wide Web</em></em> (2015), 243–246. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1145/2740908.2742839" target="_blank">https://doi-org.libproxy.mit.edu/10.1145/2740908.2742839</a></li> 
+               <li id="BibPLXBIB0048" label="[48]">Rion Snow, Brendan O'connor, Dan Jurafsky, and Andrew&nbsp;Y Ng. 2008. Cheap and fast–but is it good? evaluating non-expert annotations for natural language tasks. In <em>Proceedings of the 2008 conference on empirical methods in natural language processing</em>. 254–263.</li> 
+               <li id="BibPLXBIB0049" label="[49]">Sasha Spala, Franck Dernoncourt, Walter Chang, and Carl Dockhorn. 2018. A Web-based Framework for Collecting and Assessing Highlighted Sentences in a Document. <em><em>Proceedings of the 27th International Conference on Computational Linguistics: System Demonstrations</em></em>(2018), 78–81.</li> 
+               <li id="BibPLXBIB0050" label="[50]">Pontus Stenetorp, Sampo Pyysalo, and Goran Topi. 2012. BRAT : a Web-based Tool for NLP-Assisted Text Annotation. Figure 1 (2012), 102–107.</li> 
+               <li id="BibPLXBIB0051" label="[51]">Fabian&nbsp;M. Suchanek, Gjergji Kasneci, and Gerhard Weikum. 2007. Yago: A core of semantic knowledge. <em><em>16th International World Wide Web Conference, WWW2007</em></em> (2007), 697–706. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1145/1242572.1242667" target="_blank">https://doi-org.libproxy.mit.edu/10.1145/1242572.1242667</a></li> 
+               <li id="BibPLXBIB0052" label="[52]">Jaana Takis, A.&nbsp;Q.M.Saiful Islam, Christoph Lange, and S&ouml;ren Auer. 2015. Crowdsourced semantic annotation of scientific publications and tabular data in PDF. <em><em>ACM International Conference Proceeding Series</em></em> 16-17-Sept (2015), 1–8. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1145/2814864.2814887" target="_blank">https://doi-org.libproxy.mit.edu/10.1145/2814864.2814887</a></li> 
+               <li id="BibPLXBIB0053" label="[53]">Ann Taylor, Mitchell Marcus, and Beatrice Santorini. 2003. The Penn Treebank: An Overview. (2003), 5–22. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1007/978-94-010-0201-1_1" target="_blank">https://doi-org.libproxy.mit.edu/10.1007/978-94-010-0201-1_1</a></li> 
+               <li id="BibPLXBIB0054" label="[54]">Mark Traquair, Ertugrul Kara, Burak Kantarci, and Shahzad Khan. 2019. Deep Learning for the Detection of Tabular Information from Electronic Component Datasheets. <em><em>Proceedings - International Symposium on Computers and Communications</em></em> 2019-June(2019), 0–5. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1109/ISCC47284.2019.8969682" target="_blank">https://doi-org.libproxy.mit.edu/10.1109/ISCC47284.2019.8969682</a></li> 
+               <li id="BibPLXBIB0055" label="[55]">Thomas&nbsp;S Tullis and Jacqueline&nbsp;N Stetson. 2004. A Comparison of Questionnaires for Assessing Website Usability. <em><em>Usability Professional Association Conference</em></em> (2004), 1–12.</li> 
+               <li id="BibPLXBIB0056" label="[56]">Denny Vrandečić and Markus Kr&ouml;tzsch. 2014. Wikidata: A free collaborative knowledgebase. <em><em>Commun. ACM</em></em> 57, 10 (2014), 78–85. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1145/2629489" target="_blank">https://doi-org.libproxy.mit.edu/10.1145/2629489</a></li> 
+               <li id="BibPLXBIB0057" label="[57]">Thomas Weber, Heinrich Hu&szlig;mann, Zhiwei Han, Stefan Matthes, Yuanting Liu, and Yuant-Ing Liu. 2020. Draw with Me: Human-in-the-Loop for Image Restoration. 20 (2020), 243–253. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.1145/3377325.3377509" target="_blank">https://doi-org.libproxy.mit.edu/10.1145/3377325.3377509</a></li> 
+               <li id="BibPLXBIB0058" label="[58]">Wenpeng Yin, Jamaal Hay, and Dan Roth. 2020. Benchmarking zero-shot text classification: Datasets, evaluation and entailment approach. <em><em>EMNLP-IJCNLP 2019 - 2019 Conference on Empirical Methods in Natural Language Processing and 9th International Joint Conference on Natural Language Processing, Proceedings of the Conference</em></em>(2020), 3914–3923. <a class="link-inline force-break" href="https://doi-org.libproxy.mit.edu/10.18653/v1/d19-1404" target="_blank">https://doi-org.libproxy.mit.edu/10.18653/v1/d19-1404</a></li> 
+              </ul> 
+             </section> 
+            </section> 
+            <section id="foot-001" class="footnote"> 
+             <header> 
+              <div class="title-info"> 
+               <h2>FOOTNOTE</h2> 
+              </div> 
+             </header> 
+             <p id="fn1"> <a href="#foot-fn1"><sup>1</sup></a> <a class="link-inline force-break" href="http://ceur-ws.org">http://ceur-ws.org</a> </p> 
+             <p id="fn2"> <a href="#foot-fn2"><sup>2</sup></a> <a class="link-inline force-break" href="https://www.orkg.org/orkg/pdf-text-annotation">https://www.orkg.org/orkg/pdf-text-annotation</a> </p> 
+             <p id="fn3"> <a href="#foot-fn3"><sup>3</sup></a>Used ontologies: DEO (Discourse Elements Ontology) - http://purl.org.libproxy.mit.edu/spar/deo, C4O (Citation Counting and Context Characterization Ontology) - http://purl.org.libproxy.mit.edu/spar/c4o, PO (Pattern Ontology) - http://purl.org.libproxy.mit.edu/spar/po, DoCO (Document Components Ontology) - http://purl.org.libproxy.mit.edu/spar/doco </p> 
+             <p id="fn4"> <a href="#foot-fn4"><sup>4</sup></a> <a class="link-inline force-break" href="https://reactjs.org">https://reactjs.org</a> </p> 
+             <p id="fn5"> <a href="#foot-fn5"><sup>5</sup></a> <a class="link-inline force-break" href="https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/tree/e0a6a7a8d022119d9fb5cc7b749052f0f1c194d0/src/components/PdfTextAnnotation">https://gitlab.com/TIBHannover/orkg/orkg-frontend/-/tree/e0a6a7a8d022119d9fb5cc7b749052f0f1c194d0/src/components/PdfTextAnnotation</a> </p> 
+             <p id="fn6"> <a href="#foot-fn6"><sup>6</sup></a> <a class="link-inline force-break" href="https://mozilla.github.io/pdf.js">https://mozilla.github.io/pdf.js</a> </p> 
+             <p id="fn7"> <a href="#foot-fn7"><sup>7</sup></a> <a class="link-inline force-break" href="https://neo4j.com">https://neo4j.com</a> </p> 
+             <p id="fn8"> <a href="#foot-fn8"><sup>8</sup></a> <a class="link-inline force-break" href="https://neo4j.com/labs/neosemantics">https://neo4j.com/labs/neosemantics</a> </p> 
+             <div class="bibStrip"> 
+              <p><img src="https://www-acm-org.libproxy.mit.edu/binaries/content/gallery/acm/publications/cc-by/cc-by.jpg" class="img-responsive" alt="CC-BY license image" /><br /> This work is licensed under a <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution International 4.0 License</a>.</p> 
+              <p><em>IUI '21, April 14–17, 2021, College Station, TX, USA</em></p> 
+              <p>&copy; 2021 Copyright held by the owner/author(s).<br /> ACM ISBN 978-1-4503-8017-1/21/04.<br />DOI: <a class="link-inline force-break" target="_blank" href="https://doi-org.libproxy.mit.edu/10.1145/3397481.3450685">https://doi-org.libproxy.mit.edu/10.1145/3397481.3450685</a> </p> 
+             </div> 
+            </section> 
+           </main>   
+    </div>  
+  </body>
+</html>

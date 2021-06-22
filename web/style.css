@@ -3,7 +3,7 @@ body {
 }
 
 /* handle margin since there is a fixed header */
-p:before, li:before { content: ''; display: block; position: relative; width: 0; height: 4em; margin-top: -4em }
+p:before, li:before, h2:before, h3:before { content: ''; display: block; position: relative; width: 0; height: 4em; margin-top: -4em }
 
 #move-container {
   float:left;
@@ -48,7 +48,7 @@ pre {
   border-bottom: 5px solid black;
 }
 
-.navbar select {
+.navbar select, .navbar button {
   font-size: 50px;
 }
 

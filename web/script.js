@@ -98,9 +98,9 @@ window.addEventListener('DOMContentLoaded', () => {
       let banner;
       
       if($bridge_start) { // if user is working on a bridge
-        banner = `<span class='banner'><button type="button" onclick='addAnchor(${paragraph_id}, "${sentence_id}")'>⚓</button> <button type="button" onclick='$bridge_start = null;addBridge("${sentence_id}", "${text}")'>${BRIDGE_ICON}start</button> <button type="button" onclick='addBridge("${sentence_id}", "${text}")'>${BRIDGE_ICON}end</button></span>`;
+        banner = `<span class='banner'><button type="button" onclick='addAnchor("${paragraph_id}", "${sentence_id}")'>⚓</button> <button type="button" onclick='$bridge_start = null;addBridge("${sentence_id}", "${text}")'>${BRIDGE_ICON}start</button> <button type="button" onclick='addBridge("${sentence_id}", "${text}")'>${BRIDGE_ICON}end</button></span>`;
       } else {
-        banner = `<span class='banner'><button type="button" onclick='addAnchor(${paragraph_id}, ${sentence_id})'>⚓+</button> <button type="button" onclick='addBridge("${sentence_id}", "${text}")'>${BRIDGE_ICON}+</button></span>`
+        banner = `<span class='banner'><button type="button" onclick='addAnchor("${paragraph_id}", "${sentence_id}")'>⚓+</button> <button type="button" onclick='addBridge("${sentence_id}", "${text}")'>${BRIDGE_ICON}+</button></span>`;
       }
       
       $(".sidebar").append(banner);
@@ -208,7 +208,15 @@ function detectCurrentParagraph(entries, observer, header)  {
            $(currentFocusedParagraph).addClass("focused");
            
           //  showViewer( $(currentFocusedParagraph).attr("id") );
+         } else { // init if empty
+          currentFocusedParagraph = entry.target.parentElement;
          }
+
+         let current_section = $(currentFocusedParagraph.parentElement).attr("id") || "sec-1";
+         current_section = parseInt(current_section.split("-")[1]);// + is_next ? 1 : -1;
+         
+          $("#btn-go-prev").attr("disabled", $(`#sec-${current_section - 1}`).length == 0 );
+          $("#btn-go-next").attr("disabled", $(`#sec-${current_section + 1}`).length == 0 );
     })
 }
 
@@ -229,6 +237,16 @@ function getSelectedNode() {
     return document.selection;
   
   alert("Not supported browser")
+}
+
+function gotoNext(is_next=true) {
+  let sec_togo = $(currentFocusedParagraph.parentElement).attr("id");
+  if(sec_togo)
+    sec_togo = parseInt(sec_togo.split("-")[1]) + (is_next ? 1 : -1);
+  else
+    sec_togo = 2;
+
+  jumpTo(`sec-${sec_togo}`);
 }
 
 function jumpTo(in_dest) { 

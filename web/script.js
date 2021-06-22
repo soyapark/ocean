@@ -41,8 +41,6 @@ window.addEventListener('DOMContentLoaded', () => {
               .filter(b => ((b[0]["p-id"] == p_id && b[0]["s-id"] == $(el).attr("id")) 
                 || (b[1]["p-id"] == p_id && b[1]["s-id"] == $(el).attr("id"))))
                 .map(b => {
-                  console.log(b);
-                  debugger;
                   $( `<a role="button" href="#${b[0]["p-id"] == p_id ? b[1]["s-id"] : b[0]["s-id"]}">${BRIDGE_ICON}</a>` ).insertAfter( $(el) );
                   return null;
                 });
@@ -139,11 +137,16 @@ function addBridge(in_s_id, in_selected_text) {
       0: {"p-id": $($bridge_start.parent()).attr("id"), "s-id": $bridge_start.attr("id")},
       1: {"p-id": $(b.parent()).attr("id"), "s-id": in_s_id}
     });
+
+    // append the bridge after the sentence
+    $( `<a role="button" href="#${in_s_id}">${BRIDGE_ICON}</a>` ).insertAfter( $(`#${$bridge_start.attr("id")}`) );
+    $( `<a role="button" href="#${$bridge_start.attr("id")}">${BRIDGE_ICON}</a>` ).insertAfter( $(`#${in_s_id}`) );
+
     $("#bridge-container").hide();
     $bridge_start = null;
     $( ".banner" ).remove();
     
-    showViewer( $(b.parent()).attr("id") );
+    
 
     db.collection("papers").doc(FB_DOCNAME).set({
       bridges: bridges

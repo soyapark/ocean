@@ -112,10 +112,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // citation bridge
   $('a.bib').click(function(e) {
-    
     let s = $( e.target.parentElement ).attr("id");
-    $("#bib-bridge")
-      .append(`<a role="button" href="#${s}">${BRIDGE_ICON}</a>`);
+
+    if( $(`#${s}-${$(e.target).attr("href").substring(1)}`).length == 0 )   
+      $( `<a role="button" id="${s}-${$(e.target).attr("href").substring(1)}" href="#${s}">${BRIDGE_ICON}</a>` ).insertAfter( $(e.target).attr("href") );
   })
 });
 

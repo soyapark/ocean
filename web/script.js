@@ -7,7 +7,7 @@ let currentFocusedParagraph = null;
 let db;
 let FB_DOCNAME = ""
 
-let BRIDGE_ICON = `<img src="imgs/bridge.jpeg" width="50" alt="bridge"/>`;
+let BRIDGE_ICON = `<img src="imgs/bridge.jpeg" width="50" style="border-bottom: 5px solid blue;" alt="bridge"/>`;
 // let bridge_store=[{"bridge-id": "", "link": ""}];
 // TODO 
 
@@ -33,6 +33,21 @@ window.addEventListener('DOMContentLoaded', () => {
       if (doc.exists) {
           console.log("Document data:", doc.data());
           bridges = doc.data()["bridges"];
+
+          // append bridges container after every sentence
+          document.querySelectorAll('span.bridge-part').forEach(el => {
+            let p_id = $(el.parentElement).attr("id");
+            bridges
+              .filter(b => ((b[0]["p-id"] == p_id && b[0]["s-id"] == $(el).attr("id")) 
+                || (b[1]["p-id"] == p_id && b[1]["s-id"] == $(el).attr("id"))))
+                .map(b => {
+                  console.log(b);
+                  debugger;
+                  $( `<a role="button" href="#${b[0]["p-id"] == p_id ? b[1]["s-id"] : b[0]["s-id"]}">${BRIDGE_ICON}</a>` ).insertAfter( $(el) );
+                  return null;
+                });
+            
+          });
       } else {
           // doc.data() will be undefined in this case
           console.log("No such document!");
@@ -56,6 +71,8 @@ window.addEventListener('DOMContentLoaded', () => {
       });
       $(el).append(`<span class='observer-marker'></span>`);
   });
+
+
   
   // installing observer 
   document.querySelectorAll('.observer-marker').forEach((i) => {
@@ -76,19 +93,21 @@ window.addEventListener('DOMContentLoaded', () => {
     
     var text = getSelectedText();
     var node = getSelectedNode();
-    if (node && text.length) {
+    if (node && text.length) { // when people drag a text
       let paragraph_id = $(node.parentElement).attr("id");
       let sentence_id = $(node).attr("id");
       
       let banner;
-      // if user is working on a bridge
-      if($bridge_start) {
+      
+      if($bridge_start) { // if user is working on a bridge
         banner = `<span class='banner'><button type="button" onclick='addAnchor(${paragraph_id}, "${sentence_id}")'>⚓</button> <button type="button" onclick='$bridge_start = null;addBridge("${sentence_id}", "${text}")'>${BRIDGE_ICON}start</button> <button type="button" onclick='addBridge("${sentence_id}", "${text}")'>${BRIDGE_ICON}end</button></span>`;
       } else {
         banner = `<span class='banner'><button type="button" onclick='addAnchor(${paragraph_id}, ${sentence_id})'>⚓+</button> <button type="button" onclick='addBridge("${sentence_id}", "${text}")'>${BRIDGE_ICON}+</button></span>`
       }
       
       $(".sidebar").append(banner);
+    } else { // when people just click
+      
     }
     
   });
@@ -185,7 +204,7 @@ function detectCurrentParagraph(entries, observer, header)  {
          if(currentFocusedParagraph) {
            $(currentFocusedParagraph).addClass("focused");
            
-           showViewer( $(currentFocusedParagraph).attr("id") );
+          //  showViewer( $(currentFocusedParagraph).attr("id") );
          }
     })
 }
@@ -215,21 +234,21 @@ function jumpTo(in_dest) {
   window.scrollTo(0, top); 
 }
 
+// show existing bridges and anchors in this paragraph
 function showViewer(current_pid) {        
-           // show existing bridges and anchors in this paragraph
-           bridges.filter(b => [b[0]["p-id"], b[1]["p-id"]].includes(current_pid)) 
-             .map((b) => {
-               let new_bridge = $(`<a role="button" href="#${b[0]["p-id"] == current_pid ? b[1]["p-id"] : b[0]["p-id"]}">${BRIDGE_ICON}</a>`);
-               new_bridge.mouseover(function() {
-                 $(document.getElementById( b[0]["p-id"] == current_pid ? b[0]["s-id"] : b[1]["s-id"] )).addClass("bridge-hl");                 
-              }).mouseout(function() {
-                $(document.getElementById( b[0]["p-id"] == current_pid ? b[0]["s-id"] : b[1]["s-id"] )).removeClass("bridge-hl");
-              });
-               $(".sidebar .viewer").append(
-                 new_bridge
-               );
-               return null;
-             });
+  bridges.filter(b => [b[0]["p-id"], b[1]["p-id"]].includes(current_pid)) 
+    .map((b) => {
+      let new_bridge = $(`<a role="button" href="#${b[0]["p-id"] == current_pid ? b[1]["p-id"] : b[0]["p-id"]}">${BRIDGE_ICON}</a>`);
+      new_bridge.mouseover(function() {
+        $(document.getElementById( b[0]["p-id"] == current_pid ? b[0]["s-id"] : b[1]["s-id"] )).addClass("bridge-hl");                 
+     }).mouseout(function() {
+       $(document.getElementById( b[0]["p-id"] == current_pid ? b[0]["s-id"] : b[1]["s-id"] )).removeClass("bridge-hl");
+     });
+      $(".sidebar .viewer").append(
+        new_bridge
+      );
+      return null;
+    });
 }
 
 //Wrap selected text in  tags with the class 'hl'

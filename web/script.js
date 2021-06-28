@@ -11,6 +11,35 @@ let BRIDGE_ICON = `<img src="imgs/bridge.jpeg" width="50" style="border-bottom: 
 // let bridge_store=[{"bridge-id": "", "link": ""}];
 // TODO 
 
+
+$(document).ready(function () {
+  $(".bib-ref-num").hide();
+  $('.navbar').hover(function()
+  {
+    // alert();
+       // Mouse Over Callback
+       $("#bridge-container").css("visibility", 'visible');
+  
+  }, function()
+  { 
+       // Mouse Leave callback
+       $("#bridge-container").css("visibility", 'hidden');
+  });
+
+  // citation bridge
+  $('a.bib, a.fig, a.tbl, a.ourLink').click(function(e) {
+    // Get the section that is included in 
+    debugger;
+    // console.log($(e.target).parent('section').find('.title-info').text())
+
+    $(".bridge-snippet").html( `<a href="#${$(e.target).attr("id")}">${$(e.target).parents('section[id]:first').find('.title-info').text().trim()}</a>` );
+
+    // if( $(`#${s}-${$(e.target).attr("href").substring(1)}`).length == 0 )   
+    //   $( `<a role="button" id="${s}-${$(e.target).attr("href").substring(1)}" href="#${s}">${BRIDGE_ICON}</a>` ).insertAfter( $(e.target).attr("href") );
+  })
+});
+
+
 window.addEventListener('DOMContentLoaded', () => {
   // Your web app's Firebase configuration
     var firebaseConfig = {
@@ -110,13 +139,7 @@ window.addEventListener('DOMContentLoaded', () => {
     
   });
 
-  // citation bridge
-  $('a.bib, a.fig, a.tbl').click(function(e) {
-    let s = $( e.target.parentElement ).attr("id") || $(e.target).parents("[id]")[0].id;
-
-    if( $(`#${s}-${$(e.target).attr("href").substring(1)}`).length == 0 )   
-      $( `<a role="button" id="${s}-${$(e.target).attr("href").substring(1)}" href="#${s}">${BRIDGE_ICON}</a>` ).insertAfter( $(e.target).attr("href") );
-  })
+  
 });
 
 function addAnchor(in_part_id, in_subpart_id) {

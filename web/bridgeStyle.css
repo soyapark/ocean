@@ -20,3 +20,13 @@
 .ourLink:hover .hoverText {
   visibility: visible;
 }
+
+.ourLink .bumper {
+  visibility: hidden;
+  display:none;
+}
+
+.ourLink:hover .bumper {
+    visibility: visible;
+    display:contents;
+  }

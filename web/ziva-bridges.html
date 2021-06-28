@@ -10,10 +10,14 @@
     <link media="screen, print" rel="stylesheet" href="./ziva-original_files/bootstrap.min.css">
     <link media="screen, print" rel="stylesheet" href="./ziva-original_files/bootstrap-theme.min.css">
     <link media="screen, print" rel="stylesheet" href="./ziva-original_files/main.css">
+    <link rel="stylesheet" href="style.css">
     <link media="screen, print" rel="stylesheet" href="./bridgeStyle.css">
     <script src="./ziva-original_files/jquery.min.js.download" type="text/javascript"></script>
     <script src="./ziva-original_files/bootstrap.min.js.download" type="text/javascript"></script>
+    <script type="text/javascript" src="./script.js"></script>
     <script src="./utils.js" type="text/javascript"></script>
+
+    
     <!--<script src="./ziva-summary/bibCit.js.download" type="text/javascript"></script>
     <script src="./ziva-summary/divTab.js.download" type="text/javascript"></script>
     <script type="text/javascript" src="./ziva-summary/MathJax.js.download"></script>-->
@@ -683,9 +687,9 @@
             box-shadow: none;
         }
 
-            .panel-default > .panel-heading {
+        .panel-default > .panel-heading {
                 background: white;
-            }
+        }
 
         .panel-title a {
             text-decoration: none;
@@ -698,58 +702,73 @@
             margin-right: 5px;
         }
 
-            .material-switch > input[type="checkbox"] {
-                display: none;
-            }
+        .material-switch > input[type="checkbox"] {
+            display: none;
+        }
 
-            .material-switch > label {
-                cursor: pointer;
-                height: 0px;
-                position: relative;
-                width: 40px;
-            }
+        .material-switch > label {
+            cursor: pointer;
+            height: 0px;
+            position: relative;
+            width: 40px;
+        }
 
-                .material-switch > label::before {
-                    background: rgb(0, 0, 0);
-                    box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5);
-                    border-radius: 8px;
-                    content: '';
-                    height: 16px;
-                    margin-top: -8px;
-                    position: absolute;
-                    opacity: 0.3;
-                    transition: all 0.4s ease-in-out;
-                    width: 40px;
-                }
+        .material-switch > label::before {
+            background: rgb(0, 0, 0);
+            box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            content: '';
+            height: 16px;
+            margin-top: -8px;
+            position: absolute;
+            opacity: 0.3;
+            transition: all 0.4s ease-in-out;
+            width: 40px;
+        }
 
-                .material-switch > label::after {
-                    background: rgb(255, 255, 255);
-                    border-radius: 16px;
-                    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-                    content: '';
-                    height: 24px;
-                    left: -4px;
-                    margin-top: -8px;
-                    position: absolute;
-                    top: -4px;
-                    transition: all 0.3s ease-in-out;
-                    width: 24px;
-                }
+        .material-switch > label::after {
+            background: rgb(255, 255, 255);
+            border-radius: 16px;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+            content: '';
+            height: 24px;
+            left: -4px;
+            margin-top: -8px;
+            position: absolute;
+            top: -4px;
+            transition: all 0.3s ease-in-out;
+            width: 24px;
+        }
 
-            .material-switch > input[type="checkbox"]:checked + label::before {
-                background: inherit;
-                opacity: 0.5;
-            }
+        .material-switch > input[type="checkbox"]:checked + label::before {
+            background: inherit;
+            opacity: 0.5;
+        }
 
-            .material-switch > input[type="checkbox"]:checked + label::after {
-                background: inherit;
-                left: 20px;
-            }
+        .material-switch > input[type="checkbox"]:checked + label::after {
+            background: inherit;
+            left: 20px;
+        }
     </style>
 </head> 
  <body id="main">
      <!-- <div id="MathJax_Message" style="display: none;"></div><banner class="headerBanner"><table width="100%" role="presentation"><tbody><tr><td><div class="utilities-area"><div class="logo-section"><div class="show-for-large-up"><a class="navbar-brand" href="http://www.acm.org/"> <img alt="ACM Logo" class="img-responsive" src="./ziva-original_files/acm_logo.webp"></a></div><div class="hide-for-large-up"><a class="navbar-brand" href="http://www.acm.org/"> <img alt="ACM Logo" class="img-responsive" src="./ziva-original_files/acm_logo_mobile.webp"></a></div></div></div></td></tr><tr height="50px"><td align="left"><button class="ArtNav" id="ArtNav" onclick="openNav(this)" tabindex="0"><span aria-hidden="true">☰</span><span class="ArticleNavi"> Article Navigation</span></button></td></tr></tbody></table><banner<nav><div id="mySidenav" class="sidenav" aria-hidden="true" tabindex="-1" role="region" aria-labelledby="sidebar_title"><span id="sidebar_title" class="navHead" align="center">Article Navigation</span><a href="#" aria-label="Close article navigation" class="closebtn" onclick="closeNav(true)" tabindex="-1"><span aria-hidden="true">×</span></a><a href="#" class="navAbs" onclick="closeNav(false)" tabindex="-1">Abstract</a><hr><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-2"><span style="vertical-align: top;">1</span><span style="display:inline-block;margin-left:5px;width:80%">  INTRODUCTION</span></a><hr><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-3"><span style="vertical-align: top;">2</span><span style="display:inline-block;margin-left:5px;width:80%">  RELATED WORK</span></a><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-4"> <span style="vertical-align: top;">2.1</span><span style="display:inline-block;margin-left:5px;width:80%">  Data Science practices and collaboration</span></a><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-5"> <span style="vertical-align: top;">2.2</span><span style="display:inline-block;margin-left:5px;width:80%">  ML with domain experts</span></a><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-6"> <span style="vertical-align: top;">2.3</span><span style="display:inline-block;margin-left:5px;width:80%">  Technologies for knowledge sharing</span></a><hr><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-7"><span style="vertical-align: top;">3</span><span style="display:inline-block;margin-left:5px;width:80%">  PRELIMINARY INTERVIEW</span></a><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-8"> <span style="vertical-align: top;">3.1</span><span style="display:inline-block;margin-left:5px;width:80%">  Limited time and limited best practices</span></a><hr><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-9"><span style="vertical-align: top;">4</span><span style="display:inline-block;margin-left:5px;width:80%">  ZIVA: INTERFACE FOR ELICITING DOMAIN KNOWLEDGE</span></a><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-10"> <span style="vertical-align: top;">4.1</span><span style="display:inline-block;margin-left:5px;width:80%">  Representative sampling for instances creation</span></a><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-11"> <span style="vertical-align: top;">4.2</span><span style="display:inline-block;margin-left:5px;width:80%">  Concept creation</span></a><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-12"> <span style="vertical-align: top;">4.3</span><span style="display:inline-block;margin-left:5px;width:80%">  Justification-elicitation interface</span></a><hr><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-13"><span style="vertical-align: top;">5</span><span style="display:inline-block;margin-left:5px;width:80%">  EVALUATION ON DOMAIN EXPERTS’ EXPERIENCE</span></a><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-14"> <span style="vertical-align: top;">5.1</span><span style="display:inline-block;margin-left:5px;width:80%">  Lab study</span></a><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-15"> <span style="vertical-align: top;">5.2</span><span style="display:inline-block;margin-left:5px;width:80%">  Crowd Experiments</span></a><hr><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-16"><span style="vertical-align: top;">6</span><span style="display:inline-block;margin-left:5px;width:80%">  Data scientists interview study</span></a><hr><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-17"><span style="vertical-align: top;">7</span><span style="display:inline-block;margin-left:5px;width:80%">  DISCUSSION</span></a><hr><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-18"><span style="vertical-align: top;">8</span><span style="display:inline-block;margin-left:5px;width:80%">  CONCLUSION</span></a><hr><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-19"><span style="vertical-align: top;"></span><span style="display:inline-block;margin-left:5px;width:80%">ACKNOWLEDGMENTS</span></a><hr><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#ref-001"><span style="vertical-align: top;"></span><span style="display:inline-block;margin-left:5px;width:80%">REFERENCES</span></a></div></nav></banner>  -->
-     Reverse text and background color <input type="checkbox" onclick="reverseColor(event)">
+     <div style="margin-top: 100px;">
+        Reverse text and background color <input type="checkbox" onclick="reverseColor(event)">
+     </div>
+     <div class="navbar" style="width:100%">
+        <div id="move-container" style="display: none;"><select name="cars" id="cars">
+            <option value="volvo">⚓</option>
+            <option value="saab">Section</option>
+            <option value="mercedes">⚓ & Section</option>
+          </select> <button type="button" id="btn-go-prev" onClick="gotoNext(false)">⬅️ </button> <button type="button" id="btn-go-next" onClick="gotoNext(true)">➡️</button>
+        </div>
+        <div id="bridge-container" style="visibility: hidden;background: white;">
+            <img src="imgs/bridge.jpeg" width="50" alt="bridge" style="width: 30px;float: left;"/> <span class='bridge-snippet'>hello world</span>
+            <button class="close" onclick="cancelBridge()">X</button> 
+        </div>
+            
+          </div>
   <main> 
    <section class="front-matter"> 
     <section> 
@@ -824,12 +843,17 @@
        <h2> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">1</span></span> INTRODUCTION</h2> 
       </div> 
      </header> 
-     <p>In recent decades, <a id="Empirical1" href="#EXPERIMENT4" class="ourLink">machine learning (ML)<span class="hoverText">2 Related Work: "2.1 Silent Speech Recognition"</span></a> technologies have been sought out by an increasing number of professionals to automate their work tasks or augment their decision-making&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0083" data-original-title="" title="" id="auto-BibPLXBIB00831">83</a>]. Broad areas of applications are benefiting from integration of ML, such as healthcare&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0015" data-original-title="" title="" id="auto-BibPLXBIB00152">15</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0017" data-original-title="" title="" id="auto-BibPLXBIB00173">17</a>], finance&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0022" data-original-title="" title="" id="auto-BibPLXBIB00224">22</a>], employment&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0049" data-original-title="" title="" id="auto-BibPLXBIB00495">49</a>], and so on. However, building an ML model in a specialized domain is still expensive and time-consuming for at least two reasons. First, a common bottleneck in developing modern ML technologies is the requirement of a large quantity of labeled data. Second, many steps in an ML development pipeline, from problem definition to feature engineering to model debugging, necessitate an understanding of domain-specific knowledge and requirements. Data scientists therefore often require input from domain experts to obtain labeled data, to understand model requirements, to inspire feature engineering, and to get feedback on model behavior. In practice, such knowledge transfer between domain experts and data scientists is very much ad-hoc, with few standardized practices or proven effective approaches, and requires significant direct interaction between data scientists and domain experts. Building a high-quality legal, medical, or financial model will inevitably require a data scientist to consult with professionals in such domains. In practice, these are often costly and frustrating iterative conversations and labeling exercises that can go on for weeks and months, which usually still do not yield output in a form readily consumable by a model development pipeline.</p> 
-     <p>In this work, we set out to develop methods and interfaces that facilitate knowledge sharing from domain experts to data scientists for model development. We chose to focus on natural language processing (NLP) modeling tasks, and we are especially motivated by real-world cold-start scenarios where labeled data is small or nonexistent. Informed by a formative interview with data scientists regarding current practices and challenges of learning from domain experts, we developed a domain-knowledge acquisition interface <strong>Ziva</strong> (With <strong>Z</strong>ero knowledge, How do <strong>I</strong> de<strong>V</strong>elop <strong>A</strong> machine learning model?). Instead of a data-labeling tool, Ziva intends to provide a diverse set of elicitation methods to gather knowledge from domain experts, then present the results as a repository to data scientists to serve their domain understanding needs and to build ML models for specialized domains. Ziva scaffolds the knowledge sharing in desired formats and allows asynchronous exchange between domain experts and data scientists. It also allows flexible re-use of the knowledge repository for different modeling tasks in the domain.</p> 
-     <p>Specifically, informed by findings from the formative interview and requirements of NLP modeling tasks, Ziva focuses on eliciting key concepts in the text data of a domain (<tt>concept creation</tt>), and rationale justifying a label that a domain expert gives to a representative data instance (<tt>justification elicitation</tt>). In the current version of Ziva, we provide five different <tt>justification elicitation</tt> methods – bag of words, simplification, perturbation, concept bag of words, and concept annotation.</p> 
+     <p>In recent decades, machine learning (ML) technologies have been sought out by an increasing number of professionals to automate their work tasks or augment their decision-making&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0083" data-original-title="" title="" id="auto-BibPLXBIB00831">83</a>]. Broad areas of applications are benefiting from integration of ML, such as healthcare&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0015" data-original-title="" title="" id="auto-BibPLXBIB00152">15</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0017" data-original-title="" title="" id="auto-BibPLXBIB00173">17</a>], finance&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0022" data-original-title="" title="" id="auto-BibPLXBIB00224">22</a>], employment&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0049" data-original-title="" title="" id="auto-BibPLXBIB00495">49</a>], and so on. However, building an ML model in a specialized domain is still expensive and time-consuming for at least two reasons. First, a common bottleneck in developing modern ML technologies is the requirement of a large quantity of labeled data. Second, many steps in an ML development pipeline, from problem definition to feature engineering to model debugging, necessitate an understanding of domain-specific knowledge and requirements. Data scientists therefore <a id="intro1" href="#sec-5" class="ourLink">often require input from domain experts to obtain labeled data, to understand model requirements, to inspire feature engineering, and to get feedback on model behavior.<span class="hoverText">2 Related Work: "2.2 ML with domain experts"</span>
+    </a> 
+    <!-- <a id="intro1" href="#sec-5" class="ourLink">often require input from domain experts to obtain labeled data, to understand model requirements, to inspire feature engineering, and to get feedback on model behavior.<span class="bumper" ><br/></span>
+        <span class="hoverText">2 Related Work: "2.2 ML with domain experts"</span>
+   </a>  -->
+    In practice, such knowledge transfer between domain experts and data scientists is very much ad-hoc, with few standardized practices or proven effective approaches, and requires significant direct interaction between data scientists and domain experts. Building a high-quality legal, medical, or financial model will inevitably require a data scientist to consult with professionals in such domains. In practice, these are often costly and frustrating iterative conversations and labeling exercises that can go on for weeks and months, which usually still do not yield output in a form readily consumable by a model development pipeline.</p> 
+     <p>In this work, we set out to develop methods and interfaces that facilitate knowledge sharing from domain experts to data scientists for model development. We chose to focus on natural language processing (NLP) modeling tasks, and we are especially motivated by real-world cold-start scenarios where labeled data is small or nonexistent. <a id="intro2" href="#sec-7" class="ourLink">Informed by a formative interview<span class="hoverText">3 PRELIMINARY INTERVIEW</span></a> with data scientists regarding current practices and challenges of learning from domain experts, we developed a domain-knowledge acquisition interface <strong>Ziva</strong> (With <strong>Z</strong>ero knowledge, How do <strong>I</strong> de<strong>V</strong>elop <strong>A</strong> machine learning model?). Instead of a data-labeling tool, Ziva intends to provide a diverse set of <a id="intro3" href="#intro4" class="ourLink">elicitation methods<span class="hoverText">1 introduction</span></a> to gather knowledge from domain experts, then present the results as a repository to data scientists to serve their domain understanding needs and to build ML models for specialized domains. Ziva scaffolds the knowledge sharing in desired formats and allows asynchronous exchange between domain experts and data scientists. It also allows flexible re-use of the knowledge repository for different modeling tasks in the domain.</p> 
+     <p>Specifically, informed by findings from the formative interview and requirements of NLP modeling tasks, Ziva focuses on eliciting key concepts in the text data of a domain (<tt>concept creation</tt>), and rationale justifying a label that a domain expert gives to a representative data instance (<tt>justification elicitation</tt>). In the current version of Ziva, we provide five different <a id="intro4" href="#sec-12" class="ourLink"><tt>justification elicitation</tt> methods – bag of words, simplification, perturbation, concept bag of words, and concept annotation.<span class="hoverText">4.3 Justification-elicitation interface</span></a></p> 
      <p>To evaluate and inform future development of Ziva, we conducted a case study in assessment of its coupled design goals: 1) to provide an efficient and user-friendly experience for domain experts to supply domain knowledge; 2) to support data scientists building NLP models, especially in cold-start scenarios.</p> 
-     <p>We performed a lab study (N=12) and a crowd-deployment study (N=88) for participants to act as domain experts of a restaurant reviewing domain, and use Ziva to provide concepts and justification-based knowledge. We found the completion time and subjective workload using different elicitation methods varied. Interestingly, the popular keywords based justification (bag of words) approach led to higher self-reported task success but was considered more stressful.</p> 
-     <p>We conducted an interview study with 7 data scientists to investigate whether and how Ziva could help them build NLP models. Through the study, we identified design requirements for domain knowledge-sharing tools in ML development workflow – scalability of information and lowering workload for domain experts. Participants also reflected on how the shared domain knowledge facilitated by Ziva may be utilized, including bootstrapping labels, supporting feature engineering, improving explainability, and training few-shot learning models. Based on these suggestions, we experimented with building a rule-based model using the data from our user study, and report the outcomes using knowledge elicited with different methods. In summary, the contributions of the paper are as follows:</p> 
+     <p>We performed a <a id="introlabstudy" href="#sec-14" class="ourLink">lab study<span class="hoverText">5 EVALUATION ON DOMAIN EXPERTS’ EXPERIENCE "5.1 Lab study"</span></a> (N=12) and a <a id="intro-crowdstudy" href="#sec-15" class="ourLink">crowd-deployment study<span class="hoverText">5 EVALUATION ON DOMAIN EXPERTS’ EXPERIENCE "5.2 Crowd Experiments"</span></a> (N=88) for participants to act as domain experts of a restaurant reviewing domain, and use Ziva to provide concepts and justification-based knowledge. We found the completion time and subjective workload using different elicitation methods varied. Interestingly, the popular keywords based justification (bag of words) approach led to higher self-reported task success but was considered more stressful.</p> 
+     <p>We conducted <a id="intro-dsstudy" href="#sec-16" class="ourLink">an interview study<span class="hoverText">6 Data scientists interview study</span></a> with 7 data scientists to investigate whether and how Ziva could help them build NLP models. Through the study, we identified design requirements for domain knowledge-sharing tools in ML development workflow – scalability of information and lowering workload for domain experts. Participants also reflected on how the shared domain knowledge facilitated by Ziva may be utilized, including bootstrapping labels, supporting feature engineering, improving explainability, and training few-shot learning models. Based on these suggestions, <a id="intro-rulemodel" href="#rule-model" class="ourLink">we experimented with building a rule-based model using the data from our user study,<span class="hoverText">6 Data scientists interview study</span></a> and report the outcomes using knowledge elicited with different methods. In summary, the contributions of the paper are as follows:</p> 
      <ul class="list-no-style"> 
       <li id="list1" label="•">Through a formative interview with data scientists who built models in a specialized domain, we identified their under-supported needs to learn about a domain from domain experts.<br></li> 
       <li id="list2" label="•">We developed Ziva, a tool providing <tt>concept creation</tt> and five kinds of <tt>justification elicitation</tt> to gather domain knowledge from domain experts in formats that could help data scientists build NLP models.<br></li> 
@@ -1113,7 +1137,7 @@
      <p>One application of Ziva output mentioned by data scientists is to label more instances by generalizing <tt>concept</tt> and <tt>justification</tt>, so called <em>weak-supervised learning</em>&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0062" data-original-title="" title="" id="auto-BibPLXBIB006293">62</a>]. One interviewee said, <em>“They are trying to give me guidance on how to propagate the labels. So one, the concept is going to be able to give me some notion on how to bucket my data, right, like, just in an unsupervised fashion.”</em></p> 
      <p>Interviewees stressed the importance of domain knowledge in <em>feature engineering</em>. During meetings with domain experts, they focus on identifying features for their model: <em>“I immediately start looking at what are the different features or abstractions of features that seem to be important to the domain expert.”</em> However, data scientists expressed the difficulty of feature ideation in building models in a specialized domain. Repeat meetings were required to go over many instances together in hope of covering the complete set of features. 3 of interviewees said they would use Ziva output to facilitate feature engineering by using the concepts created by domain experts as features. A participant explained: <em>“Vector that we can convert each restaurant record into a some feature vector.”</em> When it comes to the best <tt>justification</tt> techniques for feature engineering, one said <em>“The one with the highest resolution would be more beneficial for feature learning potentially because it allow me to generalize better”</em>. One data scientist suggested that they can propagate the feature across different components (e.g., food/food quality, service) of the domain expert's concepts using <em>distributional signature</em>&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0013" data-original-title="" title="" id="auto-BibPLXBIB001394">13</a>]. For instance, in a restaurant domain, once they identified positive-sentiment words related to food, they can find similar sentiment of words related to service using the distribution of words.</p> 
      <p><em>Reduced burden on domain experts</em>. We also found data scientists were being mindful of domain experts’ cognitive load when they generated Ziva output, because domain experts were often busy. Another reason is if the eliciting <tt>justification</tt> is difficult, data scientists would not get a reliable result. One interviewee said: <em>“I would say there's also the question of what I think would be more easier for people, if it's difficult, then they're probably not going to do it very well. I wouldn't give it to them because I would think it's going to be more noisy.”</em></p> 
-     <p><em>Elicitation and learning outcomes</em>. To demonstrate the feasibility of translating the Ziva output into useful features for model building, we constructed a real implementation. Inspired by a use case suggested by a data scientist in our study, we built 5 models for weak-supervised learning, mimicking a real-world cold start scenario with extremely limited labeling resources and no pre-trained model available. With such constraints, no one can expect state-of-the-art performance after a few training examples. Instead, a valuable characteristic at this early stage is intra-class consistency, demonstrating parallel improvement in precision and recall performance on various classes (here, positive and negative sentiment). This would suggest that the model is indeed learning something relevant to the entire task rather than guessing wildly, and hints at a good robustness that can be reliably improved upon with additional examples. We therefore worked with rule models, which are both consistent and explainable, relatively simple for a human to construct, and need very little labeled data to generate candidate rules. However, the interviewed data scientists agreed that at scale, the extracted elicitations could serve as features for a variety of learning models.</p> 
+     <p><em><a id="rule-model" href="#intro-rulemodel" class="ourLink">Elicitation and learning outcomes<span class="hoverText">1 introduction</span></a></em>. To demonstrate the feasibility of translating the Ziva output into useful features for model building, we constructed a real implementation. Inspired by a use case suggested by a data scientist in our study, we built 5 models for weak-supervised learning, mimicking a real-world cold start scenario with extremely limited labeling resources and no pre-trained model available. With such constraints, no one can expect state-of-the-art performance after a few training examples. Instead, a valuable characteristic at this early stage is intra-class consistency, demonstrating parallel improvement in precision and recall performance on various classes (here, positive and negative sentiment). This would suggest that the model is indeed learning something relevant to the entire task rather than guessing wildly, and hints at a good robustness that can be reliably improved upon with additional examples. We therefore worked with rule models, which are both consistent and explainable, relatively simple for a human to construct, and need very little labeled data to generate candidate rules. However, the interviewed data scientists agreed that at scale, the extracted elicitations could serve as features for a variety of learning models.</p> 
      <p>Excepting the bag of words condition, the models primarily focused on recognizing the semantic pattern of ‘Noun is [not] Adjective’. Of course, this can take several forms (‘food is good’, ‘good food’, ‘food is not bad’, etc.) We built rule-based models that extend a generic semantic role labeling model [<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0006" data-original-title="" title="" id="auto-BibPLXBIB000695">6</a>] which can easily handle such variations. The generic model identifies all existing semantic roles, and the ten instances, annotated in each condition, are used to populate the dictionaries that those roles should match on (e.g., ‘food’ and ‘good’). In general, we were careful during model construction to not make any use of additional external knowledge (e.g., we do not know that ‘hot wings’ and ‘burgers’ are both a type of food, if this information was not in the output of Ziva.) Below we describe the details of each elicitation method and discuss the results, which are summarized in Table <a class="tbl" href="#tab4">4</a>:</p> 
      <div class="table-responsive" id="tab4"> 
       <div class="table-caption"> 

@@ -1,5 +1,5 @@
 body {
-  font-size: 50px;
+  /* font-size: 50px; */
   font-family: Verdana, Geneva, sans-serif;
 }
 
@@ -42,11 +42,14 @@ pre {
 
 .navbar {
   overflow: hidden;
-  background-color: white;
+  background-color: transparent;
   position: fixed;
   top: 0;
   width: 100%;
-  border-bottom: 5px solid black;
+  z-index: 99;
+  min-height: 30px;
+  max-height: 30px;
+  /* border-bottom: 5px solid black; */
 }
 
 .navbar select, .navbar button {
@@ -58,11 +61,11 @@ pre {
 }
 
 .navbar a {
-  float: left;
-  display: block;
+  /* float: left;
+  display: block; */
   color: #f2f2f2;
   text-align: center;
-  padding: 14px 16px;
+  /* padding: 14px 16px; */
   text-decoration: none;
   font-size: 17px;
 }
@@ -78,7 +81,9 @@ pre {
 }
 
 #bridge-container {
-  display: none;
+  /* display: none; */
+  background: white;
+  border-bottom: 5px solid black;
 }
 
 #container {
@@ -110,4 +115,8 @@ p.focused {
 
 span.bridge-hl {
   text-decoration: underline;
+}
+
+.bib-ref-num {
+  display:none;
 }

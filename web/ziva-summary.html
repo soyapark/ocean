@@ -674,63 +674,78 @@
         }
     </style>
     <style>
+        .panel {
+            border: none;
+        } 
+
+        .panel-default {
+            box-shadow: none;
+        }
+
+        .panel-default > .panel-heading {
+            background: white;
+        }
+
         .panel-title a {
             text-decoration: none;
             color: grey !important;
             font-weight: 100;
+            font-size: 11px;
         }
 
         .material-switch {
             margin-right: 5px;
         }
 
-            .material-switch > input[type="checkbox"] {
-                display: none;
-            }
+        .material-switch > input[type="checkbox"] {
+            display: none;
+        }
 
-            .material-switch > label {
-                cursor: pointer;
-                height: 0px;
-                position: relative;
+        .material-switch > label {
+            cursor: pointer;
+            height: 0px;
+            position: relative;
+            width: 40px;
+        }
+
+            .material-switch > label::before {
+                background: rgb(0, 0, 0);
+                box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5);
+                border-radius: 8px;
+                content: '';
+                height: 16px;
+                margin-top: -8px;
+                position: absolute;
+                opacity: 0.3;
+                transition: all 0.4s ease-in-out;
                 width: 40px;
             }
 
-                .material-switch > label::before {
-                    background: rgb(0, 0, 0);
-                    box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5);
-                    border-radius: 8px;
-                    content: '';
-                    height: 16px;
-                    margin-top: -8px;
-                    position: absolute;
-                    opacity: 0.3;
-                    transition: all 0.4s ease-in-out;
-                    width: 40px;
-                }
-
-                .material-switch > label::after {
-                    background: rgb(255, 255, 255);
-                    border-radius: 16px;
-                    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-                    content: '';
-                    height: 24px;
-                    left: -4px;
-                    margin-top: -8px;
-                    position: absolute;
-                    top: -4px;
-                    transition: all 0.3s ease-in-out;
-                    width: 24px;
-                }
-
-            .material-switch > input[type="checkbox"]:checked + label::before {
-                background: inherit;
-                opacity: 0.5;
+            .material-switch > label::after {
+                background: rgb(255, 255, 255);
+                border-radius: 16px;
+                box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+                content: '';
+                height: 24px;
+                left: -4px;
+                margin-top: -8px;
+                position: absolute;
+                top: -4px;
+                transition: all 0.3s ease-in-out;
+                width: 24px;
             }
 
-            .material-switch > input[type="checkbox"]:checked + label::after {
-                background: inherit;
-                left: 20px;
-            }
+        .material-switch > input[type="checkbox"]:checked + label::before {
+            background: inherit;
+            opacity: 0.5;
+        }
+
+        .material-switch > input[type="checkbox"]:checked + label::after {
+            background: inherit;
+            left: 20px;
+        }
+
+
     </style>
 </head> 
                                                                    <body id="main">
@@ -832,7 +847,7 @@
                                                                                                    <div class="panel-heading" role="tab" id="headingThree">
                                                                                                        <h6 class="panel-title">
                                                                                                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#a1" aria-expanded="false" aria-controls="collapseThree">
-                                                                                                               In recent decades, machine learning (ML) technologies have been sought out by an ...
+                                                                                                               In recent decades, machine learning (ML) technologies have been sought.. <u>load more</u>
                                                                                                            </a>
                                                                                                        </h6>
                                                                                                    </div>
@@ -849,7 +864,7 @@
                                                                                                    <div class="panel-heading" role="tab" id="headingThree">
                                                                                                        <h6 class="panel-title">
                                                                                                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#a2" aria-expanded="false" aria-controls="collapseThree">
-                                                                                                               Data scientists therefore often require input from domain experts to obtain labeled ...
+                                                                                                               Data scientists therefore often require input from domain experts.. <u>load more</u>
                                                                                                            </a>
                                                                                                        </h6>
                                                                                                    </div>
@@ -869,7 +884,7 @@
                                                                                                    <div class="panel-heading" role="tab" id="headingThree">
                                                                                                        <h6 class="panel-title">
                                                                                                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#a3" aria-expanded="false" aria-controls="collapseThree">
-                                                                                                               We chose to focus on natural language processing (NLP) modeling tasks, and we ...
+                                                                                                               We chose to focus on natural language processing (NLP) modeling tasks.. <u>load more</u>
                                                                                                            </a>
                                                                                                        </h6>
                                                                                                    </div>
@@ -890,7 +905,7 @@
                                                                                                    <div class="panel-heading" role="tab" id="headingThree">
                                                                                                        <h6 class="panel-title">
                                                                                                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#a4" aria-expanded="false" aria-controls="collapseThree">
-                                                                                                               We performed a lab study (N=12) and a crowd-deployment study (N=88) ...
+                                                                                                               We performed a lab study (N=12) and a crowd-deployment.. <u>load more</u>
                                                                                                            </a>
                                                                                                        </h6>
                                                                                                    </div>

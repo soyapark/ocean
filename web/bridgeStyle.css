@@ -1,4 +1,4 @@
-.ourLink {
+.ourLink, a.bib, a.tbl, a.fig {
   position: relative;
   background-color: #fffacd;
   color: black !important;

@@ -29,10 +29,14 @@ $(document).ready(function () {
   // citation bridge
   $('a.bib, a.fig, a.tbl, a.ourLink').click(function(e) {
     // Get the section that is included in 
-    debugger;
+    let goback_id;
+    if(e.target.nodeName == "SPAN")
+      goback_id = $(e.target.parentElement).attr("id");
+    else 
+      goback_id = $(e.target).attr("id");
     // console.log($(e.target).parent('section').find('.title-info').text())
 
-    $(".bridge-snippet").html( `<a href="#${$(e.target).attr("id")}">${$(e.target).parents('section[id]:first').find('.title-info').text().trim()}</a>` );
+    $(".bridge-snippet").html( `<a href="#${goback_id}">${$(e.target).parents('section[id]:first').find('.title-info').text().trim()}</a>` );
 
     // if( $(`#${s}-${$(e.target).attr("href").substring(1)}`).length == 0 )   
     //   $( `<a role="button" id="${s}-${$(e.target).attr("href").substring(1)}" href="#${s}">${BRIDGE_ICON}</a>` ).insertAfter( $(e.target).attr("href") );

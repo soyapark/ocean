@@ -1,5 +1,10 @@
 ﻿$(document).ready(function () {
     $('.summary-text').hide();
+
+    $('.load-less').click(function(e) {
+        $(e.target).parents(".collapse").collapse("hide");
+        
+    })
 });
 
 function switchSummary(e) {

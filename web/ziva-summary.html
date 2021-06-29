@@ -685,13 +685,15 @@
 
         .panel-default > .panel-heading {
             background: white;
+            padding: 0;
         }
 
         .panel-title a {
             text-decoration: none;
             color: grey !important;
-            font-weight: 100;
-            font-size: 11px;
+            font-style: normal;
+            font-weight: normal;
+            font-family: stix,Georgia,serif;
         }
 
         .material-switch {
@@ -709,32 +711,32 @@
             width: 40px;
         }
 
-            .material-switch > label::before {
-                background: rgb(0, 0, 0);
-                box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5);
-                border-radius: 8px;
-                content: '';
-                height: 16px;
-                margin-top: -8px;
-                position: absolute;
-                opacity: 0.3;
-                transition: all 0.4s ease-in-out;
-                width: 40px;
-            }
+        .material-switch > label::before {
+            background: rgb(0, 0, 0);
+            box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            content: '';
+            height: 16px;
+            margin-top: -8px;
+            position: absolute;
+            opacity: 0.3;
+            transition: all 0.4s ease-in-out;
+            width: 40px;
+        }
 
-            .material-switch > label::after {
-                background: rgb(255, 255, 255);
-                border-radius: 16px;
-                box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-                content: '';
-                height: 24px;
-                left: -4px;
-                margin-top: -8px;
-                position: absolute;
-                top: -4px;
-                transition: all 0.3s ease-in-out;
-                width: 24px;
-            }
+        .material-switch > label::after {
+            background: rgb(255, 255, 255);
+            border-radius: 16px;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+            content: '';
+            height: 24px;
+            left: -4px;
+            margin-top: -8px;
+            position: absolute;
+            top: -4px;
+            transition: all 0.3s ease-in-out;
+            width: 24px;
+        }
 
         .material-switch > input[type="checkbox"]:checked + label::before {
             background: inherit;
@@ -856,10 +858,12 @@
                                     <div id="a1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
                                         <div class="panel-body">
                                             In recent decades, machine learning (ML) technologies have been sought out by an increasing number of professionals to automate their work tasks or augment their decision-making&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0083" data-original-title="" title="" id="auto-BibPLXBIB00831">83</a>]. Broad areas of applications are benefiting from integration of ML, such as healthcare&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0015" data-original-title="" title="" id="auto-BibPLXBIB00152">15</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0017" data-original-title="" title="" id="auto-BibPLXBIB00173">17</a>], finance&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0022" data-original-title="" title="" id="auto-BibPLXBIB00224">22</a>], employment&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0049" data-original-title="" title="" id="auto-BibPLXBIB00495">49</a>], and so on. However, building an ML model in a specialized domain is still expensive and time-consuming for at least two reasons.
+                                            <u class="load-less">load less</u>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            
                             First, a common bottleneck in developing modern ML technologies is the requirement of a large quantity of labeled data. Second, many steps in an ML development pipeline, from problem definition to feature engineering to model debugging, necessitate an understanding of domain-specific knowledge and requirements.
                             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                                 <div class="panel panel-default">
@@ -873,6 +877,7 @@
                                     <div id="a2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
                                         <div class="panel-body">
                                             Data scientists therefore often require input from domain experts to obtain labeled data, to understand model requirements, to inspire feature engineering, and to get feedback on model behavior. In practice, such knowledge transfer between domain experts and data scientists is very much ad-hoc, with few standardized practices or proven effective approaches, and requires significant direct interaction between data scientists and domain experts. Building a high-quality legal, medical, or financial model will inevitably require a data scientist to consult with professionals in such domains. In practice, these are often costly and frustrating iterative conversations and labeling exercises that can go on for weeks and months, which usually still do not yield output in a form readily consumable by a model development pipeline.
+                                            <u class="load-less">load less</u>
                                         </div>
                                     </div>
                                 </div>
@@ -894,6 +899,7 @@
                                         <div class="panel-body">
                                             We chose to focus on natural language processing (NLP) modeling tasks, and we are especially motivated by real-world cold-start scenarios where labeled data is small or nonexistent. Informed by a formative interview with data scientists regarding current practices and challenges of learning from domain experts, we developed a domain-knowledge acquisition interface <strong>Ziva</strong> (With <strong>Z</strong>ero knowledge, How do <strong>I</strong> de<strong>V</strong>elop <strong>A</strong> machine learning model?). Instead of a data-labeling tool, Ziva intends to provide a diverse set of elicitation methods to gather knowledge from domain experts, then present the results as a repository to data scientists to serve their domain understanding needs and to build ML models for specialized domains. Ziva scaffolds the knowledge sharing in desired formats and allows asynchronous exchange between domain experts and data scientists. It also allows flexible re-use of the knowledge repository for different modeling tasks in the domain.<br /><br />
                                             Specifically, informed by findings from the formative interview and requirements of NLP modeling tasks,
+                                            <u class="load-less">load less</u>
                                         </div>
                                     </div>
                                 </div>
@@ -915,6 +921,7 @@
                                         <div class="panel-body">
                                             We performed a lab study (N=12) and a crowd-deployment study (N=88) for participants to act as domain experts of a restaurant reviewing domain, and use Ziva to provide concepts and justification-based knowledge. We found the completion time and subjective workload using different elicitation methods varied. Interestingly, the popular keywords based justification (bag of words) approach led to higher self-reported task success but was considered more stressful. <br /><br />
                                             We conducted an interview study with 7 data scientists to investigate whether and how Ziva could help them build NLP models. Through the study, we identified design requirements for domain knowledge-sharing tools in ML development workflow – scalability of information and lowering workload for domain experts. Participants also reflected on how the shared domain knowledge facilitated by Ziva may be utilized, including bootstrapping labels, supporting feature engineering, improving explainability, and training few-shot learning models. Based on these suggestions, we experimented with building a rule-based model using the data from our user study, and report the outcomes using knowledge elicited with different methods.
+                                            <u class="load-less">load less</u>
                                         </div>
                                     </div>
                                 </div>

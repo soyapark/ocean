@@ -49,7 +49,7 @@ pre {
   z-index: 99;
   min-height: 30px;
   max-height: 30px;
-  /* border-bottom: 5px solid black; */
+  border-top: 5px solid black;
 }
 
 .navbar select, .navbar button {

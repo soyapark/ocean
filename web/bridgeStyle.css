@@ -8,7 +8,7 @@
 .ourLink .hoverText {
   visibility: hidden;
   width: 200px;
-  background-color: black;
+  background-color: grey;
   color: #fff;
   text-align: center;
   border-radius: 6px;

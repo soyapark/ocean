@@ -40,7 +40,7 @@ $(document).ready(function () {
         // console.log($(e.target).parent('section').find('.title-info').text())
 
         $(".bridge-snippet").html( `<a href="#${goback_id}">${$(e.target).parents('section[id]:first').find('.title-info').text().trim()}</a>` );
-
+        
         addNewTab($(target_id).position().top - 10);
     })
 
@@ -75,7 +75,10 @@ $(document).ready(function () {
 
   var addNewTab = function(loc=0) {
     tabID++;
-    $('#tab-list').append($('<li><a href="#paper-tab' + tabID + '" role="tab" data-toggle="tab"><span>Tab ' + tabID + '</span> <span class="glyphicon glyphicon-pencil text-muted edit"></span> <button class="close" type="button" title="Remove this page">×</button></a></li>'));
+
+    // append the new tab right after the main tab
+    $('<li><a href="#paper-tab' + tabID + '" role="tab" data-toggle="tab"><span>Tab ' + tabID + '</span> <span class="glyphicon glyphicon-pencil text-muted edit"></span> <button class="close" type="button" title="Remove this page">×</button></a></li>')
+        .insertAfter('#tab-list li:first');
     $('#tab-content').append($('<div class="tab-pane fade" id="paper-tab' + tabID + '"></div>'));
     $(".edit").click(editHandler);
 

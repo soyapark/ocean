@@ -1,10 +1,11 @@
 function reverseColor(e) {
   if(e.target.checked) {
-    $("body").css("background", "black")
-      .css("color", "white");
+      $("body, .panel, .panel-default > .panel-heading").css("background", "black")
+          .css("color", "white");
+      
   }
   else {
-    $("body").css("background", "white")
-      .css("color", "black");
+      $("body, .panel, .panel-default > .panel-heading").css("background", "white")
+        .css("color", "black");
   }
 }

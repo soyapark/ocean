@@ -91,7 +91,7 @@ $(document).ready(function () {
     t.css("visibility", "hidden");
     $(this).prev().attr("contenteditable", "true").focusout(function() {
       $(this).removeAttr("contenteditable").off("focusout");
-      t.css("visibility", "visible");
+      t.css("visibility", "inherit");
     });
   };
   

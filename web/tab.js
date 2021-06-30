@@ -2,7 +2,6 @@ $(document).ready(function () {
     $(".bib-ref-num").hide();
     $('.navbar').hover(function()
     {
-      // alert();
          // Mouse Over Callback
          $("#tab-list").css("visibility", 'visible');
     
@@ -21,20 +20,40 @@ $(document).ready(function () {
         e.target // newly activated tab
         e.relatedTarget // previous active tab
     });
+
+    // citation bridge
+    $('a.bib, a.fig, a.tbl, a.ourLink').click(function(e) {
+        e.preventDefault();
+
+        // Get the section that is included in 
+        let goback_id, target_id;
+        if(e.target.nodeName == "SPAN"){
+            goback_id = $(e.target.parentElement).attr("id");
+            target_id = $(e.target.parentElement).attr("href");
+        }
+            
+        else {
+            goback_id = $(e.target).attr("id");
+            target_id = $(e.target).attr("href");
+        }
+            
+        // console.log($(e.target).parent('section').find('.title-info').text())
+
+        $(".bridge-snippet").html( `<a href="#${goback_id}">${$(e.target).parents('section[id]:first').find('.title-info').text().trim()}</a>` );
+
+        addNewTab($(target_id).position().top - 10);
+    })
+
+    $('body').on('keypress', function (event) {
+        if (event.keyCode === 10 || event.keyCode === 13) {
+            return false;
+        }
+    });
   });
 
   var button='<button class="close" type="button" title="Remove this page">×</button>';
   var tabID = 1;
   var scrollTab = [0];
-  function resetTab(){
-      var tabs=$("#tab-list li:not(:first)");
-      var len=1
-      $(tabs).each(function(k,v){
-          len++;
-          $(this).find('a').html('Tab ' + len + button);
-      })
-      tabID--;
-  }
   
   $(document).ready(function() {
       $('#btn-add-tab').click(function() {
@@ -48,20 +67,23 @@ $(document).ready(function () {
   
           //display first tab
           var tabFirst = $('#tab-list a:first');
-          resetTab();
           tabFirst.tab('show');
       });
   
       var list = document.getElementById("tab-list");
   });
 
-  var addNewTab = function() {
+  var addNewTab = function(loc=0) {
     tabID++;
     $('#tab-list').append($('<li><a href="#paper-tab' + tabID + '" role="tab" data-toggle="tab"><span>Tab ' + tabID + '</span> <span class="glyphicon glyphicon-pencil text-muted edit"></span> <button class="close" type="button" title="Remove this page">×</button></a></li>'));
     $('#tab-content').append($('<div class="tab-pane fade" id="paper-tab' + tabID + '"></div>'));
     $(".edit").click(editHandler);
 
-    scrollTab.push(0);
+    scrollTab.push(loc);
+
+    var newTab = $(`#tab-list a[href="#paper-tab${tabID}"]`);
+    newTab.tab('show');
+
   };
   
   var editHandler = function() {
@@ -74,3 +96,5 @@ $(document).ready(function () {
   };
   
   $(".edit").click(editHandler);
+
+  

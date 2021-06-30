@@ -3179,7 +3179,7 @@ hr{
     }
 }
 .nav-open{
-    cursor:pointer;
+    cursor: default;
     top:0;
     text-decoration:underline
 }

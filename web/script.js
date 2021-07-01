@@ -42,13 +42,18 @@ $(document).ready(function () {
     //   $( `<a role="button" id="${s}-${$(e.target).attr("href").substring(1)}" href="#${s}">${BRIDGE_ICON}</a>` ).insertAfter( $(e.target).attr("href") );
   })
 
-    // citation bridge
+    // going back to bridge
     $("body").on("click", ".bridge-return", function (e) {
-        debugger;
         e.preventDefault();
 
         $(window).scrollTop( $($(e.target).attr("href")).position().top - 30 );
     })
+
+    $('body').on('keypress', function (event) {
+        if (event.key === "b") {
+            $("a.bridge-return").click();
+        }
+    });
 });
 
 

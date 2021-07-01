@@ -47,7 +47,8 @@ $(document).ready(function () {
     $('body').on('keypress', function (event) {
         if (event.keyCode === 10 || event.keyCode === 13) {
             return false;
-        }
+        } 
+
     });
   });
 

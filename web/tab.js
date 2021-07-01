@@ -1,6 +1,6 @@
 $(document).ready(function () {
     $(".bib-ref-num").hide();
-    $('.navbar').hover(function()
+    /*$('.navbar').hover(function()
     {
          // Mouse Over Callback
          $("#tab-list").css("visibility", 'visible');
@@ -9,7 +9,7 @@ $(document).ready(function () {
     { 
          // Mouse Leave callback
          $("#tab-list").css("visibility", 'hidden');
-    });
+    });*/
 
     $('body').on('shown.bs.tab', 'a[data-toggle="tab"]', function(e) {
         // click to another tab

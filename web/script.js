@@ -14,7 +14,7 @@ let BRIDGE_ICON = `<img src="imgs/bridge.jpeg" width="50" style="border-bottom: 
 
 $(document).ready(function () {
   $(".bib-ref-num").hide();
-  $('.navbar').hover(function()
+  /*$('.navbar').hover(function()
   {
     // alert();
        // Mouse Over Callback
@@ -24,7 +24,7 @@ $(document).ready(function () {
   { 
        // Mouse Leave callback
        $("#bridge-container").css("visibility", 'hidden');
-  });
+  });*/
 
   // citation bridge
   $('a.bib, a.fig, a.tbl, a.ourLink').click(function(e) {
@@ -36,11 +36,19 @@ $(document).ready(function () {
       goback_id = $(e.target).attr("id");
     // console.log($(e.target).parent('section').find('.title-info').text())
 
-    $(".bridge-snippet").html( `<a href="#${goback_id}">${$(e.target).parents('section[id]:first').find('.title-info').text().trim()}</a>` );
+    $(".bridge-snippet").html( `<a class="bridge-return" href="#${goback_id}">${$(e.target).parents('section[id]:first').find('.title-info').text().trim()}</a>` );
 
     // if( $(`#${s}-${$(e.target).attr("href").substring(1)}`).length == 0 )   
     //   $( `<a role="button" id="${s}-${$(e.target).attr("href").substring(1)}" href="#${s}">${BRIDGE_ICON}</a>` ).insertAfter( $(e.target).attr("href") );
   })
+
+    // citation bridge
+    $("body").on("click", ".bridge-return", function (e) {
+        debugger;
+        e.preventDefault();
+
+        $(window).scrollTop( $($(e.target).attr("href")).position().top - 30 );
+    })
 });
 
 

@@ -14,7 +14,7 @@ let BRIDGE_ICON = `<img src="imgs/bridge.jpeg" width="50" style="border-bottom: 
 
 $(document).ready(function () {
   $(".bib-ref-num").hide();
-  $('.navbar').hover(function()
+  /*$('.navbar').hover(function()
   {
     // alert();
        // Mouse Over Callback
@@ -24,23 +24,58 @@ $(document).ready(function () {
   { 
        // Mouse Leave callback
        $("#bridge-container").css("visibility", 'hidden');
-  });
+  });*/
 
   // citation bridge
-  $('a.bib, a.fig, a.tbl, a.ourLink').click(function(e) {
-    // Get the section that is included in 
-    let goback_id;
-    if(e.target.nodeName == "SPAN")
-      goback_id = $(e.target.parentElement).attr("id");
-    else 
-      goback_id = $(e.target).attr("id");
-    // console.log($(e.target).parent('section').find('.title-info').text())
+    $('a.bib, a.fig, a.tbl, a.ourLink').click(function (e) {
+        // Get the section that is included in 
+        let goback_id;
+        if(e.target.nodeName == "SPAN")
+            goback_id = $(e.target.parentElement).attr("id");
+        else 
+            goback_id = $(e.target).attr("id");
 
-    $(".bridge-snippet").html( `<a href="#${goback_id}">${$(e.target).parents('section[id]:first').find('.title-info').text().trim()}</a>` );
+        if ($(e.target).hasClass("bib")) {
+            // get element right before the bridge start
+            let current_element_index = $(e.target.parentElement).contents().index(e.target);
 
-    // if( $(`#${s}-${$(e.target).attr("href").substring(1)}`).length == 0 )   
-    //   $( `<a role="button" id="${s}-${$(e.target).attr("href").substring(1)}" href="#${s}">${BRIDGE_ICON}</a>` ).insertAfter( $(e.target).attr("href") );
-  })
+            try {
+                $(".bridge-snippet").html(
+                    `<a class="bridge-return" href="#${goback_id}">
+                        ${$(e.target.parentElement).contents().slice(0, current_element_index).get().map(n => n.textContent).join("").split(" ").slice(-10).join(" ")}
+                    </a>`
+                );
+            } catch (e) {
+                $(".bridge-snippet").html(c.wholeText.slice(-40, -1));
+            }
+            
+        } else {
+            $(".bridge-snippet").html(
+                `<a class="bridge-return" href="#${goback_id}">
+                    ${$("#" + goback_id).text().split(" ").slice(0, 10).join(" ")}
+                </a>`
+            );
+        }
+            
+
+        
+
+        // if( $(`#${s}-${$(e.target).attr("href").substring(1)}`).length == 0 )   
+        //   $( `<a role="button" id="${s}-${$(e.target).attr("href").substring(1)}" href="#${s}">${BRIDGE_ICON}</a>` ).insertAfter( $(e.target).attr("href") );
+      })
+
+    // going back to bridge
+    $("body").on("click", ".bridge-return", function (e) {
+        e.preventDefault();
+
+        $(window).scrollTop( $($(e.target).attr("href")).position().top - 30 );
+    })
+
+    $('body').on('keypress', function (event) {
+        if (event.key === "b") {
+            $("a.bridge-return").click();
+        }
+    });
 });
 
 

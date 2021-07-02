@@ -756,17 +756,9 @@
         <div style="margin-top: 100px;">
             Reverse text and background color <input type="checkbox" onclick="reverseColor(event)">
         </div>
-        <div class="navbar" style="width:100%">
-            <div id="move-container" style="display: none;"><select name="cars" id="cars">
-                <option value="volvo">⚓</option>
-                <option value="saab">Section</option>
-                <option value="mercedes">⚓ & Section</option>
-                </select> <button type="button" id="btn-go-prev" onClick="gotoNext(false)">⬅️ </button> <button type="button" id="btn-go-next" onClick="gotoNext(true)">➡️</button>
-            </div>
-            <div id="bridge-container" style="visibility: hidden;background: white;">
-                <img src="imgs/bridge.jpeg" width="50" alt="bridge" style="width: 30px;float: left;"/> <span class='bridge-snippet'></span>
-                <button class="close" onclick="cancelBridge()">X</button> 
-            </div>
+        <div id="bridge-container" style="background: white;">
+            <img src="imgs/bridge.jpeg" width="50" alt="bridge" style="width: 30px;float: left;"/> <span class='bridge-snippet'></span>
+            <button class="close" onclick="cancelBridge()">X</button> 
         </div>
   <main> 
    <section class="front-matter"> 

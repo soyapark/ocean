@@ -10,9 +10,10 @@
     <link media="screen, print" rel="stylesheet" href="./ziva-summary/bootstrap.min.css">
     <link media="screen, print" rel="stylesheet" href="./ziva-summary/bootstrap-theme.min.css">
     <link media="screen, print" rel="stylesheet" href="./ziva-summary/main.css">
+    <link rel="stylesheet" href="style.css">
     <script src="./ziva-summary/jquery.min.js.download" type="text/javascript"></script>
     <script src="./ziva-summary/bootstrap.min.js.download" type="text/javascript"></script>
-    <script src="./ziva-summary/app.js" type="text/javascript"></script>
+    <script src="./summary.js" type="text/javascript"></script>
     <script src="./utils.js" type="text/javascript"></script>
     <!--<script src="./ziva-summary/bibCit.js.download" type="text/javascript"></script>
     <script src="./ziva-summary/divTab.js.download" type="text/javascript"></script>
@@ -754,7 +755,32 @@
     <body id="main">
         Reverse text and background color <input type="checkbox" onclick="reverseColor(event)">
         <!-- <div id="MathJax_Message" style="display: none;"></div><banner class="headerBanner"><table width="100%" role="presentation"><tbody><tr><td><div class="utilities-area"><div class="logo-section"><div class="show-for-large-up"><a class="navbar-brand" href="http://www.acm.org/"> <img alt="ACM Logo" class="img-responsive" src="./ziva-summary/acm_logo.webp"></a></div><div class="hide-for-large-up"><a class="navbar-brand" href="http://www.acm.org/"> <img alt="ACM Logo" class="img-responsive" src="./ziva-summary/acm_logo_mobile.webp"></a></div></div></div></td></tr><tr height="50px"><td align="left"><button class="ArtNav" id="ArtNav" onclick="openNav(this)" tabindex="0"><span aria-hidden="true">☰</span><span class="ArticleNavi"> Article Navigation</span></button></td></tr></tbody></table><banner<nav><div id="mySidenav" class="sidenav" aria-hidden="true" tabindex="-1" role="region" aria-labelledby="sidebar_title"><span id="sidebar_title" class="navHead" align="center">Article Navigation</span><a href="#" aria-label="Close article navigation" class="closebtn" onclick="closeNav(true)" tabindex="-1"><span aria-hidden="true">×</span></a><a href="#" class="navAbs" onclick="closeNav(false)" tabindex="-1">Abstract</a><hr><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-2"><span style="vertical-align: top;">1</span><span style="display:inline-block;margin-left:5px;width:80%">  INTRODUCTION</span></a><hr><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-3"><span style="vertical-align: top;">2</span><span style="display:inline-block;margin-left:5px;width:80%">  RELATED WORK</span></a><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-4"> <span style="vertical-align: top;">2.1</span><span style="display:inline-block;margin-left:5px;width:80%">  Data Science practices and collaboration</span></a><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-5"> <span style="vertical-align: top;">2.2</span><span style="display:inline-block;margin-left:5px;width:80%">  ML with domain experts</span></a><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-6"> <span style="vertical-align: top;">2.3</span><span style="display:inline-block;margin-left:5px;width:80%">  Technologies for knowledge sharing</span></a><hr><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-7"><span style="vertical-align: top;">3</span><span style="display:inline-block;margin-left:5px;width:80%">  PRELIMINARY INTERVIEW</span></a><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-8"> <span style="vertical-align: top;">3.1</span><span style="display:inline-block;margin-left:5px;width:80%">  Limited time and limited best practices</span></a><hr><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-9"><span style="vertical-align: top;">4</span><span style="display:inline-block;margin-left:5px;width:80%">  ZIVA: INTERFACE FOR ELICITING DOMAIN KNOWLEDGE</span></a><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-10"> <span style="vertical-align: top;">4.1</span><span style="display:inline-block;margin-left:5px;width:80%">  Representative sampling for instances creation</span></a><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-11"> <span style="vertical-align: top;">4.2</span><span style="display:inline-block;margin-left:5px;width:80%">  Concept creation</span></a><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-12"> <span style="vertical-align: top;">4.3</span><span style="display:inline-block;margin-left:5px;width:80%">  Justification-elicitation interface</span></a><hr><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-13"><span style="vertical-align: top;">5</span><span style="display:inline-block;margin-left:5px;width:80%">  EVALUATION ON DOMAIN EXPERTS’ EXPERIENCE</span></a><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-14"> <span style="vertical-align: top;">5.1</span><span style="display:inline-block;margin-left:5px;width:80%">  Lab study</span></a><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-15"> <span style="vertical-align: top;">5.2</span><span style="display:inline-block;margin-left:5px;width:80%">  Crowd Experiments</span></a><hr><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-16"><span style="vertical-align: top;">6</span><span style="display:inline-block;margin-left:5px;width:80%">  Data scientists interview study</span></a><hr><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-17"><span style="vertical-align: top;">7</span><span style="display:inline-block;margin-left:5px;width:80%">  DISCUSSION</span></a><hr><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-18"><span style="vertical-align: top;">8</span><span style="display:inline-block;margin-left:5px;width:80%">  CONCLUSION</span></a><hr><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#sec-19"><span style="vertical-align: top;"></span><span style="display:inline-block;margin-left:5px;width:80%">ACKNOWLEDGMENTS</span></a><hr><a class="navLista" onclick="closeNav(false)" style="display:list-item;" tabindex="-1" href="#ref-001"><span style="vertical-align: top;"></span><span style="display:inline-block;margin-left:5px;width:80%">REFERENCES</span></a></div></nav></banner> -->
-
+        <div class="navbar" style="width:100%">
+            <div id="move-container" style="display: none;">
+                <select name="cars" id="cars">
+                    <option value="volvo">⚓</option>
+                    <option value="saab">Section</option>
+                    <option value="mercedes">⚓ & Section</option>
+                </select> 
+                <button type="button" id="btn-go-prev" onClick="gotoNext(false)">⬅️ </button> <button type="button" id="btn-go-next" onClick="gotoNext(true)">➡️</button>
+            </div>
+            <div id="bridge-container" style="visibility: hidden;background: white;">
+                <nav style="min-height: 20px; height:25px; background: white; border: 0;" class="navbar navbar-default">
+                    <div class="navbar-inner navbar-content-center" style="float:left;">
+                        <div class="material-switch">
+                            <input id="someSwitchOptionPrimary" name="someSwitchOption001" type="checkbox" onchange="switchSummary(event)"/>
+                            <label for="someSwitchOptionPrimary" class="label-primary"></label>
+                        </div>
+                        <!--<p style="margin-bottom:0px" class="text-muted credit">Summary: on /off </p>-->
+                    </div>
+                    <select name="cars" id="cars">
+                        <option value="volvo">high level</option>
+                        <option value="saab">system</option>
+                        <option value="mercedes">experiment</option>
+                    </select> 
+                </nav>
+            </div>
+        </div>
         <main>
             <section class="front-matter">
                 <section>
@@ -1458,17 +1484,5 @@
             </section>
         </main>
         <script defer="" src="./ziva-summary/beacon.min.js.download" data-cf-beacon="{&quot;rayId&quot;:&quot;664efa1898551c00&quot;,&quot;token&quot;:&quot;b7f168b3cd354a55a4dd51b513830799&quot;,&quot;version&quot;:&quot;2021.5.2&quot;,&quot;si&quot;:10}"></script>
-
-        <div id="footer" class="container">
-            <nav style="min-height: 20px; height: 20px; background: transparent; border: 0;" class="navbar navbar-default navbar-fixed-bottom">
-                <div class="navbar-inner navbar-content-center">
-                    <div class="material-switch pull-right">
-                        <input id="someSwitchOptionPrimary" name="someSwitchOption001" type="checkbox" onchange="switchSummary(event)"/>
-                        <label for="someSwitchOptionPrimary" class="label-primary"></label>
-                    </div>
-                    <!--<p style="margin-bottom:0px" class="text-muted credit">Summary: on /off </p>-->
-                </div>
-            </nav>
-        </div>
     </body>
 </html>

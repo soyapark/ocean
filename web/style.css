@@ -53,7 +53,8 @@ pre {
 }
 
 .navbar select, .navbar button {
-  font-size: 50px;
+  /* font-size: 50px; */
+  float:left;
 }
 
 .navbar.closed {
@@ -83,7 +84,7 @@ pre {
 #bridge-container {
   /* display: none; */
   background: white;
-  border-bottom: 5px solid black;
+  /* border-bottom: 5px solid black; */
 }
 
 #container {

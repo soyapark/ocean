@@ -3,8 +3,20 @@
 
     $('.load-less').click(function(e) {
         $(e.target).parents(".collapse").collapse("hide");
-        
-    })
+    });
+
+    $('.navbar').hover(function()
+    {
+      // alert();
+         // Mouse Over Callback
+         $("#bridge-container").css("visibility", 'visible');
+    
+    }, function()
+    { 
+         // Mouse Leave callback
+         $("#bridge-container").css("visibility", 'hidden');
+    });
+  
 });
 
 function switchSummary(e) {

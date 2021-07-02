@@ -14,7 +14,6 @@ $(document).ready(function () {
     $('body').on('shown.bs.tab', 'a[data-toggle="tab"]', function(e) {
         // click to another tab
         // scroll down to the previous position at the tab
-        debugger;
         scrollTab[$(e.relatedTarget).attr("href").split("-tab")[1] - 1] = $(window).scrollTop();
         $(window).scrollTop(scrollTab[$(e.target).attr("href").split("-tab")[1] - 1]);
         e.target // newly activated tab

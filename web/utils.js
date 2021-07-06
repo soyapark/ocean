@@ -1,13 +1,14 @@
 function reverseColor(e) {
-  if(e.target.checked) {
-      $("body, .panel, .panel-default > .panel-heading").css("background", "black")
+    let t = $("body, .panel, .panel-default > .panel-heading, .appended-text");
+    if(e.target.checked) {
+        t.css("background", "black")
           .css("color", "white");
       
-  }
-  else {
-      $("body, .panel, .panel-default > .panel-heading").css("background", "white")
-        .css("color", "black");
-  }
+    }
+    else {
+        t.css("background", "white")
+            .css("color", "black");
+    }
 }
 
 $(document).ready(function () {

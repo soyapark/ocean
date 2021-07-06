@@ -1,0 +1,34 @@
+﻿.ourLink {
+    position: relative;
+    background-color: #fffacd;
+    color: black !important;
+    text-decoration: none;
+    font-weight: normal;
+    cursor: pointer;
+}
+
+    .ourLink .hoverText {
+        visibility: hidden;
+        width: 200px;
+        background-color: grey;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+        position: absolute;
+        z-index: 1;
+    }
+
+    .ourLink:hover .hoverText {
+        visibility: visible;
+    }
+
+    .ourLink .bumper {
+        visibility: hidden;
+        display: none;
+    }
+
+    .ourLink:hover .bumper {
+        visibility: visible;
+        display: contents;
+    }

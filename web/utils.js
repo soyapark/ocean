@@ -9,3 +9,7 @@ function reverseColor(e) {
         .css("color", "black");
   }
 }
+
+$(document).ready(function () {
+    $(".bib-ref-num").hide();
+});

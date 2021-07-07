@@ -1,11 +1,11 @@
 ﻿$(document).ready(function () {
-    $('.summary-text').hide();
+    $('.system-text, .summary-text').hide();
 
     $('.load-less').click(function(e) {
         $(e.target).parents(".collapse").collapse("hide");
     });
 
-    $('.navbar').hover(function()
+    /*$('.navbar').hover(function()
     {
       // alert();
          // Mouse Over Callback
@@ -15,7 +15,46 @@
     { 
          // Mouse Leave callback
          $("#bridge-container").css("visibility", 'hidden');
+    });*/
+
+    $("#collapse-mode").change(function () {
+        $(".collapse-text").hide();
+        $(`.${this.value}-text`).show();
     });
+
+    $('.ourLink').click(function (e) {
+        if ($(e.target).parents(".appended-text").length) {
+            if (e.currentTarget.tagName == "A") // if hyperlink, do default action
+                return;
+            else {
+                // nested learn more btn
+            }
+        }
+        else {
+            e.preventDefault();
+        }
+
+        if ($(e.target).text() == "Load more") {
+            $(e.target).text("Load less");
+            $(e.currentTarget).find(".appended-text").show();
+        }
+        else {
+            $(e.target).text("Load more");
+            $(e.currentTarget).find(".appended-text").hide();
+        }
+        
+
+
+
+        
+
+
+
+
+
+        // if( $(`#${s}-${$(e.target).attr("href").substring(1)}`).length == 0 )   
+        //   $( `<a role="button" id="${s}-${$(e.target).attr("href").substring(1)}" href="#${s}">${BRIDGE_ICON}</a>` ).insertAfter( $(e.target).attr("href") );
+    })
   
 });
 

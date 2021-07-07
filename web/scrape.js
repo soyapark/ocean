@@ -14,9 +14,9 @@ $(document).ready(function () {
     // scrape components
     $('.ourLink').click(function (e) {
         if ($(e.target).parents(".appended-text").length) {
-            if (e.currentTarget.tagName == "A") // if hyperlink, do default action
+            if ( ["A", "P"].includes(e.target.tagName) ) // if hyperlink, do default action
                 return;
-            else {
+            else  {
                 // nested learn more btn
             }
         }

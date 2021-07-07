@@ -38,9 +38,9 @@ $(document).ready(function () {
             
         // console.log($(e.target).parent('section').find('.title-info').text())
 
-        $(".bridge-snippet").html( `<a href="#${goback_id}">${$(e.target).parents('section[id]:first').find('.title-info').text().trim()}</a>` );
-        
-        addNewTab($(target_id).position().top - 10);
+        $(".bridge-snippet").html(`<a href="#${goback_id}">${$(e.target).parents('section[id]:first').find('.title-info').text().trim()}</a>`);
+
+        addNewTab($(target_id).position().top - 10, $(target_id).parents('section[id]:first').find('> header .title-info').text().trim());
     })
 
     $('body').on('keypress', function (event) {
@@ -56,10 +56,6 @@ $(document).ready(function () {
   var scrollTab = [0];
   
   $(document).ready(function() {
-      $('#btn-add-tab').click(function() {
-          addNewTab();
-      });
-      
       $('#tab-list').on('click', '.close', function() {
           var tabID = $(this).parents('a').attr('href');
           $(this).parents('li').remove();
@@ -73,11 +69,11 @@ $(document).ready(function () {
       var list = document.getElementById("tab-list");
   });
 
-  var addNewTab = function(loc=0) {
-    tabID++;
+  var addNewTab = function(loc=0, tab_name="") {
+    tabID++;  
 
     // append the new tab right after the main tab
-    $('<li><a href="#paper-tab' + tabID + '" role="tab" data-toggle="tab"><span>Tab ' + tabID + '</span> <span class="glyphicon glyphicon-pencil text-muted edit"></span> <button class="close" type="button" title="Remove this page">×</button></a></li>')
+      $('<li><a href="#paper-tab' + tabID + `" role="tab" data-toggle="tab"><span>${tab_name || ("Tab " + tabID)}` + '</span> <span class="glyphicon glyphicon-pencil text-muted edit"></span> <button class="close" type="button" title="Remove this page">×</button></a></li>')
         .insertAfter('#tab-list li:first');
     $('#tab-content').append($('<div class="tab-pane fade" id="paper-tab' + tabID + '"></div>'));
     $(".edit").click(editHandler);

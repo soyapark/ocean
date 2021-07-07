@@ -66,9 +66,10 @@ $(document).ready(function () {
 
     // going back to bridge
     $("body").on("click", ".bridge-return", function (e) {
-        e.preventDefault();
+        //e.preventDefault();
+        //$(window).scrollTop($($(e.target).attr("href")).position().top - 30);
 
-        $(window).scrollTop( $($(e.target).attr("href")).position().top - 30 );
+        $(".bridge-snippet").empty();
     })
 
     $('body').on('keypress', function (event) {

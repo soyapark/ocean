@@ -70,13 +70,8 @@ function switchSummary(e) {
     }
 }
 
-function loadLess() {
-
-}
-
 function contextmenuClick() {
     // load less
     $right_clicked_tgt.parents(".ourLink").find('.btn').text("Load more");
     $right_clicked_tgt.parents(".ourLink").find(".appended-text").hide();
-
 }

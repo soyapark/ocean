@@ -46,7 +46,13 @@ $(document).ready(function () {
     $('body').on('keypress', function (event) {
         if (event.keyCode === 10 || event.keyCode === 13) {
             return false;
-        } 
+        } else if (event.target.tagName == "SPAN") {
+            // typing tab name - do nothing; 
+        }else if ([...Array(10).keys()].includes(parseInt(event.key))) {
+            // switch to a different tab
+            var target_tab = $(`#tab-list a:eq(${(parseInt(event.key) || 10) - 1})`);
+            target_tab.tab('show');
+        }
 
     });
   });

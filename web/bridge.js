@@ -68,13 +68,12 @@ $(document).ready(function () {
     $("body").on("click", ".bridge-return", function (e) {
         //e.preventDefault();
         //$(window).scrollTop($($(e.target).attr("href")).position().top - 30);
-
         $(".bridge-snippet").empty();
     })
 
     $('body').on('keypress', function (event) {
         if (event.key === "b") {
-            $("a.bridge-return").click();
+            $("a.bridge-return")[0].click();
         }
     });
 });

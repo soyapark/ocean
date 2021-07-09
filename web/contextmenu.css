@@ -18,9 +18,9 @@
         .context-menu ul li {
             padding: 5px 2px;
             margin-bottom: 3px;
-            color: white;
+            color: #004242;
             font-weight: bold;
-            background-color: darkturquoise;
+            background-color: white;
         }
 
             .context-menu ul li:hover {

@@ -77,8 +77,7 @@ pre {
 }
 
 .navbar .close {
-  font-size: 70%;
-/*   float:right; */
+   float:right;
 }
 
 #bridge-container {

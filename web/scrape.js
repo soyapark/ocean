@@ -32,7 +32,9 @@ $(document).ready(function () {
         if (scrape[0].tagName == "SPAN")
             scrape = $("<p></p>").append(scrape);
 
-        scrape.css("background", "#AFC0B0");//.css("border", "1rem solid grey");
+        scrape.css("background", "#AFC0B0")
+            .css("height", "100px")
+            .css("overflow-y", "scroll");//.css("border", "1rem solid grey");
 
         // if already appended
         if ($(e.target.parentElement).find("> .appended-text").text()) {

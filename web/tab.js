@@ -1,5 +1,7 @@
 $(document).ready(function () {
     $(".bib-ref-num").hide();
+
+    $("a.bib, a.tbl, a.fig").addClass("link-available");
     /*$('.navbar').hover(function()
     {
          // Mouse Over Callback

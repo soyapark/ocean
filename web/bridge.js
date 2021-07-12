@@ -13,7 +13,9 @@ let BRIDGE_ICON = `<img src="imgs/bridge.jpeg" width="50" style="border-bottom: 
 
 
 $(document).ready(function () {
-  $(".bib-ref-num").hide();
+    $(".bib-ref-num").hide();
+
+    $("a.bib, a.tbl, a.fig").addClass("link-available");
   /*$('.navbar').hover(function()
   {
     // alert();

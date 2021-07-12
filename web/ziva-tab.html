@@ -758,6 +758,16 @@
             padding-top: 0;
             padding-bottom: 0;
         }
+
+        /* handle margin since there is a fixed header */
+        p:before, .navbar li:before, h2:before, h3:before {
+            content: '';
+            display: block;
+            position: relative;
+            width: 0;
+            height: 4em;
+            margin-top: -4em
+        }
     </style>
 </head> 
  <body id="main">

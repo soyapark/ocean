@@ -1,3 +1,5 @@
+let cxt_menu_tgt = "p";
+
 $(document).ready(function () {
     /*$('.navbar').hover(function()
     {

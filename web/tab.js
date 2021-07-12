@@ -1,3 +1,5 @@
+let cxt_menu_tgt = "#tab-list li";
+
 $(document).ready(function () {
     $(".bib-ref-num").hide();
 
@@ -104,4 +106,11 @@ $(document).ready(function () {
   
   $(".edit").click(editHandler);
 
-  
+function contextmenuClick() {
+    // duplicate tab
+    addNewTab(
+        // get the tab's scroll location 
+        scrollTab[$($right_clicked_tgt.context).parents('a').attr("href").split("-tab")[1] - 1],
+        $($right_clicked_tgt.context).text() + " (copy)"
+    );
+}

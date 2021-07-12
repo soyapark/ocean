@@ -2,8 +2,8 @@ let $right_clicked_tgt;
 
 $(document).ready(function () {
     // disable right click and show custom context menu
-    $('body').on('contextmenu', 'p', function (e) {
-        if ($(e.target).parents(".appended-text").length == 0) {
+    $('body').on('contextmenu', cxt_menu_tgt, function (e) {
+        if (e.target.tagName == "P" && $(e.target).parents(".appended-text").length == 0) {
             return;
         }
         var id = this.id;

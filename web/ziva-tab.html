@@ -13,9 +13,11 @@
     <link media="screen, print" rel="stylesheet" href="./ocean.css">
     <link media="screen, print" rel="stylesheet" href="./bridgeStyle.css">
     <link rel="stylesheet" href="style.css">
+    <link media="screen, print" rel="stylesheet" href="./contextmenu.css">
     <script src="./ziva-original_files/jquery.min.js.download" type="text/javascript"></script>
     <script src="./ziva-original_files/bootstrap.min.js.download" type="text/javascript"></script>
     <script src="./tab.js" type="text/javascript"></script>
+    <script src="./contextmenu.js" type="text/javascript"></script>
     <script src="./utils.js" type="text/javascript"></script>
     <!--<script src="./ziva-summary/bibCit.js.download" type="text/javascript"></script>
     <script src="./ziva-summary/divTab.js.download" type="text/javascript"></script>
@@ -785,6 +787,16 @@
     </div>
     <!-- <button id="btn-add-tab" type="button" class="btn btn-primary pull-right">Add Tab</button> -->
     <!-- Nav tabs -->
+
+    <!-- Context-menu -->
+    <div class='context-menu'>
+        <ul>
+            <li><span class='Gainsboro'></span>&nbsp;<span>Duplicate this tab</span></li>
+            <!--<li><span class='Orange'></span>&nbsp;<span>Orange</span></li>
+            <li><span class='Plum'></span>&nbsp;<span>Plum</span></li>-->
+        </ul>
+    </div>
+    <input type='hidden' value='' id='txt_id'/>
     
     <div style="margin-top: 100px;">
         Reverse text and background color <input type="checkbox" onclick="reverseColor(event)">

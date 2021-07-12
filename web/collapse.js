@@ -1,4 +1,6 @@
-﻿$(document).ready(function () {
+﻿let cxt_menu_tgt = "p";
+
+$(document).ready(function () {
     $('.system-text, .summary-text, .experiment-text').hide();
 
     $('.load-less').click(function(e) {

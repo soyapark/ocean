@@ -44,7 +44,10 @@ $(document).ready(function () {
 
         $(".bridge-snippet").html(`<a href="#${goback_id}">${$(e.target).parents('section[id]:first').find('.title-info').text().trim()}</a>`);
 
-        addNewTab($(target_id).position().top - 10, $(target_id).parents('section[id]:first').find('> header .title-info').text().trim());
+        addNewTab($(target_id).position().top - 10, $(target_id).find('> header .title-info').length ?
+            $(target_id).find('> header .title-info').text().trim()
+            : $(target_id).parents('section[id]:first').find('> header .title-info').text().trim()
+            );
     })
 
     $('body').on('keypress', function (event) {
@@ -83,7 +86,7 @@ $(document).ready(function () {
     tabID++;  
 
     // append the new tab right after the main tab
-      $('<li><a href="#paper-tab' + tabID + `" role="tab" data-toggle="tab"><span>${tab_name || ("Tab " + tabID)}` + '</span> <span class="glyphicon glyphicon-pencil text-muted edit"></span> <button class="close" type="button" title="Remove this page">×</button></a></li>')
+      $('<li><a href="#paper-tab' + tabID + `" role="tab" data-toggle="tab"><span>${(tab_name.substr(0, 10) + "..") || ("Tab " + tabID)}` + '</span> <span class="glyphicon glyphicon-pencil text-muted edit"></span> <button class="close" type="button" title="Remove this page">×</button></a></li>')
         .insertAfter('#tab-list li:first');
     $('#tab-content').append($('<div class="tab-pane fade" id="paper-tab' + tabID + '"></div>'));
     $(".edit").click(editHandler);

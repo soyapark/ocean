@@ -37,27 +37,26 @@ $(document).ready(function () {
         else 
             goback_id = $(e.target).attr("id");
 
-        if ($(e.target).hasClass("bib")) {
-            // get element right before the bridge start
-            let current_element_index = $(e.target.parentElement).contents().index(e.target);
+        // get element right before the bridge start
+        let current_element_index = $(e.target.parentElement).contents().index(e.target);
+        let txt_before_bridge = $(e.target.parentElement).contents().slice(0, current_element_index).get().map(n => n.textContent).join("").trim();
+        let bridge_snippet = "";
 
-            try {
-                $(".bridge-snippet").html(
-                    `<a class="bridge-return" href="#${goback_id}">
-                        ${$(e.target.parentElement).contents().slice(0, current_element_index).get().map(n => n.textContent).join("").split(" ").slice(-10).join(" ")}
-                    </a>`
-                );
-            } catch (e) {
-                $(".bridge-snippet").html(c.wholeText.slice(-40, -1));
-            }
-            
-        } else {
+        if($(e.target).hasClass("bib"))
+          bridge_snippet = txt_before_bridge;
+        else 
+          bridge_snippet = txt_before_bridge + " " + e.target.childNodes[0].nodeValue.trim();
+
+        try {
             $(".bridge-snippet").html(
                 `<a class="bridge-return" href="#${goback_id}">
-                    ${$("#" + goback_id).text().split(" ").slice(0, 10).join(" ")}
+                    ${bridge_snippet.split(" ").slice(-10).join(" ")}
                 </a>`
             );
+        } catch (e) {
+            $(".bridge-snippet").html(c.wholeText.slice(-40, -1));
         }
+            
             
 
         

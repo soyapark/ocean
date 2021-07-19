@@ -35,7 +35,7 @@ $(document).ready(function () {
             scrape = $("<p></p>").append(scrape);
 
         scrape.css("background", "#AFC0B0")
-            .css("height", "100px")
+            .css("height", "150px")
             .css("overflow-y", "scroll");//.css("border", "1rem solid grey");
 
         // if already appended

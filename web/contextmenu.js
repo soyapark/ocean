@@ -9,7 +9,9 @@ $(document).ready(function () {
         var id = this.id;
         $("#txt_id").val(id);
 
-        $right_clicked_tgt = $(e.target).parents(".appended-text");
+        $right_clicked_tgt = $(e.target).parents(".appended-text").legnth ?
+            $(e.target).parents(".appended-text") 
+            : $(e.target);
 
         var top = e.pageY + 5;
         var left = e.pageX;

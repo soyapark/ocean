@@ -1,7 +1,8 @@
-﻿let cxt_menu_tgt = "p";
+﻿let cxt_menu_tgt = "p, small, span";
 
 $(document).ready(function () {
-    $('.system-text, .summary-text, .experiment-text').hide();
+    $('.system-text, .summary-text, .experiment-text, .data-text').hide();
+    $(".full-text").show();
 
     $('.load-less').click(function(e) {
         $(e.target).parents(".collapse").collapse("hide");

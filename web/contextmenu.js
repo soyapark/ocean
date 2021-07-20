@@ -9,7 +9,7 @@ $(document).ready(function () {
         var id = this.id;
         $("#txt_id").val(id);
 
-        $right_clicked_tgt = $(e.target).parents(".appended-text").legnth ?
+        $right_clicked_tgt = $(e.target).parents(".appended-text").get() ?
             $(e.target).parents(".appended-text") 
             : $(e.target);
 

@@ -846,97 +846,122 @@
 
 
     (function () {
+      let bridge_start = false;
+      let bridge_snippet = "";
 
-      // var ColorSelectorWidget = function(args) {
-      //   // 1. Find a current color setting in the annotation, if any
-      //   var currentColorBody = args.annotation ? 
-      //     args.annotation.bodies.find(function(b) {
-      //       return b.purpose == 'highlighting';
-      //     }) : null;
-
-      //   // 2. Keep the value in a variable
-      //   var currentColorValue = currentColorBody ? currentColorBody.value : null;
-
-      //   // 3. Triggers callbacks on user action
-      //   var addTag = function(evt) {
-      //     if (currentColorBody) {
-      //       args.onUpdateBody(currentColorBody, {
-      //         type: 'TextualBody',
-      //         purpose: 'highlighting',
-      //         value: evt.target.dataset.tag
-      //       });
-      //     } else { 
-      //       args.onAppendBody({
-      //         type: 'TextualBody',
-      //         purpose: 'highlighting',
-      //         value: evt.target.dataset.tag
-      //       });
-      //     }
-      //   }
-
-      //   // 4. This part renders the UI elements
-      //   var createButton = function(value) {
-      //     var button = document.createElement('button');
-
-      //     if (value == currentColorValue)
-      //       button.className = 'selected';
-
-      //     button.dataset.tag = value;
-      //     button.style.backgroundColor = value;
-      //     button.addEventListener('click', addTag); 
-      //     return button;
-      //   }
-
-      //   var container = document.createElement('div');
-      //   container.className = 'colorselector-widget';
-        
-      //   var button1 = createButton('RED');
-      //   var button2 = createButton('GREEN');
-      //   var button3 = createButton('BLUE');
-
-      //   container.appendChild(button1);
-      //   container.appendChild(button2);
-      //   container.appendChild(button3);
-
-      //   return container;
-      // }
-
-      var BridgeWidget = function(args) {
-        // Check if there is already bridge here
-        var currentBridges = args.annotation ? 
+      var ColorSelectorWidget = function(args) {
+        // 1. Find a current color setting in the annotation, if any
+        var currentColorBody = args.annotation ? 
           args.annotation.bodies.find(function(b) {
-            return b.purpose == 'bridge';
-          }) : null;  
+            return b.purpose == 'highlighting';
+          }) : null;
 
-        // Triggers callbacks when they click the button
+        // 2. Keep the value in a variable
+        var currentColorValue = currentColorBody ? currentColorBody.value : null;
+
+        // 3. Triggers callbacks on user action
         var addTag = function(evt) {
-          evt.target.style.display = "none";
-          debugger;
-          args.onAppendBody({
-            type: 'TextualBody',
-            purpose: 'bridge',
-            value: evt.target.dataset.tag
-          });
+          if (currentColorBody) {
+            args.onUpdateBody(currentColorBody, {
+              type: 'TextualBody',
+              purpose: 'highlighting',
+              value: evt.target.dataset.tag
+            });
+          } else { 
+            args.onAppendBody({
+              type: 'TextualBody',
+              purpose: 'highlighting',
+              value: evt.target.dataset.tag
+            });
+          }
         }
 
         // 4. This part renders the UI elements
         var createButton = function(value) {
           var button = document.createElement('button');
 
+          if (value == currentColorValue)
+            button.className = 'selected';
+
           button.dataset.tag = value;
+          button.style.backgroundColor = value;
           button.addEventListener('click', addTag); 
-          button.textContent = 'Start bridge';
+          return button;
+        }
+
+        var container = document.createElement('div');
+        container.className = 'colorselector-widget';
+        
+        var button1 = createButton('RED');
+        var button2 = createButton('GREEN');
+        var button3 = createButton('BLUE');
+
+        container.appendChild(button1);
+        container.appendChild(button2);
+        container.appendChild(button3);
+
+        return container;
+      }
+
+      var BridgeWidget = function(args) {
+        // Check if there is already bridge here
+        var currentBridges = args.annotation ? 
+          args.annotation.bodies.find(function(b) {
+            return b.purpose == 'bridge' || b.purpose == 'tagging';
+          }) : null;  
+
+        // Triggers callbacks when they click the button
+        var addTag = function(evt) {
+          args.onAppendBody({
+            type: 'TextualBody',
+            purpose: 'bridge',
+            value: evt.target.dataset.tag
+          });
+
+          bridge_start = true;
+          bridge_snippet = args.annotation.target.selector[0].exact;
+        }
+
+        // 4. This part renders the UI elements
+        var createButton = function(value) {
+          var button = document.createElement('button');
+
+          button.dataset.tag = 'GREY';
+          button.addEventListener('click', addTag); 
+          button.textContent = value;
           return button;
         }
 
         var container = document.createElement('div');
         container.className = 'bridgeselector-widget';
-        
+        debugger;
         // if bridge exist, don't allow users to add more
-        if(currentBridges) {
+        if(currentBridges && currentBridges.purpose == "tagging") {
+          var button1 = createButton('Go to bridge');
+        
+          container.appendChild(button1);
+        } else if(currentBridges && currentBridges.purpose == "bridge") {
+          // var button1 = createButton('End bridge');
+        
+          // container.appendChild(button1);
+          let t = document.createElement('span');
 
+          t.textContent = "Find another part of the bridge";
+          container.appendChild(t);
+        } else if(bridge_start) {
+          let t = document.createElement('span');
+
+          t.textContent = bridge_snippet;
+          container.appendChild(t);
+          var button1 = createButton('End bridge');
+        
+          container.appendChild(button1);
+          container.appendChild(document.createElement('br'));
+          var button1 = createButton('Start bridge');
+        
+          container.appendChild(button1);
         } else {
-          var button1 = createButton('GREY');
+          var button1 = createButton('Start bridge');
         
           container.appendChild(button1);
         }   
@@ -948,7 +973,7 @@
       /** A matching formatter that sets the color according to the 'highlighting' body value **/
       var ColorFormatter = function(annotation) {
         var highlightBody = annotation.bodies.find(function(b) {
-          return b.purpose == 'bridge';
+          return b.purpose.includes("bridge");
         });
 
         if (highlightBody)

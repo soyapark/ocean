@@ -7,7 +7,7 @@ let currentFocusedParagraph = null;
 let db;
 let FB_DOCNAME = ""
 
-let BRIDGE_ICON = `<img src="imgs/bridge.jpeg" width="50" style="border-bottom: 5px solid blue;" alt="bridge"/>`;
+let BRIDGE_ICON = `<img src="imgs/bridge.jpeg" width="20" style="border-bottom: 5px solid blue;" alt="bridge"/>`;
 // let bridge_store=[{"bridge-id": "", "link": ""}];
 // TODO 
 
@@ -144,12 +144,12 @@ window.addEventListener('DOMContentLoaded', () => {
   // installing observer 
   document.querySelectorAll('.observer-marker').forEach((i) => {
     if (i) {
-        const observer = new IntersectionObserver((entries) => {
-            detectCurrentParagraph(entries, observer, i)
-        },
-        {threshold: 1, trackVisibility: true,
-    delay: 100 });    
-        observer.observe(i);
+    //     const observer = new IntersectionObserver((entries) => {
+    //         detectCurrentParagraph(entries, observer, i)
+    //     },
+    //     {threshold: 1, trackVisibility: true,
+    // delay: 100 });    
+    //     observer.observe(i);
     }
   })
   

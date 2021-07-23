@@ -6,10 +6,12 @@ $(document).ready(function () {
     $("a.bib, a.tbl, a.fig").addClass("link-available");
 
     $(".abstract").find("a").each(function(index, value){
-        $("#bridge-preview-container small").append( $(value).clone() );
-        $("#bridge-preview-container small").append( $("<br/>") );
+        let $new_li = $("<li></li>");
+        $new_li.append($(value).clone());
+        $("#bridge-preview-container small ul")
+            .append( $new_li );
       });
-      
+
     /*$('.navbar').hover(function()
     {
          // Mouse Over Callback

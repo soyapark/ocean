@@ -45,7 +45,7 @@ $(document).ready(function () {
 
         $(".bridge-snippet").html(`<a href="#${goback_id}">${$(e.target).parents('section[id]:first').find('.title-info').text().trim()}</a>`);
 
-        addNewTab($(target_id).position().top - 10, $(target_id).find('> header .title-info').length ?
+        addNewTab($(target_id).position().top - 30, $(target_id).find('> header .title-info').length ?
             $(target_id).find('> header .title-info').text().trim()
             : $(target_id).parents('section[id]:first').find('> header .title-info').text().trim()
             );

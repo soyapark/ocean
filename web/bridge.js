@@ -30,6 +30,8 @@ $(document).ready(function () {
 
   // citation bridge
     $('a.bib, a.fig, a.tbl, a.ourLink').click(function (e) {
+        e.preventDefault();
+
         // Get the section that is included in 
         let goback_id;
         if(e.target.nodeName == "SPAN")
@@ -41,7 +43,8 @@ $(document).ready(function () {
             $(e.target).attr("id", goback_id);
           }
         }
-            
+
+        $(window).scrollTop( $( $(e.target).attr("href") ).position().top - 30 );
 
         // get element right before the bridge start
         let current_element_index = $(e.target.parentElement).contents().index(e.target);
@@ -60,10 +63,6 @@ $(document).ready(function () {
             $(".bridge-snippet").html(c.wholeText.slice(-40, -1));
         }
             
-            
-
-        
-
         // if( $(`#${s}-${$(e.target).attr("href").substring(1)}`).length == 0 )   
         //   $( `<a role="button" id="${s}-${$(e.target).attr("href").substring(1)}" href="#${s}">${BRIDGE_ICON}</a>` ).insertAfter( $(e.target).attr("href") );
       })

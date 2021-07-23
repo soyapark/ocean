@@ -16,6 +16,13 @@ $(document).ready(function () {
     $(".bib-ref-num").hide();
 
     $("a.bib, a.tbl, a.fig").addClass("link-available");
+
+    $(".abstract").find("a").each(function(index, value){
+      debugger;
+      $("#bridge-preview-container small").append( $(value).clone() );
+      $("#bridge-preview-container small").append( $("<br/>") );
+    });
+    
   /*$('.navbar').hover(function()
   {
     // alert();

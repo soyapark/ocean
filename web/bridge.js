@@ -34,8 +34,14 @@ $(document).ready(function () {
         let goback_id;
         if(e.target.nodeName == "SPAN")
             goback_id = $(e.target.parentElement).attr("id");
-        else 
-            goback_id = $(e.target).attr("id");
+        else {
+          goback_id = $(e.target).attr("id");
+          if (!goback_id) {
+            goback_id = Math.random().toString().substr(2, 8);
+            $(e.target).attr("id", goback_id);
+          }
+        }
+            
 
         // get element right before the bridge start
         let current_element_index = $(e.target.parentElement).contents().index(e.target);

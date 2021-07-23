@@ -127,8 +127,8 @@
 </head>
 
 <body>
-  <div><button id="add-annotation">Add Annotation</button> <button id="update-annotation">Update Annotation</button>
-    <button id="remove-annotation">Remove Annotation</button> <button id="toggle-mode">MODE: ANNOTATION</button></div>
+  <!-- <div><button id="add-annotation">Add Annotation</button> <button id="update-annotation">Update Annotation</button>
+    <button id="remove-annotation">Remove Annotation</button> <button id="toggle-mode">MODE: ANNOTATION</button></div> -->
   <div id="outer-container">
     <div id="content" class="plaintext">
         <main> 
@@ -937,9 +937,9 @@
         debugger;
         // if bridge exist, don't allow users to add more
         if(currentBridges && currentBridges.purpose == "tagging") {
-          var button1 = createButton('Go to bridge');
+          // var button1 = createButton('Go to bridge');
         
-          container.appendChild(button1);
+          // container.appendChild(button1);
         } else if(currentBridges && currentBridges.purpose == "bridge") {
           // var button1 = createButton('End bridge');
         

@@ -48,10 +48,7 @@ $(document).ready(function () {
         let txt_before_bridge = $(e.target.parentElement).contents().slice(0, current_element_index).get().map(n => n.textContent).join("").trim();
         let bridge_snippet = "";
 
-        if($(e.target).hasClass("bib"))
-          bridge_snippet = txt_before_bridge;
-        else 
-          bridge_snippet = txt_before_bridge + " " + e.target.childNodes[0].nodeValue.trim();
+        bridge_snippet = txt_before_bridge + " " + e.target.childNodes[0].nodeValue.trim();
 
         try {
             $(".bridge-snippet").html(

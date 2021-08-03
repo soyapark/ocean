@@ -123,6 +123,11 @@
 //     });
     
     </script>
+
+<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/@recogito/annotorious@2.1.6/dist/annotorious.min.js"></script> -->
+<script src="recogito-firebase-storage.js"></script>
   <link href="recogito.min.css" rel="stylesheet">
   <script src="recogito.min.js"></script>
 </head>
@@ -997,52 +1002,74 @@
         relationVocabulary: ['isRelated', 'isPartOf', 'isSameAs ']
       });
 
+      var firebaseConfig = {
+        apiKey: "AIzaSyCTua642g885yQ_lqck4F7fwTwqlrYKfF4",
+        authDomain: "ocean-78725.firebaseapp.com",
+        projectId: "ocean-78725",
+        storageBucket: "ocean-78725.appspot.com",
+        messagingSenderId: "109351838437",
+        appId: "1:109351838437:web:a96c9d256173e20d63ea0c"
+      };
+
+      var settings = {
+        annotationTarget: "test",  // mandatory
+        collectionName: 'annotations' // optional (default = 'annotations')
+      }
+
+      // Init the storage plugin
+      recogito.FirebaseStorage(r, firebaseConfig, settings);
+
+
       // r.loadAnnotations('annotations.w3c.json');
-      for(var i=0;i< zivaAnnotations.length; i++)
-        r.addAnnotation(zivaAnnotations[i]);
+      // for(var i=0;i< zivaAnnotations.length; i++)
+      //   r.addAnnotation(zivaAnnotations[i]);
 
-      r.on('selectAnnotation', function (a) {
-        // alert("selected");
-        console.log('selected', a);
-      });
+      // r.on('selectAnnotation', function (a) {
+      //   // alert("selected");
+      //   console.log('selected', a);
+      // });
 
-      r.on('createAnnotation', function (a) {
-        // alert("hello");
-        console.log('created', a); 
-        console.log(r.getAnnotations());
-      });
+      // r.on('createAnnotation', function (a) {
+      //   // alert("hello");
+      //   console.log('created', a); 
+      //   console.log(r.getAnnotations());
 
-      r.on('updateAnnotation', function (annotation, previous) {
-        console.log('updated', previous, 'with', annotation);
-      });
+      //   // db.collection('annotations').add(annotation).then(function() {
+      //   //   console.log('Stored annotation');
+      //   // });
+      // });
+
+      // r.on('updateAnnotation', function (annotation, previous) {
+      //   console.log('updated', previous, 'with', annotation);
+      // });
 
       // Wire the Add/Update/Remove buttons
-      document.getElementById('add-annotation').addEventListener('click', function () {
-        r.addAnnotation(myAnnotation);
-      });
+      // document.getElementById('add-annotation').addEventListener('click', function () {
+      //   r.addAnnotation(myAnnotation);
+      // });
 
-      document.getElementById('update-annotation').addEventListener('click', function () {
-        r.addAnnotation(Object.assign({}, myAnnotation, {
-          'body': [{
-            'type': 'TextualBody',
-            'value': 'This annotation was added via JS, and has been updated now.'
-          }],
-          'target': {
-            'selector': [{
-              'type': 'TextQuoteSelector',
-              'exact': 'ingenious hero who'
-            }, {
-              'type': 'TextPositionSelector',
-              'start': 43,
-              'end': 61
-            }]
-          }
-        }));
-      });
+      // document.getElementById('update-annotation').addEventListener('click', function () {
+      //   r.addAnnotation(Object.assign({}, myAnnotation, {
+      //     'body': [{
+      //       'type': 'TextualBody',
+      //       'value': 'This annotation was added via JS, and has been updated now.'
+      //     }],
+      //     'target': {
+      //       'selector': [{
+      //         'type': 'TextQuoteSelector',
+      //         'exact': 'ingenious hero who'
+      //       }, {
+      //         'type': 'TextPositionSelector',
+      //         'start': 43,
+      //         'end': 61
+      //       }]
+      //     }
+      //   }));
+      // });
 
-      document.getElementById('remove-annotation').addEventListener('click', function () {
-        r.removeAnnotation(myAnnotation);
-      });
+      // document.getElementById('remove-annotation').addEventListener('click', function () {
+      //   r.removeAnnotation(myAnnotation);
+      // });
 
       // $('div').mouseup(function() {
           
@@ -1061,18 +1088,18 @@
       // Switch annotation mode (annotation/relationships)
       var annotationMode = 'ANNOTATION'; // or 'RELATIONS'
 
-      var toggleModeBtn = document.getElementById('toggle-mode');
-      toggleModeBtn.addEventListener('click', function () {
-        if (annotationMode === 'ANNOTATION') {
-          toggleModeBtn.innerHTML = 'MODE: RELATIONS';
-          annotationMode = 'RELATIONS';
-        } else {
-          toggleModeBtn.innerHTML = 'MODE: ANNOTATION';
-          annotationMode = 'ANNOTATION';
-        }
+      // var toggleModeBtn = document.getElementById('toggle-mode');
+      // toggleModeBtn.addEventListener('click', function () {
+      //   if (annotationMode === 'ANNOTATION') {
+      //     toggleModeBtn.innerHTML = 'MODE: RELATIONS';
+      //     annotationMode = 'RELATIONS';
+      //   } else {
+      //     toggleModeBtn.innerHTML = 'MODE: ANNOTATION';
+      //     annotationMode = 'ANNOTATION';
+      //   }
 
-        r.setMode(annotationMode);
-      });
+      //   r.setMode(annotationMode);
+      // });
     })();</script>
 </body>
 

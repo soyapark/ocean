@@ -105,7 +105,7 @@
           return '';}
           
    window.addEventListener('mouseup', function(event){
-     debugger;
+    //  debugger;
         console.log(event);
         // alert();
         var text=getSelectedText();
@@ -854,6 +854,7 @@
     (function () {
       let bridge_start = false;
       let bridge_snippet = "";
+      let pending_bridges = [];
 
       var ColorSelectorWidget = function(args) {
         // 1. Find a current color setting in the annotation, if any
@@ -921,7 +922,8 @@
           args.onAppendBody({
             type: 'TextualBody',
             purpose: 'bridge',
-            value: evt.target.dataset.tag
+            value: evt.target.dataset.tag,
+            author: "soya"
           });
 
           bridge_start = true;
@@ -940,7 +942,7 @@
 
         var container = document.createElement('div');
         container.className = 'bridgeselector-widget';
-        debugger;
+        // debugger;
         // if bridge exist, don't allow users to add more
         if(currentBridges && currentBridges.purpose == "tagging") {
           // var button1 = createButton('Go to bridge');
@@ -1019,6 +1021,33 @@
       // Init the storage plugin
       recogito.FirebaseStorage(r, firebaseConfig, settings);
 
+      var db = firebase.firestore();
+      let init = false;
+
+      // listen to add event from db
+      db.collection("annotations")
+        .onSnapshot((doc) => {
+          if(!init) {
+            init = !init;
+            return; 
+          }
+          if(!doc.docChanges) return;
+          doc.docChanges().forEach(function(change) {
+            console.log(change)
+              if (change.type === "added") {
+                  // change.doc here is new a new document added by me
+                  debugger;
+                  // change.doc.data().body[0].author
+                  if(r.getAnnotations().length != doc.docChanges().length)
+                    r.addAnnotation(change.doc.data());
+              } else if (change.type === "removed") {
+                  // change.doc here is new a new document removed by me
+                  if(r.getAnnotations().length != doc.docChanges().length)
+                    r.removeAnnotation(change.doc.data());
+              }
+          });
+        });
+
 
       // r.loadAnnotations('annotations.w3c.json');
       // for(var i=0;i< zivaAnnotations.length; i++)
@@ -1030,13 +1059,8 @@
       // });
 
       // r.on('createAnnotation', function (a) {
-      //   // alert("hello");
       //   console.log('created', a); 
-      //   console.log(r.getAnnotations());
-
-      //   // db.collection('annotations').add(annotation).then(function() {
-      //   //   console.log('Stored annotation');
-      //   // });
+      //   console.log(r.getAnnotations());        
       // });
 
       // r.on('updateAnnotation', function (annotation, previous) {

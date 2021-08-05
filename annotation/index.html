@@ -1159,7 +1159,7 @@
       /** A matching formatter that sets the color according to the 'highlighting' body value **/
       var ColorFormatter = function(annotation) {
         var highlightBody = annotation.bodies.find(function(b) {
-          return b.purpose.includes("bridge");
+          return b.purpose.includes("bridge") || b.purpose.includes("pre-select");
         });
 
         if (highlightBody)

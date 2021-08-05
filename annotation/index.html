@@ -769,12 +769,13 @@
     var zivaAnnotations = [
       {
         '@context': 'http://www.w3.org/ns/anno.jsonld',
-        'id': 'https://www.example.com/recogito-js-example/foo',
+        'id': 'anno1',
         'type': 'Annotation',
         'body': [{
-          "purpose": "tagging",
+          "purpose": "bridge",
           "type": "TextualBody",
-          "value": "4 ZIVA: INTERFACE FOR ELICITING DOMAIN"
+          "value": "4 ZIVA: INTERFACE FOR ELICITING DOMAIN", 
+          "href": "#sec-9"
         }],
         'target': {
           'selector': [{
@@ -789,12 +790,14 @@
       },
       {
         '@context': 'http://www.w3.org/ns/anno.jsonld',
-        'id': 'https://www.example.com/recogito-js-example/foo',
+        'id': 'anno2',
         'type': 'Annotation',
         'body': [{
-          "purpose": "tagging",
+          "purpose": "bridge",
           "type": "TextualBody",
-          "value": "4.2 Concept creation"
+          "value": "4.2 Concept creation",
+          "href": "#sec-11",
+          "blob": "Creating a taxonomy is an effective way of organizing information [20, 48]. Ziva provides an interface where SMEs can extract domain concepts (R2). Users are asked to categorize each example instance, presented as a card, via a card-sorting activity. Users first group cards by topic (general concepts of the domain such as atmosphere, food, service, price). Cards in each topic are then further divided cards into descriptions referencing specific attributes for a topic (e.g., cool, tasty, kind, high). The interface (Figure 2) was implemented as a drag-and-drop UI using LMDD [2]."
         }],
         'target': {
           'selector': [{
@@ -809,12 +812,13 @@
       },
       {
         '@context': 'http://www.w3.org/ns/anno.jsonld',
-        'id': 'https://www.example.com/recogito-js-example/foo',
+        'id': 'anno3',
         'type': 'Annotation',
         'body': [{
-          "purpose": "tagging",
+          "purpose": "bridge",
           "type": "TextualBody",
-          "value": "4.3 Justification-elicitation interface"
+          "value": "4.3 Justification-elicitation interface",
+          "href": "#sec-12"
         }],
         'target': {
           'selector': [{
@@ -829,12 +833,14 @@
       },
       {
         '@context': 'http://www.w3.org/ns/anno.jsonld',
-        'id': 'https://www.example.com/recogito-js-example/foo',
+        'id': 'anno4',
         'type': 'Annotation',
         'body': [{
-          "purpose": "tagging",
+          "purpose": "bridge",
           "type": "TextualBody",
-          "value": "4.1 Representative sampling for instances creation"
+          "value": "4.1 Representative sampling for instances creation",
+          "href": "#sec-10",
+          "blob": "As highlighted in the our formative interview, domain experts have limited time for labeling or sharing domain knowledge (R1). Hence, it is important to ask them to review only a few of instances and the sample can cover most concepts in the domain. Ziva extracts such a representative sample of m instances from a large training set of N text instances by the simple method of transforming the original text into ’tf-idf’ space, clustering the result using an algorithm such as k-means (setting k = m), and, for each cluster, returning the text instance closest to the cluster center. This method is not deterministic, but provides a reasonable set of representative instances, for cases where m < < N."
         }],
         'target': {
           'selector': [{
@@ -846,6 +852,28 @@
             'end': 1280
           }]
         }
+      },
+      {
+        '@context': 'http://www.w3.org/ns/anno.jsonld',
+        'id': 'anno5',
+        'type': 'Annotation',
+        'body': [{
+          "purpose": "bridge",
+          "type": "TextualBody",
+          "value": "INTRODUCTION",
+          "href": "#sec-2",
+          "blob": "First, a common bottleneck in developing modern ML technologies is the requirement of a large quantity of labeled data. Second, many steps in an ML development pipeline, from problem definition to feature engineering to model debugging, necessitate an understanding of domain-specific knowledge and requirements."
+        }],
+        'target': {
+          'selector': [{
+            'type': 'TextQuoteSelector',
+            'exact': 'that ingenious hero'
+          }, {
+            'type': 'TextPositionSelector',
+            'start': 666,
+            'end': 686
+          }]
+        }
       }
     ];
 
@@ -855,6 +883,7 @@
       let bridge_start = false;
       let bridge_snippet = "";
       let pending_bridges = [];
+      let ok_clicked = false;
 
       var ColorSelectorWidget = function(args) {
         // 1. Find a current color setting in the annotation, if any
@@ -917,8 +946,52 @@
             return b.purpose == 'bridge' || b.purpose == 'tagging';
           }) : null;  
 
+        var currentPreBridges = args.annotation ? 
+          args.annotation.bodies.find(function(b) {
+            return b.purpose == 'pre-bridge';
+          }) : null;  
+
+        var currentPreSelect = args.annotation ? 
+          args.annotation.bodies.find(function(b) {
+            return b.purpose == 'pre-select';
+          }) : null;  
+        debugger;
         // Triggers callbacks when they click the button
         var addTag = function(evt) {
+          // args.onAppendBody({
+          //   type: 'TextualBody',
+          //   purpose: 'pre-bridge',
+          //   value: evt.target.dataset.tag,
+          //   author: "soya"
+          // });
+
+          args.onAppendBody({
+            type: 'TextualBody',
+            purpose: 'pre-bridge',
+            value: "GREY",
+            author: "soya"
+          });
+
+          // args.onSaveAndClose({
+          //   type: 'TextualBody',
+          //   purpose: 'pre-bridge',
+          //   value: "GREY",
+          //   author: "soya"
+          // });
+
+          bridge_start = true;
+          bridge_snippet = args.annotation.target.selector[0].exact;
+
+          // add another pending bridges
+          pending_bridges.push( bridge_snippet );
+
+          // r.addAnnotation(args);
+          // debugger;
+
+          // document.getElementById('ok-btn').click()
+        }
+
+        var finishBridge = function(evt) {
           args.onAppendBody({
             type: 'TextualBody',
             purpose: 'bridge',
@@ -926,8 +999,7 @@
             author: "soya"
           });
 
-          bridge_start = true;
-          bridge_snippet = args.annotation.target.selector[0].exact;
+          delete pending_bridges[0];
         }
 
         // 4. This part renders the UI elements
@@ -936,6 +1008,15 @@
 
           button.dataset.tag = 'GREY';
           button.addEventListener('click', addTag); 
+          button.textContent = value;
+          return button;
+        }
+
+        var finishBridgeButton = function(value) {
+          var button = document.createElement('button');
+
+          button.dataset.tag = 'YELLOW';
+          button.addEventListener('click', finishBridge); 
           button.textContent = value;
           return button;
         }
@@ -952,27 +1033,124 @@
           // var button1 = createButton('End bridge');
         
           // container.appendChild(button1);
+          if(currentBridges.value && currentBridges.href) {
+            if(!currentBridges.blob) {
+              let a = document.createElement('a');
+              a.href = currentBridges.href;
+
+              let t = document.createElement('input');
+              t.type = "button";
+
+              t.value = currentBridges.value;
+              a.appendChild(t);
+              container.appendChild(a);
+            }
+            else {
+              let t = document.createElement('span');
+
+              t.textContent = currentBridges.blob;
+
+              container.appendChild(t);
+
+              let a = document.createElement('a');
+              a.href = currentBridges.href;
+
+              t = document.createElement('input');
+              t.type = "button";
+
+              t.value = "Go to " + currentBridges.value;
+              a.appendChild(t);
+              container.appendChild(a);
+            }
+            
+          } else {
+            // 
+            
+          }
+          
+        } 
+        else if(currentPreBridges) {
           let t = document.createElement('span');
 
-          t.textContent = "Find another part of the bridge";
-          container.appendChild(t);
-        } else if(bridge_start) {
-          let t = document.createElement('span');
+            t.textContent = "Find another end of bridge";
+            container.appendChild(t);
 
-          t.textContent = bridge_snippet;
-          container.appendChild(t);
-          var button1 = createButton('End bridge');
-        
+          
+          
+        }
+         else if(currentPreSelect) {
+          if(pending_bridges.length) {
+            let rdo = document.createElement('input');
+            rdo.type = "radio";
+            rdo.name= "bridge-ctl";
+            rdo.id = "start-bridge"
+            rdo.checked = true;
+
+            let l = document.createElement('label');
+            l.for = "start-bridge";
+            l.textContent = "Start bridge"
+
+            container.appendChild(rdo);
+            container.appendChild(l);
+
+            container.appendChild(document.createElement('br'));
+
+            rdo = document.createElement('input');
+            rdo.type = "radio";
+            rdo.name= "bridge-ctl";
+            rdo.id = "end-bridge"
+
+            l = document.createElement('label');
+            l.for = "end-bridge";
+            l.textContent = "End bridge"
+
+            container.appendChild(rdo);
+            container.appendChild(l);
+
+            container.appendChild(document.createElement('br'));
+
+            // bridge finishing buttons 
+            pending_bridges.map(p => {
+              var button1 = createButton(p);
+              container.appendChild(button1);
+              return null;
+            })
+
+            bridge_snippet = args.annotation.target.selector[0].exact;
+
+          // add another pending bridges
+          pending_bridges.push( bridge_snippet );
+          } else {
+            var button1 = createButton("Can't understand? Start bookmark?");
           container.appendChild(button1);
-          container.appendChild(document.createElement('br'));
-          var button1 = createButton('Start bridge');
-        
-          container.appendChild(button1);
-        } else {
-          var button1 = createButton('Start bridge');
-        
-          container.appendChild(button1);
-        }   
+          }
+
+          
+        } else  {
+          
+
+          // args.onSaveAndClose({
+          //   type: 'TextualBody',
+          //   purpose: 'pre-bridge',
+          //   value: "GREY",
+          //   author: "soya"
+          // });
+
+
+          args.onAppendBody({
+            type: 'TextualBody',
+            purpose: 'pre-select',
+            value: "GREY",
+            author: "soya"
+          });
+
+          // bridge_start = true;
+          // bridge_snippet = args.annotation.target.selector[0].exact;
+
+          // // add another pending bridges
+          // pending_bridges.push( bridge_snippet );
+
+        }
         
 
         return container;
@@ -998,7 +1176,7 @@
           // { widget: 'COMMENT' },
           // ColorSelectorWidget,
           BridgeWidget,
-          { widget: 'TAG', vocabulary: ['Place', 'Person', 'Event', 'Organization', 'Animal'] }
+          // { widget: 'TAG', vocabulary: ['Place', 'Person', 'Event', 'Organization', 'Animal'] }
         ],
         formatter: ColorFormatter,
         relationVocabulary: ['isRelated', 'isPartOf', 'isSameAs ']
@@ -1038,6 +1216,7 @@
                   // change.doc here is new a new document added by me
                   debugger;
                   // change.doc.data().body[0].author
+                  // TODO if it is grey, don't add it to the other clients' end
                   if(r.getAnnotations().length != doc.docChanges().length)
                     r.addAnnotation(change.doc.data());
               } else if (change.type === "removed") {
@@ -1050,18 +1229,19 @@
 
 
       // r.loadAnnotations('annotations.w3c.json');
-      // for(var i=0;i< zivaAnnotations.length; i++)
-      //   r.addAnnotation(zivaAnnotations[i]);
+      for(var i=0;i< zivaAnnotations.length; i++)
+        r.addAnnotation(zivaAnnotations[i]);
 
       // r.on('selectAnnotation', function (a) {
-      //   // alert("selected");
+      //   alert("selected");
       //   console.log('selected', a);
       // });
 
-      // r.on('createAnnotation', function (a) {
-      //   console.log('created', a); 
-      //   console.log(r.getAnnotations());        
-      // });
+      r.on('createAnnotation', function (a) {
+        // alert('created'); 
+        ok_clicked = true;
+        console.log(r.getAnnotations());        
+      });
 
       // r.on('updateAnnotation', function (annotation, previous) {
       //   console.log('updated', previous, 'with', annotation);

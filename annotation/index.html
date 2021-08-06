@@ -1092,7 +1092,7 @@
 
             let l = document.createElement('label');
             l.for = "start-bridge";
-            l.textContent = "Start bridge"
+            l.textContent = "Can't understand? Add a bookmark?"
 
             container.appendChild(rdo);
             container.appendChild(l);
@@ -1106,7 +1106,7 @@
 
             l = document.createElement('label');
             l.for = "end-bridge";
-            l.textContent = "End bridge"
+            l.textContent = "Found the answer? Create a link: "
 
             container.appendChild(rdo);
             container.appendChild(l);
@@ -1125,7 +1125,7 @@
           // add another pending bridges
           pending_bridges.push( bridge_snippet );
           } else {
-            var button1 = createButton("Can't understand? Start bookmark?");
+            var button1 = createButton("Can't understand? Add a bookmark?");
           container.appendChild(button1);
           }
 

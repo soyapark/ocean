@@ -892,6 +892,8 @@
       let ok_clicked = false;
       let src_id;
 
+      let session_id = "user" + Math.random();
+
       var ColorSelectorWidget = function(args) {
         // 1. Find a current color setting in the annotation, if any
         var currentColorBody = args.annotation ? 
@@ -976,7 +978,7 @@
             type: 'TextualBody',
             purpose: 'pre-bridge',
             value: "GREY",
-            author: "soya"
+            author: session_id
           });
 
           // args.onSaveAndClose({
@@ -1003,7 +1005,7 @@
             type: 'TextualBody',
             purpose: 'bridge',
             value: "WHITE",
-            author: "soya",
+            author: session_id,
             ocean_id: "ocean" + Math.random()
           });
 
@@ -1157,7 +1159,7 @@
             type: 'TextualBody',
             purpose: 'pre-select',
             value: "GREY",
-            author: "soya"
+            author: session_id
           });
 
           // bridge_start = true;
@@ -1231,9 +1233,9 @@
               if (change.type === "added") {
                   // change.doc here is new a new document added by me
                   debugger;
-                  // change.doc.data().body[0].author
-                  // TODO if it is grey, don't add it to the other clients' end
-                  if(r.getAnnotations().length != doc.docChanges().length)
+                  // if it is grey, don't add it to the other clients' end
+                  if((change.doc.data().body[0].author != session_id) &&
+                    (change.doc.data().body[0].purpose == "bridge"))
                     r.addAnnotation(change.doc.data());
               } else if (change.type === "removed") {
                   // change.doc here is new a new document removed by me
@@ -1241,7 +1243,7 @@
                     r.removeAnnotation(change.doc.data());
               } else {
                 // updated
-                debugger;
+                r.addAnnotation(change.doc.data());
               }
           });
         });

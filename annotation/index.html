@@ -66,6 +66,12 @@
       cursor: pointer;
     }
 
+    .r6o-annotation.WHITE {
+      background-color: initial;
+      border-bottom: 2px solid orange;
+      cursor: pointer;
+    }
+
     svg.a9s-annotationlayer .a9s-annotation.RED .a9s-outer {
       stroke:red;
       stroke-width:3;
@@ -884,6 +890,7 @@
       let bridge_snippet = "";
       let pending_bridges = [];
       let ok_clicked = false;
+      let src_id;
 
       var ColorSelectorWidget = function(args) {
         // 1. Find a current color setting in the annotation, if any
@@ -965,7 +972,7 @@
           //   author: "soya"
           // });
 
-          args.onAppendBody({
+          args.onUpdateBody({
             type: 'TextualBody',
             purpose: 'pre-bridge',
             value: "GREY",
@@ -983,7 +990,7 @@
           bridge_snippet = args.annotation.target.selector[0].exact;
 
           // add another pending bridges
-          pending_bridges.push( bridge_snippet );
+          // pending_bridges.push( bridge_snippet );
 
           // r.addAnnotation(args);
           // debugger;
@@ -992,14 +999,21 @@
         }
 
         var finishBridge = function(evt) {
-          args.onAppendBody({
+          args.onUpdateBody(currentPreSelect, {
             type: 'TextualBody',
             purpose: 'bridge',
-            value: evt.target.dataset.tag,
-            author: "soya"
+            value: "WHITE",
+            author: "soya",
+            ocean_id: "ocean" + Math.random()
           });
 
-          delete pending_bridges[0];
+
+          src_id = evt.target.dataset.src_id
+          
+
+          
+
+          // delete pending_bridges[0];
         }
 
         // 4. This part renders the UI elements
@@ -1016,8 +1030,9 @@
           var button = document.createElement('button');
 
           button.dataset.tag = 'YELLOW';
+          button.dataset.src_id = value.id;
           button.addEventListener('click', finishBridge); 
-          button.textContent = value;
+          button.textContent = value.snippet;
           return button;
         }
 
@@ -1030,9 +1045,6 @@
         
           // container.appendChild(button1);
         } else if(currentBridges && currentBridges.purpose == "bridge") {
-          // var button1 = createButton('End bridge');
-        
-          // container.appendChild(button1);
           if(currentBridges.value && currentBridges.href) {
             if(!currentBridges.blob) {
               let a = document.createElement('a');
@@ -1052,20 +1064,28 @@
 
               container.appendChild(t);
 
-              let a = document.createElement('a');
-              a.href = currentBridges.href;
+              // let a = document.createElement('a');
+              // a.href = currentBridges.href;
 
-              t = document.createElement('input');
-              t.type = "button";
+              // t = document.createElement('input');
+              // t.type = "button";
 
-              t.value = "Go to " + currentBridges.value;
-              a.appendChild(t);
+              // t.value = "Go to " + currentBridges.value;
+              let a = document.createElement("button");
+              a.textContent = "Go to " + currentBridges.value;
+              a.addEventListener('click', function() {
+                document.querySelector(`[data-id='${currentBridges.href}']`).scrollIntoView();
+              }); 
+              // a.appendChild(t);
               container.appendChild(a);
             }
             
           } else {
-            // 
-            
+            // Right after bridge is created 
+            let t = document.createElement('span');
+
+            t.textContent = "Press OK to create the bridge";
+            container.appendChild(t);
           }
           
         } 
@@ -1079,7 +1099,7 @@
           
         }
          else if(currentPreSelect) {
-          if(pending_bridges.length) {
+          
             let rdo = document.createElement('input');
             rdo.type = "radio";
             rdo.name= "bridge-ctl";
@@ -1088,42 +1108,38 @@
 
             let l = document.createElement('label');
             l.for = "start-bridge";
-            l.textContent = "Can't understand? Add a bookmark?"
+            l.textContent = "Can't understand? Add a bridge?"
 
             container.appendChild(rdo);
             container.appendChild(l);
 
             container.appendChild(document.createElement('br'));
 
-            rdo = document.createElement('input');
-            rdo.type = "radio";
-            rdo.name= "bridge-ctl";
-            rdo.id = "end-bridge"
+            if(pending_bridges.length) {
+              rdo = document.createElement('input');
+              rdo.type = "radio";
+              rdo.name= "bridge-ctl";
+              rdo.id = "end-bridge"
 
-            l = document.createElement('label');
-            l.for = "end-bridge";
-            l.textContent = "Found the answer? Create a link: "
+              l = document.createElement('label');
+              l.for = "end-bridge";
+              l.textContent = "Found the answer? Create a link: "
 
-            container.appendChild(rdo);
-            container.appendChild(l);
+              container.appendChild(rdo);
+              container.appendChild(l);
 
-            container.appendChild(document.createElement('br'));
+              container.appendChild(document.createElement('br'));
 
-            // bridge finishing buttons 
-            pending_bridges.map(p => {
-              var button1 = createButton(p);
-              container.appendChild(button1);
-              return null;
-            })
+              // bridge finishing buttons 
+              pending_bridges.map(p => {
+                var button1 = finishBridgeButton(p);
+                
+                container.appendChild(button1);
+                return null;
+              })
 
-            bridge_snippet = args.annotation.target.selector[0].exact;
 
-          // add another pending bridges
-          pending_bridges.push( bridge_snippet );
-          } else {
-            var button1 = createButton("Can't understand? Add a bookmark?");
-          container.appendChild(button1);
-          }
+          } 
 
           
         } else  {
@@ -1223,6 +1239,9 @@
                   // change.doc here is new a new document removed by me
                   if(r.getAnnotations().length != doc.docChanges().length)
                     r.removeAnnotation(change.doc.data());
+              } else {
+                // updated
+                debugger;
               }
           });
         });
@@ -1240,12 +1259,58 @@
       r.on('createAnnotation', function (a) {
         // alert('created'); 
         ok_clicked = true;
-        console.log(r.getAnnotations());        
+        console.log("created");
+        console.log(r.getAnnotations());      
+
+        debugger;
+        
+        if(a.body[0].purpose == "pre-select") {
+          let bridge_snippet = a.target.selector[0].exact;
+
+          // add another pending bridges
+          pending_bridges.push({
+            "snippet": bridge_snippet,
+            "id": a.id
+          });
+        } else if (a.body[0].purpose == "bridge") {
+          // find the source annotation `data-id` and update the another end
+          let src_annotation = r.getAnnotations().filter(an => an.id == src_id)[0];
+
+          r.removeAnnotation(src_annotation);
+
+          src_annotation.body[0] = {
+            "purpose": "bridge",
+            "href": a.id,
+            "value": "test",
+            "blob": a.target.selector[0].exact
+          }
+          
+          r.addAnnotation(src_annotation);
+
+          // manually update the old annotation from db since the updateAnnotation event is not triggered
+          db.collection("annotations").where("id","==", src_annotation.id).get().then(function(querySnapshot) {
+              querySnapshot.docs[0].ref.update({
+                body: [{
+                  "purpose": "bridge",
+                  "href": a.id,
+                  "value": "test",
+                  "blob": a.target.selector[0].exact
+                }]
+              });
+            
+          })
+
+          // remove the pending bridges
+          pending_bridges = pending_bridges.filter(p => p.id != src_annotation.id)
+          
+        }
+        
+        
       });
 
-      // r.on('updateAnnotation', function (annotation, previous) {
-      //   console.log('updated', previous, 'with', annotation);
-      // });
+      r.on('updateAnnotation', function (annotation, previous) {
+        alert('updated', previous, 'with', annotation);
+      });
 
       // Wire the Add/Update/Remove buttons
       // document.getElementById('add-annotation').addEventListener('click', function () {

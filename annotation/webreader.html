@@ -72,8 +72,12 @@
 
     .r6o-annotation.WHITE {
       background-color: initial;
-      border-bottom: 2px solid orange;
-      cursor: pointer;
+      border-bottom: 0px;
+      cursor: default;
+    }
+
+    .r6o-annotation.WHITE.highlighted {
+      background-color: yellow;
     }
 
     svg.a9s-annotationlayer .a9s-annotation.RED .a9s-outer {
@@ -1183,7 +1187,11 @@
               let a = document.createElement("button");
               a.textContent = "Go to " + currentBridges.value;
               a.addEventListener('click', function() {
-                document.querySelector(`[data-id='${currentBridges.href}']`).scrollIntoView();
+                document.querySelectorAll(".r6o-annotation.WHITE").forEach(e => e.classList.remove("highlighted"));
+
+                let target_annotation = document.querySelector(`[data-id='${currentBridges.href}']`);
+                target_annotation.classList.add("highlighted");
+                target_annotation.scrollIntoView();
               }); 
               // a.appendChild(t);
               container.appendChild(a);
@@ -1401,6 +1409,10 @@
 
           // remove the pending bridges
           pending_bridges = pending_bridges.filter(p => p.id != src_annotation.id)
+          
+          // add a highlight to newly added annotation
+          document.querySelectorAll(".r6o-annotation.WHITE").forEach(e => e.classList.remove("highlighted"));
+          document.querySelector(`[data-id='${a.id}']`).classList.add("highlighted");
           
         }
         

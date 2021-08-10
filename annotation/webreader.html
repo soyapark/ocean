@@ -1191,7 +1191,8 @@
 
                 let target_annotation = document.querySelector(`[data-id='${currentBridges.href}']`);
                 target_annotation.classList.add("highlighted");
-                target_annotation.scrollIntoView();
+                // target_annotation.scrollIntoView();
+                location.href = currentBridges.href;
               }); 
               // a.appendChild(t);
               container.appendChild(a);
@@ -1369,7 +1370,7 @@
         console.log("created");
         console.log(r.getAnnotations());      
 
-        debugger;
+        document.querySelector(`[data-id='${a.id}']`).id = a.id.substr(1);
         
         if(a.body[0].purpose == "pre-select") {
           let bridge_snippet = a.target.selector[0].exact;
@@ -1418,6 +1419,8 @@
         
         
       });
+
+      
 
       r.on('updateAnnotation', function (annotation, previous) {
         alert('updated', previous, 'with', annotation);

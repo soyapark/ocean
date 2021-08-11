@@ -1142,6 +1142,8 @@
         var finishBridgeButton = function(value) {
           var button = document.createElement('button');
 
+          button.classList.add("bridge-end-btn");
+          button.style.fontSize = "17px";
           button.dataset.tag = 'YELLOW';
           button.dataset.src_id = value.id;
           button.addEventListener('click', finishBridge); 
@@ -1222,6 +1224,9 @@
             rdo.name= "bridge-ctl";
             rdo.id = "start-bridge"
             rdo.checked = true;
+            rdo.addEventListener('change', function() {
+              document.querySelectorAll(".bridge-end-btn").forEach(e => e.parentNode.removeChild(e));
+            });
 
             let l = document.createElement('label');
             l.for = "start-bridge";
@@ -1237,6 +1242,15 @@
               rdo.type = "radio";
               rdo.name= "bridge-ctl";
               rdo.id = "end-bridge"
+              rdo.addEventListener('change', function() {
+                // bridge finishing buttons 
+                pending_bridges.map(p => {
+                    var button1 = finishBridgeButton(p);
+                    
+                    container.appendChild(button1);
+                    return null;
+                  })
+              });
 
               l = document.createElement('label');
               l.for = "end-bridge";
@@ -1247,21 +1261,13 @@
 
               container.appendChild(document.createElement('br'));
 
-              // bridge finishing buttons 
-              pending_bridges.map(p => {
-                var button1 = finishBridgeButton(p);
-                
-                container.appendChild(button1);
-                return null;
-              })
+              
 
 
           } 
 
           
         } else  {
-          
-
           // args.onSaveAndClose({
           //   type: 'TextualBody',
           //   purpose: 'pre-bridge',

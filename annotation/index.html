@@ -72,8 +72,12 @@
 
     .r6o-annotation.WHITE {
       background-color: initial;
-      border-bottom: 2px solid orange;
-      cursor: pointer;
+      border-bottom: 0px;
+      cursor: default;
+    }
+
+    .r6o-annotation.WHITE.highlighted {
+      background-color: yellow;
     }
 
     svg.a9s-annotationlayer .a9s-annotation.RED .a9s-outer {
@@ -755,7 +759,8 @@
            </main> 
     </div>
   </div>
-<script>// An example annotation we'll add/remove via JavaScript
+
+  <script>// An example annotation we'll add/remove via JavaScript
     var myAnnotation = {
       '@context': 'http://www.w3.org/ns/anno.jsonld',
       'id': 'https://www.example.com/recogito-js-example/foo',
@@ -1035,6 +1040,8 @@
         var finishBridgeButton = function(value) {
           var button = document.createElement('button');
 
+          button.classList.add("bridge-end-btn");
+          button.style.fontSize = "17px";
           button.dataset.tag = 'YELLOW';
           button.dataset.src_id = value.id;
           button.addEventListener('click', finishBridge); 
@@ -1080,7 +1087,12 @@
               let a = document.createElement("button");
               a.textContent = "Go to " + currentBridges.value;
               a.addEventListener('click', function() {
-                document.querySelector(`[data-id='${currentBridges.href}']`).scrollIntoView();
+                document.querySelectorAll(".r6o-annotation.WHITE").forEach(e => e.classList.remove("highlighted"));
+
+                let target_annotation = document.querySelector(`[data-id='${currentBridges.href}']`);
+                target_annotation.classList.add("highlighted");
+                // target_annotation.scrollIntoView();
+                location.href = currentBridges.href;
               }); 
               // a.appendChild(t);
               container.appendChild(a);
@@ -1111,10 +1123,13 @@
             rdo.name= "bridge-ctl";
             rdo.id = "start-bridge"
             rdo.checked = true;
+            rdo.addEventListener('change', function() {
+              document.querySelectorAll(".bridge-end-btn").forEach(e => e.parentNode.removeChild(e));
+            });
 
             let l = document.createElement('label');
             l.for = "start-bridge";
-            l.textContent = "Can't understand? Add a bridge?"
+            l.textContent = "Add a bookmark"
 
             container.appendChild(rdo);
             container.appendChild(l);
@@ -1126,31 +1141,32 @@
               rdo.type = "radio";
               rdo.name= "bridge-ctl";
               rdo.id = "end-bridge"
+              rdo.addEventListener('change', function() {
+                // bridge finishing buttons 
+                pending_bridges.map(p => {
+                    var button1 = finishBridgeButton(p);
+                    
+                    container.appendChild(button1);
+                    return null;
+                  })
+              });
 
               l = document.createElement('label');
               l.for = "end-bridge";
-              l.textContent = "Found the answer? Create a link: "
+              l.textContent = "Link with another bookmark: "
 
               container.appendChild(rdo);
               container.appendChild(l);
 
               container.appendChild(document.createElement('br'));
 
-              // bridge finishing buttons 
-              pending_bridges.map(p => {
-                var button1 = finishBridgeButton(p);
-                
-                container.appendChild(button1);
-                return null;
-              })
+              
 
 
           } 
 
           
         } else  {
-          
-
           // args.onSaveAndClose({
           //   type: 'TextualBody',
           //   purpose: 'pre-bridge',
@@ -1252,23 +1268,13 @@
           });
         });
 
-
-      // r.loadAnnotations('annotations.w3c.json');
-      for(var i=0;i< zivaAnnotations.length; i++)
-        r.addAnnotation(zivaAnnotations[i]);
-
-      // r.on('selectAnnotation', function (a) {
-      //   alert("selected");
-      //   console.log('selected', a);
-      // });
-
       r.on('createAnnotation', function (a) {
         // alert('created'); 
         ok_clicked = true;
         console.log("created");
         console.log(r.getAnnotations());      
 
-        debugger;
+        document.querySelector(`[data-id='${a.id}']`).id = a.id.substr(1);
         
         if(a.body[0].purpose == "pre-select") {
           let bridge_snippet = a.target.selector[0].exact;
@@ -1309,10 +1315,16 @@
           // remove the pending bridges
           pending_bridges = pending_bridges.filter(p => p.id != src_annotation.id)
           
+          // add a highlight to newly added annotation
+          document.querySelectorAll(".r6o-annotation.WHITE").forEach(e => e.classList.remove("highlighted"));
+          document.querySelector(`[data-id='${a.id}']`).classList.add("highlighted");
+          
         }
         
         
       });
+
+      
 
       r.on('updateAnnotation', function (annotation, previous) {
         alert('updated', previous, 'with', annotation);
@@ -1376,6 +1388,7 @@
       //   r.setMode(annotationMode);
       // });
     })();</script>
+
 </body>
 
 </html>

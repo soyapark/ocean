@@ -1058,6 +1058,10 @@
         
           // container.appendChild(button1);
         } else if(currentBridges && currentBridges.purpose == "bridge") {
+          // hide Ok and cancel button at the tooltip
+          document.getElementById("ok-btn").style.visibility = "hidden";
+          document.getElementById("cancel-btn").style.visibility = "hidden";
+
           if(currentBridges.value && currentBridges.href) {
             if(!currentBridges.blob) {
               let a = document.createElement('a');

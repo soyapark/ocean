@@ -1010,6 +1010,7 @@
         }
 
         var finishBridge = function(evt) {
+          
           args.onUpdateBody(currentPreSelect, {
             type: 'TextualBody',
             purpose: 'bridge',
@@ -1018,7 +1019,7 @@
             ocean_id: "ocean" + Math.random()
           });
 
-
+          debugger;
           src_id = evt.target.dataset.src_id
           
 
@@ -1058,11 +1059,11 @@
         
           // container.appendChild(button1);
         } else if(currentBridges && currentBridges.purpose == "bridge") {
-          // hide Ok and cancel button at the tooltip
-          document.getElementById("ok-btn").style.visibility = "hidden";
-          document.getElementById("cancel-btn").style.visibility = "hidden";
-
           if(currentBridges.value && currentBridges.href) {
+            // hide Ok and cancel button at the tooltip
+            document.getElementById("ok-btn").style.visibility = "hidden";
+            document.getElementById("cancel-btn").style.visibility = "hidden";
+
             if(!currentBridges.blob) {
               let a = document.createElement('a');
               a.href = currentBridges.href;
@@ -1103,6 +1104,8 @@
             }
             
           } else {
+            document.getElementById("ok-btn").disabled = false;
+
             // Right after bridge is created 
             let t = document.createElement('span');
 
@@ -1301,7 +1304,7 @@
           src_annotation.body[0] = {
             "purpose": "bridge",
             "href": a.id,
-            "value": "test",
+            "value": "here",
             "blob": a.target.selector[0].exact
           }
           
@@ -1310,12 +1313,7 @@
           // manually update the old annotation from db since the updateAnnotation event is not triggered
           db.collection("annotations").where("id","==", src_annotation.id).get().then(function(querySnapshot) {
               querySnapshot.docs[0].ref.update({
-                body: [{
-                  "purpose": "bridge",
-                  "href": a.id,
-                  "value": "test",
-                  "blob": a.target.selector[0].exact
-                }]
+                body: [src_annotation.body[0]]
               });
             
           })

@@ -1105,13 +1105,30 @@
             }
             
           } else {
+            // Right after bridge is created for bridge ends
             document.getElementById("ok-btn").disabled = false;
 
-            // Right after bridge is created 
-            let t = document.createElement('span');
+            if(args.annotation.id && r.getAnnotations().filter(an => an.body[0].href == args.annotation.id)) {
+                // before the bridge is complete
+                let a = document.createElement("button");
+                a.textContent = "Go to another end of bridge";
+                a.style.fontSize = "17px";
+                a.addEventListener('click', function() {
+                    let ans = r.getAnnotations();       
+                    let jump_href = r.getAnnotations().filter(an => an.body[0].href == args.annotation.id)[0].id
+                    document.querySelector(`[data-id='${jump_href}']`).id = jump_href.substr(1);
+                    
+                    location.href = jump_href;
+                }); 
+                container.appendChild(a);
+            }
 
-            t.textContent = "Press OK to create the bridge";
-            container.appendChild(t);
+            else {
+                let t = document.createElement('span');
+
+                t.textContent = "Press OK to create the bridge";
+                container.appendChild(t);
+            }
           }
           
         } 
@@ -1299,6 +1316,9 @@
         } else if (a.body[0].purpose == "bridge") {
           // find the source annotation `data-id` and update the another end
           let src_annotation = r.getAnnotations().filter(an => an.id == src_id)[0];
+
+          // get the section name of the newly created annotation
+          // document.querySelector(`[data-id='${a.id}']`)
 
           r.removeAnnotation(src_annotation);
 

@@ -257,23 +257,12 @@ var zivaAnnotations = [
         ocean_id: "ocean" + Math.random()
         });
 
-        debugger;
         src_id = evt.target.dataset.src_id
         
 
         
 
         // delete pending_bridges[0];
-    }
-
-    // 4. This part renders the UI elements
-    var createButton = function(value) {
-        var button = document.createElement('button');
-
-        button.dataset.tag = 'GREY';
-        button.addEventListener('click', addTag); 
-        button.textContent = value;
-        return button;
     }
 
     var finishBridgeButton = function(value) {
@@ -330,25 +319,44 @@ var zivaAnnotations = [
             let a = document.createElement("button");
             a.textContent = "Go to " + currentBridges.value;
             a.addEventListener('click', function() {
-            document.querySelectorAll(".r6o-annotation.WHITE").forEach(e => e.classList.remove("highlighted"));
+                document.querySelectorAll(".r6o-annotation.WHITE").forEach(e => e.classList.remove("highlighted"));
 
-            let target_annotation = document.querySelector(`[data-id='${currentBridges.href}']`);
-            target_annotation.classList.add("highlighted");
-            // target_annotation.scrollIntoView();
-            location.href = currentBridges.href;
+                let target_annotation = document.querySelector(`[data-id='${currentBridges.href}']`);
+                target_annotation.classList.add("highlighted");
+                // target_annotation.scrollIntoView();
+                location.href = currentBridges.href;
             }); 
             // a.appendChild(t);
             container.appendChild(a);
         }
         
         } else {
+        // Right after bridge is created for bridge ends
         document.getElementById("ok-btn").disabled = false;
 
-        // Right after bridge is created 
-        let t = document.createElement('span');
+        if(args.annotation.id && r.getAnnotations().filter(an => an.body[0].href == args.annotation.id)) {
+            // before the bridge is complete
+            let a = document.createElement("button");
+            a.textContent = "Go to another end of bridge";
+            a.style.fontSize = "17px";
+            a.addEventListener('click', function() {
+                let ans = r.getAnnotations();       
+                let jump_href = r.getAnnotations().filter(an => an.body[0].href == args.annotation.id)[0].id
+                document.querySelector(`[data-id='${jump_href}']`).id = jump_href.substr(1);
+                
+                location.href = jump_href;
+            }); 
+            container.appendChild(a);
+        }
+        
+        else {
+            let t = document.createElement('span');
 
-        t.textContent = "Press OK to create the bridge";
-        container.appendChild(t);
+            t.textContent = "Press OK to create the bridge";
+            container.appendChild(t);
+        }
+         
+        
         }
         
     } 
@@ -503,7 +511,6 @@ var zivaAnnotations = [
         console.log(change)
             if (change.type === "added") {
                 // change.doc here is new a new document added by me
-                debugger;
                 // if it is grey, don't add it to the other clients' end
                 if((change.doc.data().body[0].author != session_id) &&
                 (change.doc.data().body[0].purpose == "bridge"))
@@ -552,6 +559,8 @@ var zivaAnnotations = [
         }
         
         r.addAnnotation(src_annotation);
+        
+        
 
         // manually update the old annotation from db since the updateAnnotation event is not triggered
         db.collection(COLLECTION_NAME).where("id","==", src_annotation.id).get().then(function(querySnapshot) {

@@ -130,7 +130,20 @@ var zivaAnnotations = [
     }
 ];
 
+function getUrlParameter(sParam) {
+    var sPageURL = window.location.search.substring(1),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
 
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+        }
+    }
+}
 
 (function () {
     let bridge_start = false;
@@ -139,7 +152,13 @@ var zivaAnnotations = [
     let ok_clicked = false;
     let src_id;
 
-    let session_id = "user" + Math.random();
+    let session_id = getUrlParameter("user");
+
+    if(!session_id) {
+        alert("Wrong URL. Please contact Soya for a correct link.");
+        $("body").hide();
+        return;
+    }
 
     var ColorSelectorWidget = function(args) {
     // 1. Find a current color setting in the annotation, if any
@@ -265,7 +284,6 @@ var zivaAnnotations = [
     }
 
     var finishBridge = function(evt) {
-        
         args.onUpdateBody(currentPreSelect, {
         type: 'TextualBody',
         purpose: 'bridge',
@@ -299,9 +317,8 @@ var zivaAnnotations = [
     // debugger;
     // if bridge exist, don't allow users to add more
     if(currentBridges && currentBridges.purpose == "tagging") {
-        // var button1 = createButton('Go to bridge');
-    
-        // container.appendChild(button1);
+        // no op
+
     } else if(currentBridges && currentBridges.purpose == "bridge") {
         if(currentBridges.value && currentBridges.href) {
         // hide Ok and cancel button at the tooltip
@@ -334,6 +351,9 @@ var zivaAnnotations = [
 
             // t.value = "Go to " + currentBridges.value;
 
+            let author_tag = document.createElement("span");
+            author_tag.textContent = " 😃 " + (currentBridges.author == session_id? "me":currentBridges.author); 
+            container.appendChild( author_tag);
             container.appendChild( document.createElement("br") );
 
             // Jump to another end of bridge
@@ -434,10 +454,6 @@ var zivaAnnotations = [
             container.appendChild(l);
 
             container.appendChild(document.createElement('br'));
-
-            
-
-
         } 
 
         
@@ -567,7 +583,8 @@ var zivaAnnotations = [
         "purpose": "pre-bridge",
         "href": a.id,
         "value": "GREY",
-        "blob": a.target.selector[0].exact
+        "blob": a.target.selector[0].exact,
+        "author": session_id
         }
         
         r.addAnnotation(a);
@@ -585,7 +602,8 @@ var zivaAnnotations = [
         "purpose": "bridge",
         "href": a.id,
         "value": "here",
-        "blob": a.target.selector[0].exact
+        "blob": a.target.selector[0].exact,
+        "author": session_id
         }
         
         r.addAnnotation(src_annotation);

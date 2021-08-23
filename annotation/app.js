@@ -130,7 +130,20 @@ var zivaAnnotations = [
     }
 ];
 
+function getUrlParameter(sParam) {
+    var sPageURL = window.location.search.substring(1),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
 
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+        }
+    }
+}
 
 (function () {
     let bridge_start = false;
@@ -139,7 +152,13 @@ var zivaAnnotations = [
     let ok_clicked = false;
     let src_id;
 
-    let session_id = "user" + Math.random();
+    let session_id = getUrlParameter("user");
+
+    if(!session_id) {
+        alert("Wrong URL. Please contact Soya for a correct link.");
+        $("body").hide();
+        return;
+    }
 
     var ColorSelectorWidget = function(args) {
     // 1. Find a current color setting in the annotation, if any
@@ -247,8 +266,24 @@ var zivaAnnotations = [
         // document.getElementById('ok-btn').click()
     }
 
+    var createNewTabButton = function(value) {
+        var button = document.createElement('button');
+
+        button.style.fontSize = "17px";
+        button.dataset.tag = 'YELLOW';
+        button.addEventListener('click', function() {
+            alert("will create a new tab - preserving same viewport");
+            this.parentNode.removeChild(this);
+            let s = document.createElement("span");
+            s.textContent = "A new tab is created!";
+
+            container.appendChild(s);
+        });
+        button.textContent = "Open in new tab";
+        return button;
+    }
+
     var finishBridge = function(evt) {
-        
         args.onUpdateBody(currentPreSelect, {
         type: 'TextualBody',
         purpose: 'bridge',
@@ -282,9 +317,8 @@ var zivaAnnotations = [
     // debugger;
     // if bridge exist, don't allow users to add more
     if(currentBridges && currentBridges.purpose == "tagging") {
-        // var button1 = createButton('Go to bridge');
-    
-        // container.appendChild(button1);
+        // no op
+
     } else if(currentBridges && currentBridges.purpose == "bridge") {
         if(currentBridges.value && currentBridges.href) {
         // hide Ok and cancel button at the tooltip
@@ -316,8 +350,17 @@ var zivaAnnotations = [
             // t.type = "button";
 
             // t.value = "Go to " + currentBridges.value;
+
+            let author_tag = document.createElement("span");
+            author_tag.textContent = " 😃 " + (currentBridges.author == session_id? "me":currentBridges.author); 
+            container.appendChild( author_tag);
+            container.appendChild( document.createElement("br") );
+
+            // Jump to another end of bridge
             let a = document.createElement("button");
             a.textContent = "Go to " + currentBridges.value;
+            a.style.fontSize = "17px";
+
             a.addEventListener('click', function() {
                 document.querySelectorAll(".r6o-annotation.WHITE").forEach(e => e.classList.remove("highlighted"));
 
@@ -328,6 +371,11 @@ var zivaAnnotations = [
             }); 
             // a.appendChild(t);
             container.appendChild(a);
+
+            // Create a tab from this bookmark 
+            let tabButton= createNewTabButton("test");
+             
+            container.appendChild(tabButton);
         }
         
         } else {
@@ -360,17 +408,7 @@ var zivaAnnotations = [
         }
         
     } 
-    else if(currentPreBridges) {
-        let t = document.createElement('span');
-
-        t.textContent = "Find another end of bridge";
-        container.appendChild(t);
-
-        
-        
-    }
-        else if(currentPreSelect) {
-        
+    else if(currentPreSelect) {
         let rdo = document.createElement('input');
         rdo.type = "radio";
         rdo.name= "bridge-ctl";
@@ -416,22 +454,18 @@ var zivaAnnotations = [
             container.appendChild(l);
 
             container.appendChild(document.createElement('br'));
-
-            
-
-
         } 
 
         
+        if(currentPreBridges) {
+            let tabButton= createNewTabButton("test");
+             
+            container.appendChild(tabButton);
+        }
+        
+
+        
     } else  {
-        // args.onSaveAndClose({
-        //   type: 'TextualBody',
-        //   purpose: 'pre-bridge',
-        //   value: "GREY",
-        //   author: "soya"
-        // });
-
-
         args.onAppendBody({
         type: 'TextualBody',
         purpose: 'pre-select',
@@ -454,7 +488,7 @@ var zivaAnnotations = [
     /** A matching formatter that sets the color according to the 'highlighting' body value **/
     var ColorFormatter = function(annotation) {
     var highlightBody = annotation.bodies.find(function(b) {
-        return b.purpose.includes("bridge") || b.purpose.includes("pre-select");
+        return b.purpose.includes("bridge");
     });
 
     if (highlightBody)
@@ -542,6 +576,19 @@ var zivaAnnotations = [
         "snippet": bridge_snippet,
         "id": a.id
         });
+        
+        r.removeAnnotation(a);
+
+        a.body[0] = {
+        "purpose": "pre-bridge",
+        "href": a.id,
+        "value": "GREY",
+        "blob": a.target.selector[0].exact,
+        "author": session_id
+        }
+        
+        r.addAnnotation(a);
+
     } else if (a.body[0].purpose == "bridge") {
         // find the source annotation `data-id` and update the another end
         let src_annotation = r.getAnnotations().filter(an => an.id == src_id)[0];
@@ -555,7 +602,8 @@ var zivaAnnotations = [
         "purpose": "bridge",
         "href": a.id,
         "value": "here",
-        "blob": a.target.selector[0].exact
+        "blob": a.target.selector[0].exact,
+        "author": session_id
         }
         
         r.addAnnotation(src_annotation);

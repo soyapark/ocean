@@ -383,7 +383,7 @@ var zivaAnnotations = [
         });
 
         let l = document.createElement('label');
-        l.for = "start-bridge";
+        l.htmlFor = "start-bridge";
         l.textContent = "Add a bookmark"
 
         container.appendChild(rdo);
@@ -409,7 +409,7 @@ var zivaAnnotations = [
             });
 
             l = document.createElement('label');
-            l.for = "end-bridge";
+            l.htmlFor = "end-bridge";
             l.textContent = "Link with another bookmark: "
 
             container.appendChild(rdo);

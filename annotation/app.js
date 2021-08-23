@@ -623,8 +623,7 @@ function getUrlParameter(sParam) {
         
         // add a highlight to newly added annotation
         document.querySelectorAll(".r6o-annotation.WHITE").forEach(e => e.classList.remove("highlighted"));
-        document.querySelector(`[data-id='${a.id}']`).classList.add("highlighted");
-        
+        document.querySelectorAll(`[data-id='${a.id}']`).forEach(e => e.classList.add("highlighted"));
     }
     
     

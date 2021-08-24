@@ -154,8 +154,9 @@ let cxt_menu_tgt = "p, small, span";
     let ok_clicked = false;
     let src_id;
 
-    var tabID = 1;
-    var scrollTab = [0];
+    let tabID = 1;
+    let currentTabID = 0;
+    let scrollTab = [{"name": "Main", "loc": 0}];
 
     let session_id = getUrlParameter("user");
 
@@ -164,6 +165,11 @@ let cxt_menu_tgt = "p, small, span";
         $("body").hide();
         return;
     }
+
+    $("body").on("click", ".context-menu li", function(e) {
+        openTab( $(e.target).attr("tabID") );
+        
+    });
 
     var ColorSelectorWidget = function(args) {
     // 1. Find a current color setting in the annotation, if any
@@ -282,7 +288,7 @@ let cxt_menu_tgt = "p, small, span";
         button.style.fontSize = "17px";
         button.dataset.tag = 'YELLOW';
         button.addEventListener('click', function() {
-            createNewTab();
+            createNewTab($(window).scrollTop());
             // alert("will create a new tab - preserving same viewport");
             this.parentNode.removeChild(this);
             let s = document.createElement("span");
@@ -371,12 +377,12 @@ let cxt_menu_tgt = "p, small, span";
             let a = document.createElement("button");
             a.textContent = "Go to " + currentBridges.value;
             a.style.fontSize = "17px";
+            a.style.marginRight = "5px";
 
             a.addEventListener('click', function() {
                 document.querySelectorAll(".r6o-annotation.WHITE").forEach(e => e.classList.remove("highlighted"));
-
-                let target_annotation = document.querySelector(`[data-id='${currentBridges.href}']`);
-                target_annotation.classList.add("highlighted");
+                document.querySelectorAll(`[data-id='${currentBridges.href}']`).forEach(e => e.classList.add("highlighted"));
+                
                 // target_annotation.scrollIntoView();
                 location.href = currentBridges.href;
             }); 
@@ -679,7 +685,28 @@ let cxt_menu_tgt = "p, small, span";
     // });
 
 
-    
+    function createNewTab(loc=0, tab_name="New tab") {
+        $(".context-menu ul").append(`<li tabID=${tabID}>${tab_name}</li>`)
+        scrollTab.push({
+            "name": tab_name,
+            "loc": loc
+        });
+
+        openTab(tabID++);
+    }
+
+    function openTab(inTabID) {
+        // save the current tab position
+        scrollTab[currentTabID].loc = $(window).scrollTop();
+
+        currentTabID = inTabID;
+
+        // open the selected tab
+        $(window).scrollTop(scrollTab[inTabID].loc);
+
+        $(`.context-menu ul li`).removeClass('selected');
+        $(`.context-menu ul li[tabID=${currentTabID}]`).addClass('selected');
+    }
 
     function getSelectedText() {
         if (window.getSelection) {

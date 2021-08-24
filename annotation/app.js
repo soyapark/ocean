@@ -167,9 +167,20 @@ let cxt_menu_tgt = "p, small, span";
     }
 
     $("body").on("click", ".context-menu li", function(e) {
+        if(e.target !== e.currentTarget) return;
+
         openTab( $(e.target).attr("tabID") );
         
     });
+
+    $("body").on("click", "span.close", function(e) {
+        // remove tab
+        let to_removed = $(e.target).parents("li").attr("tabID");
+        $(`.context-menu ul li[tabID=${to_removed}]`).remove();
+
+        if(to_removed == currentTabID)
+            openTab(0);
+    })
 
     var ColorSelectorWidget = function(args) {
     // 1. Find a current color setting in the annotation, if any
@@ -402,8 +413,9 @@ let cxt_menu_tgt = "p, small, span";
         if(args.annotation.id && r.getAnnotations().filter(an => an.body[0].href == args.annotation.id)) {
             // before the bridge is complete
             let a = document.createElement("button");
-            a.textContent = "Go to another end of bridge";
+            a.textContent = "Go back to link";
             a.style.fontSize = "17px";
+            a.style.marginRight = "5px";
             a.addEventListener('click', function() {
                 let ans = r.getAnnotations();       
                 let jump_href = r.getAnnotations().filter(an => an.body[0].href == args.annotation.id)[0].id
@@ -412,6 +424,19 @@ let cxt_menu_tgt = "p, small, span";
                 location.href = jump_href;
             }); 
             container.appendChild(a);
+
+            // go to first occurence
+            let src_text = r.getAnnotations().filter(an => an.body[0].href == args.annotation.id)[0].target.selector[0].exact;
+            if($(`p:contains("${src_text}")`).length > 1) {
+                a = document.createElement("button");
+                a.textContent = `Go to first occurence of "${src_text}"`;
+                a.style.fontSize = "17px";
+                a.addEventListener('click', function() {
+                    alert("TODO this will let users go to the first occurence of the term");
+                }); 
+                container.appendChild(a);
+            }
+            
         }
         
         else {
@@ -686,7 +711,7 @@ let cxt_menu_tgt = "p, small, span";
 
 
     function createNewTab(loc=0, tab_name="New tab") {
-        $(".context-menu ul").append(`<li tabID=${tabID}>${tab_name}</li>`)
+        $(".context-menu ul").append(`<li tabID=${tabID}>${tab_name} <span class="close"></span></li>`)
         scrollTab.push({
             "name": tab_name,
             "loc": loc

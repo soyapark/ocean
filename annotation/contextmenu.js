@@ -5,9 +5,6 @@ $(document).ready(function () {
 
     // disable right click and show custom context menu
     $('body').on('contextmenu', cxt_menu_tgt, function (e) {
-        if (e.target.tagName == "P" && $(e.target).parents(".appended-text").length == 0) {
-            return;
-        }
         var id = this.id;
         $("#txt_id").val(id);
 
@@ -32,6 +29,10 @@ $(document).ready(function () {
     $(document).bind('contextmenu click', function (e) {
         let is_safari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
+        if(["SPAN", "LI"].includes(e.target.tagName)) {
+            return;
+        }
+
         if(!is_safari || !e.ctrlKey) {
             $(".context-menu").hide();
             $("#txt_id").val("");
@@ -45,9 +46,12 @@ $(document).ready(function () {
     });
 
     // Clicked context-menu item
-    $('.context-menu li').click(function (e) {
-        $right_clicked_tgt.hide();
-        $(".context-menu").hide();
+    $("body").on("click", ".context-menu li", function(e) {
+        // if( !$(e.target).hasClass("close") ) {
+        //     $right_clicked_tgt.hide();
+        //     $(".context-menu").hide();
+        // }
+        
         contextmenuClick(e);
-    });
+    })
 });

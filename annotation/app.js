@@ -145,12 +145,17 @@ function getUrlParameter(sParam) {
     }
 }
 
+let cxt_menu_tgt = "p, small, span";
+
 (function () {
     let bridge_start = false;
     let bridge_snippet = "";
     let pending_bridges = [];
     let ok_clicked = false;
     let src_id;
+
+    var tabID = 1;
+    var scrollTab = [0];
 
     let session_id = getUrlParameter("user");
 
@@ -215,6 +220,11 @@ function getUrlParameter(sParam) {
     }
 
     var BridgeWidget = function(args) {
+        // for safari, if the context menu is open, don't open the widget
+        if($(".context-menu").css("display") == "block")
+            $(".r6o-editor").hide();
+            
+
     // Check if there is already bridge here
     var currentBridges = args.annotation ? 
         args.annotation.bodies.find(function(b) {
@@ -272,7 +282,8 @@ function getUrlParameter(sParam) {
         button.style.fontSize = "17px";
         button.dataset.tag = 'YELLOW';
         button.addEventListener('click', function() {
-            alert("will create a new tab - preserving same viewport");
+            createNewTab();
+            // alert("will create a new tab - preserving same viewport");
             this.parentNode.removeChild(this);
             let s = document.createElement("span");
             s.textContent = "A new tab is created!";
@@ -351,8 +362,8 @@ function getUrlParameter(sParam) {
 
             // t.value = "Go to " + currentBridges.value;
 
-            let author_tag = document.createElement("span");
-            author_tag.textContent = " 😃 " + (currentBridges.author == session_id? "me":currentBridges.author); 
+            let author_tag = document.createElement("i");
+            author_tag.textContent = " Created by " + (currentBridges.author == session_id? "me":currentBridges.author); 
             container.appendChild( author_tag);
             container.appendChild( document.createElement("br") );
 
@@ -693,3 +704,8 @@ function getUrlParameter(sParam) {
     //   r.setMode(annotationMode);
     // });
 })();
+
+function contextmenuClick(e) {
+    debugger;
+    // swith tab 
+}

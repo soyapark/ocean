@@ -6,6 +6,10 @@
   <title>Ocean authoring interface</title>
   <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
 
+  <!-- <link media="screen, print" rel="stylesheet" href="./webreader_files/bootstrap.min.css">
+  <link media="screen, print" rel="stylesheet" href="./webreader_files/bootstrap-theme.min.css"> -->
+  <link media="screen, print" rel="stylesheet" href="./contextmenu.css">
+
   <style>
     html,
     body {
@@ -31,6 +35,55 @@
     }
   </style>
   <style>
+    .navbar {
+      overflow: hidden;
+      background-color: transparent;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 99;
+      min-height: 30px;
+      max-height: 30px;
+      border-top: 5px solid grey;
+    }
+
+    .navbar select, .navbar button {
+      /* font-size: 50px; */
+      float:left;
+    }
+
+    .navbar.closed {
+      visibility: hidden;
+    }
+
+    .navbar .nav{
+      visibility: hidden;
+
+    }
+
+    .navbar:hover .nav {
+      visibility: visible;
+    }
+
+    .nav > li > a {
+      /* float: left;
+      display: block; */
+      color: #f2f2f2;
+      text-align: center;
+      padding-top: 0;
+      text-decoration: none;
+      font-size: 17px;
+    }
+
+    .navbar a:hover {
+      background: #ddd;
+      color: black;
+    }
+
+    .navbar .close {
+      float:right;
+    }
+
     .widget {
       background:#85D5AC;
     }
@@ -126,7 +179,6 @@
           if (text!='') console.log(text);
 // do logic here
 })
-})();
 
 //     (function () {
       
@@ -142,6 +194,7 @@
 <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
 <!-- <script src="https://cdn.jsdelivr.net/npm/@recogito/annotorious@2.1.6/dist/annotorious.min.js"></script> -->
 <script src="recogito-firebase-storage.js"></script>
+
   <link href="recogito.min.css" rel="stylesheet">
   <script src="recogito.min.js"></script>
 </head>
@@ -149,6 +202,20 @@
 <body>
   <!-- <div><button id="add-annotation">Add Annotation</button> <button id="update-annotation">Update Annotation</button>
     <button id="remove-annotation">Remove Annotation</button> <button id="toggle-mode">MODE: ANNOTATION</button></div> -->
+  <!-- <div class="navbar" style="width:100%">
+      <ul id="tab-list" style="background: white;" class="nav nav-tabs" role="tablist">
+        <li class="active"><a href="#paper-tab1" role="tab" data-toggle="tab"><span>Main </span>
+                </a></li>
+      </ul>
+  </div> -->
+  <!-- Context-menu -->
+  <div class='context-menu'>
+      <ul>
+          <li><span>close "load more"</span></li>
+          <!--<li><span class='Orange'></span>&nbsp;<span>Orange</span></li>
+          <li><span class='Plum'></span>&nbsp;<span>Plum</span></li>-->
+      </ul>
+  </div>  
   <div id="outer-container">
     <div id="content" class="plaintext">
       <section class="front-matter"> 
@@ -863,6 +930,7 @@
     </div>
   </div>
   <script src="app.js"></script>
+  <script src="./contextmenu.js" type="text/javascript"></script>
 </body>
 
 </html>

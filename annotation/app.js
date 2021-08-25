@@ -588,13 +588,12 @@ let cxt_menu_tgt = "p, small, span";
             if (change.type === "added") {
                 // change.doc here is new a new document added by me
                 // if it is grey, don't add it to the other clients' end
-                if((change.doc.data().body[0].author != session_id) &&
-                (change.doc.data().body[0].purpose == "bridge"))
-                r.addAnnotation(change.doc.data());
+                if((change.doc.data().body[0].author != session_id) && (change.doc.data().body[0].purpose == "bridge"))
+                    r.addAnnotation(change.doc.data());
             } else if (change.type === "removed") {
                 // change.doc here is new a new document removed by me
                 if(r.getAnnotations().length != doc.docChanges().length)
-                r.removeAnnotation(change.doc.data());
+                    r.removeAnnotation(change.doc.data());
             } else {
             // updated
             r.addAnnotation(change.doc.data());
@@ -666,13 +665,38 @@ let cxt_menu_tgt = "p, small, span";
         // add a highlight to newly added annotation
         document.querySelectorAll(".r6o-annotation.WHITE").forEach(e => e.classList.remove("highlighted"));
         document.querySelectorAll(`[data-id='${a.id}']`).forEach(e => e.classList.add("highlighted"));
+
+
+        // if the term is appeared multiple times, add bridges from the occurence 
+        let term = src_annotation.target.selector[0].exact;
+        let occurences = getIndicesOf(term, $("#content").text());
+        
+        // temporarily add to only first ten
+        occurences = occurences.slice(0, 10);
+        occurences.forEach(function(e) {
+            if(src_annotation.target.selector[1].start == e)
+                return;
+            let extra_annon = {...src_annotation};
+            extra_annon.id = "random" + Math.random();
+            extra_annon.target.selector[1] = {
+                'type': 'TextPositionSelector',
+                'start': e,
+                'end': e + term.length
+            };
+            r.addAnnotation(extra_annon);
+
+            // save it to db
+            db.collection(COLLECTION_NAME).add(
+                extra_annon
+            )
+        })
+
     }
     
     
     });
-
     
-
+    
     // r.on('updateAnnotation', function (annotation, previous) {
     //   alert('updated', previous, 'with', annotation);
     // });
@@ -731,6 +755,23 @@ let cxt_menu_tgt = "p, small, span";
 
         $(`.context-menu ul li`).removeClass('selected');
         $(`.context-menu ul li[tabID=${currentTabID}]`).addClass('selected');
+    }
+
+    function getIndicesOf(searchStr, str, caseSensitive) {
+        var searchStrLen = searchStr.length;
+        if (searchStrLen == 0) {
+            return [];
+        }
+        var startIndex = 0, index, indices = [];
+        if (!caseSensitive) {
+            str = str.toLowerCase();
+            searchStr = searchStr.toLowerCase();
+        }
+        while ((index = str.indexOf(searchStr, startIndex)) > -1) {
+            indices.push(index);
+            startIndex = index + searchStrLen;
+        }
+        return indices;
     }
 
     function getSelectedText() {

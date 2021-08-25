@@ -23,7 +23,7 @@
         }
 
             .context-menu ul li.selected {
-                background-color: lightslategray;
+                background-color: lightgray;
                 font-weight: bold;
             }
 

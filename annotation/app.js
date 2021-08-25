@@ -417,6 +417,7 @@ let cxt_menu_tgt = "p, small, span";
             a.style.fontSize = "17px";
             a.style.marginRight = "5px";
             a.addEventListener('click', function() {
+                // TODO make it so that it goes back to src 
                 let ans = r.getAnnotations();       
                 let jump_href = r.getAnnotations().filter(an => an.body[0].href == args.annotation.id)[0].id
                 document.querySelector(`[data-id='${jump_href}']`).id = jump_href.substr(1);
@@ -428,6 +429,7 @@ let cxt_menu_tgt = "p, small, span";
             // go to first occurence
             let src_text = r.getAnnotations().filter(an => an.body[0].href == args.annotation.id)[0].target.selector[0].exact;
             if($(`p:contains("${src_text}")`).length > 1) {
+                // TODO debug this as well and make sure it goes first in paper content not title 
                 a = document.createElement("button");
                 a.textContent = `Go to first occurence of "${src_text}"`;
                 a.style.fontSize = "17px";
@@ -676,6 +678,11 @@ let cxt_menu_tgt = "p, small, span";
         occurences.forEach(function(e) {
             if(src_annotation.target.selector[1].start == e)
                 return;
+
+            // if this occurence is in the target part, skip this occurence 
+            if(Math.max(e, a.target.selector[1].start) <= Math.min(e + term.length, a.target.selector[1].end))
+                return;
+
             let extra_annon = {...src_annotation};
             extra_annon.id = "random" + Math.random();
             extra_annon.target.selector[1] = {

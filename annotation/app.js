@@ -153,6 +153,7 @@ let cxt_menu_tgt = "p, small, span";
     let pending_bridges = [];
     let ok_clicked = false;
     let src_id;
+    let jump_src_id;
 
     let tabID = 1;
     let currentTabID = 0;
@@ -399,7 +400,7 @@ let cxt_menu_tgt = "p, small, span";
                 document.querySelectorAll(".r6o-annotation.WHITE").forEach(e => e.classList.remove("highlighted"));
                 document.querySelectorAll(`[data-id='${currentBridges.href}']`).forEach(e => e.classList.add("highlighted"));
                 
-                // target_annotation.scrollIntoView();
+                jump_src_id = args.annotation.id;
                 location.href = currentBridges.href;
             }); 
             // a.appendChild(t);
@@ -418,23 +419,21 @@ let cxt_menu_tgt = "p, small, span";
         if(args.annotation.id && r.getAnnotations().filter(an => an.body[0].href == args.annotation.id)) {
             // before the bridge is complete
             let a = document.createElement("button");
-            a.textContent = "Go back to link";
+            a.textContent = "Go back";
             a.style.fontSize = "17px";
             a.style.marginRight = "5px";
             a.addEventListener('click', function() {
-                // TODO make it so that it goes back to src 
-                let ans = r.getAnnotations();       
-                let jump_href = r.getAnnotations().filter(an => an.body[0].href == args.annotation.id)[0].id
-                document.querySelector(`[data-id='${jump_href}']`).id = jump_href.substr(1);
+                // goes back to where the user jumped from
+                document.querySelector(`[data-id='${jump_src_id}']`).id = jump_src_id.substr(1);
                 
-                location.href = jump_href;
+                location.href = jump_src_id;
             }); 
             container.appendChild(a);
 
             // go to first occurence
             let src_text = r.getAnnotations().filter(an => an.body[0].href == args.annotation.id)[0].target.selector[0].exact;
             if($(`p:contains("${src_text}")`).length > 1) {
-                // TODO debug this as well and make sure it goes first in paper content not title 
+                // it goes first in paper content not including title 
                 a = document.createElement("button");
                 a.textContent = `Go to first occurence of "${src_text}"`;
                 a.style.fontSize = "17px";

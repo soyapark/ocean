@@ -770,6 +770,11 @@ let cxt_menu_tgt = "p, small, span";
 
         currentTabID = inTabID;
 
+        // make the contextmenu follow the scroll
+        $(".context-menu").css({
+            top: ($(".context-menu").offset().top + scrollTab[inTabID].loc - $(window).scrollTop()) + "px"
+        });
+
         // open the selected tab
         $(window).scrollTop(scrollTab[inTabID].loc);
 

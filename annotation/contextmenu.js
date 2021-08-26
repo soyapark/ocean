@@ -28,8 +28,7 @@ $(document).ready(function () {
     // Hide context menu
     $(document).bind('contextmenu click', function (e) {
         let is_safari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-
-        if(["SPAN", "LI"].includes(e.target.tagName)) {
+        if(["SPAN", "LI", "BUTTON"].includes(e.target.tagName)) {
             return;
         }
 

@@ -439,7 +439,11 @@ let cxt_menu_tgt = "p, small, span";
                 a.textContent = `Go to first occurence of "${src_text}"`;
                 a.style.fontSize = "17px";
                 a.addEventListener('click', function() {
-                    alert("TODO this will let users go to the first occurence of the term");
+                    let jump_href = r.getAnnotations().filter(an => (an.body[0].href == args.annotation.id) && $(`[data-id='${an.id}']`).parents('p').length)[0].id;
+                    jump_href = (jump_href[0] == "#" ? jump_href.substr(1) : jump_href); 
+                    document.querySelector(`[data-id='#${jump_href}']`).id = jump_href
+                    
+                    location.href = "#" + jump_href;
                 }); 
                 container.appendChild(a);
             }
@@ -617,9 +621,11 @@ let cxt_menu_tgt = "p, small, span";
     console.log("created");
     console.log(r.getAnnotations());      
 
-    document.querySelector(`[data-id='${a.id}']`).id = a.id.substr(1);
+    document.querySelector(`[data-id='${a.id}']`).id = (a.id[0] == "#" ? a.id.substr(1) : a.id);
     
     if(a.body[0].purpose == "pre-select") {
+        // TODO add tab at context menu
+
         let bridge_snippet = a.target.selector[0].exact;
 
         // add another pending bridges
@@ -692,7 +698,7 @@ let cxt_menu_tgt = "p, small, span";
                 return;
 
             let extra_annon = {...src_annotation};
-            extra_annon.id = "random" + Math.random();
+            extra_annon.id = "#ocean" + Math.random();
             extra_annon.target.selector[1] = {
                 'type': 'TextPositionSelector',
                 'start': e,

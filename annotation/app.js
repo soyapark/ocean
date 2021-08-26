@@ -299,7 +299,12 @@ let cxt_menu_tgt = "p, small, span";
         button.style.fontSize = "17px";
         button.dataset.tag = 'YELLOW';
         button.addEventListener('click', function() {
-            createNewTab($(window).scrollTop());
+            // TODO if it is bridge, jump to the end of bridge and create a tab there, and open up a contextmenu at the cursor
+            // set proper name for the new tab
+            let new_tab_name = args.annotation.target.selector[0].exact.split(" ");
+            new_tab_name = new_tab_name.length > 3 ? new_tab_name.slice(0, 3).join(" ") + " ...": new_tab_name.join(" ");
+
+            createNewTab($(window).scrollTop(), new_tab_name);
             // alert("will create a new tab - preserving same viewport");
             this.parentNode.removeChild(this);
             let s = document.createElement("span");
@@ -582,6 +587,9 @@ let cxt_menu_tgt = "p, small, span";
     .onSnapshot((doc) => {
         if(!init) {
         init = !init;
+
+        // TODO add annotations programatically from Table & Figure captions to the part it is referenced
+
         return; 
         }
         if(!doc.docChanges) return;

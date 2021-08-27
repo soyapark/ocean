@@ -184,57 +184,57 @@ let cxt_menu_tgt = "p, small, span";
     })
 
     var ColorSelectorWidget = function(args) {
-    // 1. Find a current color setting in the annotation, if any
-    var currentColorBody = args.annotation ? 
-        args.annotation.bodies.find(function(b) {
-        return b.purpose == 'highlighting';
-        }) : null;
+        // 1. Find a current color setting in the annotation, if any
+        var currentColorBody = args.annotation ? 
+            args.annotation.bodies.find(function(b) {
+            return b.purpose == 'highlighting';
+            }) : null;
 
-    // 2. Keep the value in a variable
-    var currentColorValue = currentColorBody ? currentColorBody.value : null;
+        // 2. Keep the value in a variable
+        var currentColorValue = currentColorBody ? currentColorBody.value : null;
 
-    // 3. Triggers callbacks on user action
-    var addTag = function(evt) {
-        if (currentColorBody) {
-        args.onUpdateBody(currentColorBody, {
-            type: 'TextualBody',
-            purpose: 'highlighting',
-            value: evt.target.dataset.tag
-        });
-        } else { 
-        args.onAppendBody({
-            type: 'TextualBody',
-            purpose: 'highlighting',
-            value: evt.target.dataset.tag
-        });
+        // 3. Triggers callbacks on user action
+        var addTag = function(evt) {
+            if (currentColorBody) {
+            args.onUpdateBody(currentColorBody, {
+                type: 'TextualBody',
+                purpose: 'highlighting',
+                value: evt.target.dataset.tag
+            });
+            } else { 
+            args.onAppendBody({
+                type: 'TextualBody',
+                purpose: 'highlighting',
+                value: evt.target.dataset.tag
+            });
+            }
         }
-    }
 
-    // 4. This part renders the UI elements
-    var createButton = function(value) {
-        var button = document.createElement('button');
+        // 4. This part renders the UI elements
+        var createButton = function(value) {
+            var button = document.createElement('button');
 
-        if (value == currentColorValue)
-        button.className = 'selected';
+            if (value == currentColorValue)
+            button.className = 'selected';
 
-        button.dataset.tag = value;
-        button.style.backgroundColor = value;
-        button.addEventListener('click', addTag); 
-        return button;
-    }
+            button.dataset.tag = value;
+            button.style.backgroundColor = value;
+            button.addEventListener('click', addTag); 
+            return button;
+        }
 
-    var container = document.createElement('div');
-    container.className = 'colorselector-widget';
-    
-    var button1 = createButton('RED');
-    var button2 = createButton('GREEN');
-    var button3 = createButton('BLUE');
+        var container = document.createElement('div');
+        container.className = 'colorselector-widget';
+        
+        var button1 = createButton('RED');
+        var button2 = createButton('GREEN');
+        var button3 = createButton('BLUE');
 
-    container.appendChild(button1);
-    container.appendChild(button2);
-    container.appendChild(button3);
+        container.appendChild(button1);
+        container.appendChild(button2);
+        container.appendChild(button3);
 
-    return container;
+        return container;
     }
 
     var BridgeWidget = function(args) {
@@ -243,21 +243,26 @@ let cxt_menu_tgt = "p, small, span";
             $(".r6o-editor").hide();
             
 
-    // Check if there is already bridge here
-    var currentBridges = args.annotation ? 
-        args.annotation.bodies.find(function(b) {
-        return b.purpose == 'bridge' || b.purpose == 'tagging';
-        }) : null;  
+        // Check if there is already bridge here
+        var currentBridges = args.annotation ? 
+            args.annotation.bodies.find(function(b) {
+            return b.purpose == 'bridge' || b.purpose == 'tagging';
+            }) : null;  
 
-    var currentPreBridges = args.annotation ? 
-        args.annotation.bodies.find(function(b) {
-        return b.purpose == 'pre-bridge';
-        }) : null;  
+        var currentPreBridges = args.annotation ? 
+            args.annotation.bodies.find(function(b) {
+            return b.purpose == 'pre-bridge';
+            }) : null;  
 
-    var currentPreSelect = args.annotation ? 
-        args.annotation.bodies.find(function(b) {
-        return b.purpose == 'pre-select';
-        }) : null;  
+        var currentPreSelect = args.annotation ? 
+            args.annotation.bodies.find(function(b) {
+            return b.purpose == 'pre-select';
+            }) : null;  
+
+        var currentMaterials = args.annotation ? 
+            args.annotation.bodies.find(function(b) {
+            return b.purpose == 'material';
+            }) : null;  
     
     // Triggers callbacks when they click the button
     var addTag = function(evt) {
@@ -518,6 +523,9 @@ let cxt_menu_tgt = "p, small, span";
         } 
 
         
+    } else if (currentMaterials) {
+        // fig, tables or footnotes
+
     } else  {
         args.onAppendBody({
         type: 'TextualBody',
@@ -593,6 +601,8 @@ let cxt_menu_tgt = "p, small, span";
             init = !init;
 
             // TODO add annotations programatically from Table & Figure captions to the part it is referenced
+
+            // find all the figs, tables and citations
             $(".table-number, .figure-number")
 
             return; 

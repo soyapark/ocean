@@ -647,7 +647,7 @@ let cxt_menu_tgt = "p, small, span";
                     }
                     };
                 
-                $(".bibUl li, .table-number").each(function( index, el ) {
+                $(".bibUl li, .table-number, .figure-number").each(function( index, el ) {
                     // el == this
 
                     // find text position
@@ -660,7 +660,7 @@ let cxt_menu_tgt = "p, small, span";
 
                     let a = {...annotaton_template};
 
-                    a.id = "#" + ($(el).attr("id") || $(el).parents(".table-responsive").attr("id"));
+                    a.id = "#" + ($(el).attr("id") || $(el).parents(".table-responsive").attr("id") || $(el).parents("figure").attr("id"));
                     a.target.selector[1] = {
                         'type': 'TextPositionSelector',
                         'start': loc[0],

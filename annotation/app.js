@@ -525,7 +525,7 @@ let cxt_menu_tgt = "p, small, span";
         
     } else if (currentMaterials) {
         // fig, tables or footnotes
-        $(`a.bib[href=${args.annotation.id}]`).each(function( index, el ) {
+        $(`a[href="${args.annotation.id}"]`).each(function( index, el ) {
             // el == this
             let a = document.createElement("button");
             
@@ -533,8 +533,10 @@ let cxt_menu_tgt = "p, small, span";
                 if($(e).find("> header").length == 0) return;
                 a.textContent = $(e).find("> header .title-info").text().trim();
             })
-            
-            a.id = "ocean" + Math.random();
+
+            if(!$(el).attr("id"))
+                $(el).attr("id", "ocean" + Math.random());
+
             a.style.fontSize = "17px";
             a.style.marginRight = "5px";
             a.addEventListener('click', function() {
@@ -645,17 +647,24 @@ let cxt_menu_tgt = "p, small, span";
                     }
                     };
                 
-                $(".bibUl li").each(function( index, el ) {
+                $(".bibUl li, .table-number").each(function( index, el ) {
                     // el == this
-                    debugger;
+
                     // find text position
-                    let loc = getIndicesOf($( el ).text(), $("#content").text());
+                    let loc;
+                    if($(el).parents(".table-caption").length) {
+                        loc = getIndicesOf($(el).parents(".table-caption").text(), $("#content").text());
+                    } else {
+                        loc = getIndicesOf($( el ).text(), $("#content").text());
+                    }
+
                     let a = {...annotaton_template};
-                    a.id = "#" + $(el).attr("id");
+
+                    a.id = "#" + ($(el).attr("id") || $(el).parents(".table-responsive").attr("id"));
                     a.target.selector[1] = {
                         'type': 'TextPositionSelector',
                         'start': loc[0],
-                        'end': loc[0] + $( el ).text().length
+                        'end': loc[0] + $.trim($( el ).text()).length
                     }
                     r.addAnnotation(a);
                 });

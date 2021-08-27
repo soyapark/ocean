@@ -525,7 +525,26 @@ let cxt_menu_tgt = "p, small, span";
         
     } else if (currentMaterials) {
         // fig, tables or footnotes
+        $(`a.bib[href=${args.annotation.id}]`).each(function( index, el ) {
+            // el == this
+            let a = document.createElement("button");
+            
+            $(el).parents('section[id]').each(function (i, e) {
+                if($(e).find("> header").length == 0) return;
+                a.textContent = $(e).find("> header .title-info").text().trim();
+            })
+            
+            a.id = "ocean" + Math.random();
+            a.style.fontSize = "17px";
+            a.style.marginRight = "5px";
+            a.addEventListener('click', function() {
+                // go to the part of the content that is citing
+                location.href = "#" + $(el).attr("id");
+            }); 
+            container.appendChild(a);
+        });
 
+        
     } else  {
         args.onAppendBody({
         type: 'TextualBody',
@@ -601,9 +620,51 @@ let cxt_menu_tgt = "p, small, span";
             init = !init;
 
             // TODO add annotations programatically from Table & Figure captions to the part it is referenced
+            $(".bibUl li select").hide();
+
+            // set delay so that other annotations made by users loaded faster 
+            setTimeout(function() {
+                let annotaton_template = {
+                    '@context': 'http://www.w3.org/ns/anno.jsonld',
+                    'id': 'anno2',
+                    'type': 'Annotation',
+                    'body': [{
+                        "purpose": "material",
+                        "type": "TextualBody",
+                        "value": "RED"
+                    }],
+                    'target': {
+                        'selector': [{
+                        'type': 'TextQuoteSelector',
+                        'exact': 'that ingenious hero'
+                        }, {
+                        'type': 'TextPositionSelector',
+                        'start': 1183,
+                        'end': 1208
+                        }]
+                    }
+                    };
+                
+                $(".bibUl li").each(function( index, el ) {
+                    // el == this
+                    debugger;
+                    // find text position
+                    let loc = getIndicesOf($( el ).text(), $("#content").text());
+                    let a = {...annotaton_template};
+                    a.id = "#" + $(el).attr("id");
+                    a.target.selector[1] = {
+                        'type': 'TextPositionSelector',
+                        'start': loc[0],
+                        'end': loc[0] + $( el ).text().length
+                    }
+                    r.addAnnotation(a);
+                });
+              }, 1000);
 
             // find all the figs, tables and citations
-            $(".table-number, .figure-number")
+            $(".table-number, .figure-number") // disambiguate
+
+            
 
             return; 
         }

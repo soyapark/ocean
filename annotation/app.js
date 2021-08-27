@@ -590,11 +590,12 @@ let cxt_menu_tgt = "p, small, span";
     db.collection(COLLECTION_NAME)
     .onSnapshot((doc) => {
         if(!init) {
-        init = !init;
+            init = !init;
 
-        // TODO add annotations programatically from Table & Figure captions to the part it is referenced
+            // TODO add annotations programatically from Table & Figure captions to the part it is referenced
+            $(".table-number, .figure-number")
 
-        return; 
+            return; 
         }
         if(!doc.docChanges) return;
         doc.docChanges().forEach(function(change) {

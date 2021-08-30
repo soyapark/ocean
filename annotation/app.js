@@ -621,7 +621,7 @@ let cxt_menu_tgt = "p, small, span";
         if(!init) {
             init = !init;
 
-            // TODO add annotations programatically from Table & Figure captions to the part it is referenced
+            // add annotations programatically from Table & Figure captions to the part it is referenced
             $(".bibUl li select").hide();
 
             // set delay so that other annotations made by users loaded faster 

@@ -183,6 +183,17 @@ let cxt_menu_tgt = "p, small, span";
             openTab(0);
     })
 
+    $("body").on("change", "#bookmark-nav", function () {
+        if(this.value == "default") {
+            // TODO no jump 
+        }
+
+        var end = this.value;
+        var firstDropVal = $('#pick').val();
+
+        alert(end);
+    });
+
     var ColorSelectorWidget = function(args) {
         // 1. Find a current color setting in the annotation, if any
         var currentColorBody = args.annotation ? 
@@ -650,25 +661,28 @@ let cxt_menu_tgt = "p, small, span";
                 $(".bibUl li, .table-number, .figure-number").each(function( index, el ) {
                     // el == this
 
-                    // find text position
-                    let loc;
-                    if($(el).parents(".table-caption").length) {
-                        loc = getIndicesOf($(el).parents(".table-caption").text(), $("#content").text());
-                    } else {
-                        loc = getIndicesOf($( el ).text(), $("#content").text());
-                    }
+                    sleep(500).then(() => {
+                        // find text position
+                        let loc;
+                        if($(el).parents(".table-caption").length) {
+                            loc = getIndicesOf($(el).parents(".table-caption").text(), $("#content").text());
+                        } else {
+                            loc = getIndicesOf($( el ).text(), $("#content").text());
+                        }
 
-                    let a = {...annotaton_template};
+                        let a = {...annotaton_template};
 
-                    a.id = "#" + ($(el).attr("id") || $(el).parents(".table-responsive").attr("id") || $(el).parents("figure").attr("id"));
-                    a.target.selector[1] = {
-                        'type': 'TextPositionSelector',
-                        'start': loc[0],
-                        'end': loc[0] + $.trim($( el ).text()).length
-                    }
-                    r.addAnnotation(a);
+                        a.id = "#" + ($(el).attr("id") || $(el).parents(".table-responsive").attr("id") || $(el).parents("figure").attr("id"));
+                        a.target.selector[1] = {
+                            'type': 'TextPositionSelector',
+                            'start': loc[0],
+                            'end': loc[0] + $.trim($( el ).text()).length
+                        }
+                        r.addAnnotation(a);
+                    });
                 });
-              }, 1000);
+
+              }, 2000);
 
             // find all the figs, tables and citations
             $(".table-number, .figure-number") // disambiguate
@@ -726,6 +740,12 @@ let cxt_menu_tgt = "p, small, span";
         }
         
         r.addAnnotation(a);
+
+        var option = document.createElement("option");
+        option.text = a.target.selector[0].exact;
+        option.value = a.id;
+        var select = document.getElementById("bookmark-nav");
+        select.appendChild(option);
 
     } else if (a.body[0].purpose == "bridge") {
         // find the source annotation `data-id` and update the another end
@@ -793,9 +813,18 @@ let cxt_menu_tgt = "p, small, span";
             )
         })
 
+        // TODO remove from dropdown
     }
     
     
+    });
+
+    r.on('deleteAnnotation', function (a) {
+        if(a.body[0].purpose == "pre-select") {
+            // TODO remove option from dropdowns
+            
+        }
+        
     });
     
     
@@ -835,6 +864,7 @@ let cxt_menu_tgt = "p, small, span";
         
     // });
 
+    
 
     function createNewTab(loc=0, tab_name="New tab") {
         $(".context-menu ul").append(`<li tabID=${tabID}>${tab_name} <span class="close"></span></li>`)
@@ -868,6 +898,10 @@ let cxt_menu_tgt = "p, small, span";
         $(`.context-menu ul li`).removeClass('selected');
         $(`.context-menu ul li[tabID=${currentTabID}]`).addClass('selected');
     }
+
+    function sleep (time) {
+        return new Promise((resolve) => setTimeout(resolve, time));
+    }  
 
     function getIndicesOf(searchStr, str, caseSensitive) {
         var searchStrLen = searchStr.length;

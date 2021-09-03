@@ -185,13 +185,17 @@ let cxt_menu_tgt = "p, small, span";
 
     $("body").on("change", "#bookmark-nav", function () {
         if(this.value == "default") {
-            // TODO no jump 
+            // no jump 
+            return;
         }
+
+        // jump to the selected bookmark
+        location.href = this.value;
 
         var end = this.value;
         var firstDropVal = $('#pick').val();
 
-        alert(end);
+        // alert(end);
     });
 
     var ColorSelectorWidget = function(args) {
@@ -715,12 +719,8 @@ let cxt_menu_tgt = "p, small, span";
     ok_clicked = true;
     console.log("created");
     console.log(r.getAnnotations());      
-
-    document.querySelector(`[data-id='${a.id}']`).id = (a.id[0] == "#" ? a.id.substr(1) : a.id);
     
     if(a.body[0].purpose == "pre-select") {
-        // TODO add tab at context menu
-
         let bridge_snippet = a.target.selector[0].exact;
 
         // add another pending bridges
@@ -741,6 +741,7 @@ let cxt_menu_tgt = "p, small, span";
         
         r.addAnnotation(a);
 
+        // add option to dropdown at context menu
         var option = document.createElement("option");
         option.text = a.target.selector[0].exact;
         option.value = a.id;
@@ -813,17 +814,19 @@ let cxt_menu_tgt = "p, small, span";
             )
         })
 
-        // TODO remove from dropdown
+        // remove from dropdown
+        $(`option[value="${src_annotation.id}"]`).remove();
+
     }
+
+    document.querySelector(`[data-id='${a.id}']`).id = (a.id[0] == "#" ? a.id.substr(1) : a.id);
     
     
     });
 
     r.on('deleteAnnotation', function (a) {
-        if(a.body[0].purpose == "pre-select") {
-            // TODO remove option from dropdowns
-            
-        }
+        // remove option from dropdowns
+        $(`option[value="${a.id}"]`).remove();
         
     });
     

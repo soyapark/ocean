@@ -130,6 +130,9 @@ var zivaAnnotations = [
     }
 ];
 
+let session_id = getUrlParameter("user");
+let pending_bridges = [];
+
 function getUrlParameter(sParam) {
     var sPageURL = window.location.search.substring(1),
         sURLVariables = sPageURL.split('&'),
@@ -150,7 +153,7 @@ let cxt_menu_tgt = "p, small, span";
 (function () {
     let bridge_start = false;
     let bridge_snippet = "";
-    let pending_bridges = [];
+    
     let ok_clicked = false;
     let src_id;
     let jump_src_id;
@@ -159,7 +162,7 @@ let cxt_menu_tgt = "p, small, span";
     let currentTabID = 0;
     let scrollTab = [{"name": "Main", "loc": 0}];
 
-    let session_id = getUrlParameter("user");
+    
 
     if(!session_id) {
         alert("Wrong URL. Please contact Soya for a correct link.");
@@ -663,6 +666,7 @@ let cxt_menu_tgt = "p, small, span";
                     }
                     };
                 
+                // find all the figs, tables and citations
                 $(".bibUl li, .table-number, .figure-number").each(function( index, el ) {
                     // el == this
 
@@ -687,18 +691,12 @@ let cxt_menu_tgt = "p, small, span";
                     });
                 });
 
-              }, 2000);
-
-            // find all the figs, tables and citations
-            $(".table-number, .figure-number") // disambiguate
-
-            
+              }, 2000);            
 
             return; 
         }
         if(!doc.docChanges) return;
         doc.docChanges().forEach(function(change) {
-        console.log(change)
             if (change.type === "added") {
                 // change.doc here is new a new document added by me
                 // if it is grey, don't add it to the other clients' end
@@ -742,6 +740,13 @@ let cxt_menu_tgt = "p, small, span";
         
         r.addAnnotation(a);
 
+        // manually update the old annotation from db since the updateAnnotation event is not triggered
+        db.collection(COLLECTION_NAME).where("id","==", a.id).get().then(function(querySnapshot) {
+            querySnapshot.docs[0].ref.update({
+            body: [a.body[0]]
+            });   
+        })
+
         // add option to dropdown at context menu
         var option = document.createElement("option");
         option.text = a.target.selector[0].exact;
@@ -774,8 +779,7 @@ let cxt_menu_tgt = "p, small, span";
         db.collection(COLLECTION_NAME).where("id","==", src_annotation.id).get().then(function(querySnapshot) {
             querySnapshot.docs[0].ref.update({
             body: [src_annotation.body[0]]
-            });
-        
+            });   
         })
 
         // remove the pending bridges

@@ -353,10 +353,11 @@ let cxt_menu_tgt = "p, small, span";
         purpose: 'bridge',
         value: "WHITE",
         author: session_id,
-        ocean_id: "ocean" + Math.random()
+        ocean_id: "ocean" + Math.random(),
+        snippet: evt.target.textContent
         });
 
-        src_id = evt.target.dataset.src_id
+        src_id = evt.target.dataset.src_id;
         
 
         
@@ -442,48 +443,48 @@ let cxt_menu_tgt = "p, small, span";
         }
         
         } else {
-        // Right after bridge is created for bridge ends
-        document.getElementById("ok-btn").disabled = false;
+            // Right after bridge is created for bridge ends
+            document.getElementById("ok-btn").disabled = false;
 
-        if(args.annotation.id && r.getAnnotations().filter(an => an.body[0].href == args.annotation.id)) {
-            // before the bridge is complete
-            let a = document.createElement("button");
-            a.textContent = "Go back";
-            a.style.fontSize = "17px";
-            a.style.marginRight = "5px";
-            a.addEventListener('click', function() {
-                // goes back to where the user jumped from
-                document.querySelector(`[data-id='${jump_src_id}']`).id = jump_src_id.substr(1);
-                
-                location.href = jump_src_id;
-            }); 
-            container.appendChild(a);
-
-            // go to first occurence
-            let src_text = r.getAnnotations().filter(an => an.body[0].href == args.annotation.id)[0].target.selector[0].exact;
-            if($(`p:contains("${src_text}")`).length > 1) {
-                // it goes first in paper content not including title 
-                a = document.createElement("button");
-                a.textContent = `Go to first occurence of "${src_text}"`;
+            if(args.annotation.id && r.getAnnotations().filter(an => an.body[0].href == args.annotation.id)) {
+                // before the bridge is complete
+                let a = document.createElement("button");
+                a.textContent = "Go back";
                 a.style.fontSize = "17px";
+                a.style.marginRight = "5px";
                 a.addEventListener('click', function() {
-                    let jump_href = r.getAnnotations().filter(an => (an.body[0].href == args.annotation.id) && $(`[data-id='${an.id}']`).parents('p').length)[0].id;
-                    jump_href = (jump_href[0] == "#" ? jump_href.substr(1) : jump_href); 
-                    document.querySelector(`[data-id='#${jump_href}']`).id = jump_href
+                    // goes back to where the user jumped from
+                    document.querySelector(`[data-id='${jump_src_id}']`).id = jump_src_id.substr(1);
                     
-                    location.href = "#" + jump_href;
+                    location.href = jump_src_id;
                 }); 
                 container.appendChild(a);
+
+                // go to first occurence
+                let src_text = r.getAnnotations().filter(an => an.body[0].href == args.annotation.id)[0].target.selector[0].exact;
+                if($(`p:contains("${src_text}")`).length > 1) {
+                    // it goes first in paper content not including title 
+                    a = document.createElement("button");
+                    a.textContent = `Go to first occurence of "${src_text}"`;
+                    a.style.fontSize = "17px";
+                    a.addEventListener('click', function() {
+                        let jump_href = r.getAnnotations().filter(an => (an.body[0].href == args.annotation.id) && $(`[data-id='${an.id}']`).parents('p').length)[0].id;
+                        jump_href = (jump_href[0] == "#" ? jump_href.substr(1) : jump_href); 
+                        document.querySelector(`[data-id='#${jump_href}']`).id = jump_href
+                        
+                        location.href = "#" + jump_href;
+                    }); 
+                    container.appendChild(a);
+                }
+                
             }
             
-        }
-        
-        else {
-            let t = document.createElement('span');
+            else {
+                let t = document.createElement('span');
 
-            t.textContent = "Press OK to create the bridge";
-            container.appendChild(t);
-        }
+                t.textContent = `Press OK to create the link to "${currentBridges.snippet}"`;
+                container.appendChild(t);
+            }
          
         
         }

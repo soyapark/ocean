@@ -624,6 +624,19 @@ let cxt_menu_tgt = "p, small, span";
 
     $(".bibUl li select").remove();
 
+    // find all citations
+    $(".bibUl li").each(function( index, el ) {
+        // $(".bibUl li, .table-number, .figure-number").each(function( index, el ) {
+            // el == this
+    
+        let c = $(el).html();
+        $(el).empty();
+
+        let s = $("<span></span>");
+        s.html(c);
+        $(el).append(s);
+    });
+
     var firebaseConfig = {
     apiKey: "AIzaSyCTua642g885yQ_lqck4F7fwTwqlrYKfF4",
     authDomain: "ocean-78725.firebaseapp.com",

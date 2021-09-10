@@ -133,6 +133,15 @@ var zivaAnnotations = [
 let session_id = getUrlParameter("user");
 let pending_bridges = [];
 
+function addBookmarkDropdown(a) {
+    // add option to dropdown at context menu
+    var option = document.createElement("option");
+    option.text = a.target.selector[0].exact;
+    option.value = a.id;
+    var select = document.getElementById("bookmark-nav");
+    select.appendChild(option);
+}
+
 function getUrlParameter(sParam) {
     var sPageURL = window.location.search.substring(1),
         sURLVariables = sPageURL.split('&'),
@@ -191,6 +200,8 @@ let cxt_menu_tgt = "p, small, span";
             // no jump 
             return;
         }
+
+        document.querySelector(`[data-id='${this.value}']`).id = (this.value[0] == "#" ? this.value.substr(1) : this.value);
 
         // jump to the selected bookmark
         location.href = this.value;
@@ -747,12 +758,7 @@ let cxt_menu_tgt = "p, small, span";
             });   
         })
 
-        // add option to dropdown at context menu
-        var option = document.createElement("option");
-        option.text = a.target.selector[0].exact;
-        option.value = a.id;
-        var select = document.getElementById("bookmark-nav");
-        select.appendChild(option);
+        addBookmarkDropdown(a);
 
     } else if (a.body[0].purpose == "bridge") {
         // find the source annotation `data-id` and update the another end

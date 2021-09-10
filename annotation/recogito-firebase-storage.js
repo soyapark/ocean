@@ -17,6 +17,7 @@
                 });
 
                 t.addAnnotation(n[i]);
+                addBookmarkDropdown(n[i]);
             }
                 
                 

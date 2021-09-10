@@ -134,7 +134,7 @@ let session_id = getUrlParameter("user");
 let pending_bridges = [];
 
 function addBookmarkDropdown(a) {
-    // add option to dropdown at context menu
+    // add option to dropdown at context menu   
     var option = document.createElement("option");
     option.text = a.target.selector[0].exact;
     option.value = a.id;
@@ -619,9 +619,10 @@ let cxt_menu_tgt = "p, small, span";
         BridgeWidget,
         // { widget: 'TAG', vocabulary: ['Place', 'Person', 'Event', 'Organization', 'Animal'] }
     ],
-    formatter: ColorFormatter,
-    relationVocabulary: ['isRelated', 'isPartOf', 'isSameAs ']
+    formatter: ColorFormatter
     });
+
+    $(".bibUl li select").remove();
 
     var firebaseConfig = {
     apiKey: "AIzaSyCTua642g885yQ_lqck4F7fwTwqlrYKfF4",
@@ -645,64 +646,47 @@ let cxt_menu_tgt = "p, small, span";
     var db = firebase.firestore();
     let init = false;
 
+    // add annotations programatically from Table & Figure captions to the part it is referenced
+
+    // load lazily for citations since they are so many
+    $('a.bib').click(function(e) {
+        let prev_sib = $($(e.target).attr("href")).prev("li"), next_sib = $($(e.target).attr("href")).next("li");
+        
+        if(prev_sib.length && (prev_sib.find(`[data-id="#${prev_sib[0].id}"]`).length == 0))
+            addLinktoMaterial( prev_sib );
+        if($($(e.target).attr("href")).find("span.r6o-annotation").length == 0)
+            addLinktoMaterial( $($(e.target).attr("href")) );
+        if(next_sib.length && (next_sib.find(`[data-id="#${next_sib[0].id}"]`).length == 0))
+            addLinktoMaterial( next_sib );
+    })   
+    
+    $('.bibUl li').click(function(e) {
+        let prev_sib = $(e.currentTarget).prev("li"), next_sib = $(e.currentTarget).next("li");
+        
+        if(prev_sib.length && (prev_sib.find(`[data-id="#${prev_sib[0].id}"]`).length == 0))
+            addLinktoMaterial( prev_sib );
+        if($(e.currentTarget).find(`[data-id="#${e.currentTarget.id}"]`).length == 0)
+            addLinktoMaterial( $(e.currentTarget) );
+        if(next_sib.length && (next_sib.find(`[data-id="#${next_sib[0].id}"]`).length == 0))
+            addLinktoMaterial( next_sib );
+    })     
+
+                
+                
+    // find all the figs & tables
+    $(".table-number, .figure-number").each(function( index, el ) {
+    // $(".bibUl li, .table-number, .figure-number").each(function( index, el ) {
+        // el == this
+
+        addLinktoMaterial($(el));
+    });
+   
+
     // listen to add event from db
     db.collection(COLLECTION_NAME)
     .onSnapshot((doc) => {
         if(!init) {
             init = !init;
-
-            // add annotations programatically from Table & Figure captions to the part it is referenced
-            $(".bibUl li select").hide();
-
-            // set delay so that other annotations made by users loaded faster 
-            setTimeout(function() {
-                let annotaton_template = {
-                    '@context': 'http://www.w3.org/ns/anno.jsonld',
-                    'id': 'anno2',
-                    'type': 'Annotation',
-                    'body': [{
-                        "purpose": "material",
-                        "type": "TextualBody",
-                        "value": "RED"
-                    }],
-                    'target': {
-                        'selector': [{
-                        'type': 'TextQuoteSelector',
-                        'exact': 'that ingenious hero'
-                        }, {
-                        'type': 'TextPositionSelector',
-                        'start': 1183,
-                        'end': 1208
-                        }]
-                    }
-                    };
-                
-                // find all the figs, tables and citations
-                $(".bibUl li, .table-number, .figure-number").each(function( index, el ) {
-                    // el == this
-
-                    sleep(500).then(() => {
-                        // find text position
-                        let loc;
-                        if($(el).parents(".table-caption").length) {
-                            loc = getIndicesOf($(el).parents(".table-caption").text(), $("#content").text());
-                        } else {
-                            loc = getIndicesOf($( el ).text(), $("#content").text());
-                        }
-
-                        let a = {...annotaton_template};
-
-                        a.id = "#" + ($(el).attr("id") || $(el).parents(".table-responsive").attr("id") || $(el).parents("figure").attr("id"));
-                        a.target.selector[1] = {
-                            'type': 'TextPositionSelector',
-                            'start': loc[0],
-                            'end': loc[0] + $.trim($( el ).text()).length
-                        }
-                        r.addAnnotation(a);
-                    });
-                });
-
-              }, 2000);            
 
             return; 
         }
@@ -878,7 +862,63 @@ let cxt_menu_tgt = "p, small, span";
         
     // });
 
+    function addLinktoMaterial(el) {
+        let annotaton_template = {
+            '@context': 'http://www.w3.org/ns/anno.jsonld',
+            'id': 'anno2',
+            'type': 'Annotation',
+            'body': [{
+                "purpose": "material",
+                "type": "TextualBody",
+                "value": "RED"
+            }],
+            'target': {
+                'selector': [{
+                'type': 'TextQuoteSelector',
+                'exact': 'that ingenious hero'
+                }, {
+                'type': 'TextPositionSelector',
+                'start': 1183,
+                'end': 1208
+                }]
+            }
+        };
+        
+        let loc = []; 
+        if(el.parents(".table-caption").length) {
+            loc = getIndicesOf(el.parents(".table-caption").text(), $("#content").text());
+        } else {
+            loc = getIndicesOf(el.text(), $("#content").text());
+        }
     
+        let a = JSON.parse(JSON.stringify(annotaton_template));
+        // Object.assign(a, annotaton_template)
+    
+        a.id = "#" + (el.attr("id") || el.parents(".table-responsive").attr("id") || el.parents("figure").attr("id"));
+        a.target.selector[1] = {...{
+            'type': 'TextPositionSelector',
+            'start': loc[0],
+            'end': loc[0] + $.trim(el.text()).length
+        }}
+        r.addAnnotation({...a});
+    }
+    
+    function getIndicesOf(searchStr, str, caseSensitive) {
+        var searchStrLen = searchStr.length;
+        if (searchStrLen == 0) {
+            return [];
+        }
+        var startIndex = 0, index, indices = [];
+        if (!caseSensitive) {
+            str = str.toLowerCase();
+            searchStr = searchStr.toLowerCase();
+        }
+        while ((index = str.indexOf(searchStr, startIndex)) > -1) {
+            indices.push(index);
+            startIndex = index + searchStrLen;
+        }
+        return indices;
+    }
 
     function createNewTab(loc=0, tab_name="New tab") {
         $(".context-menu ul").append(`<li tabID=${tabID}>${tab_name} <span class="close"></span></li>`)
@@ -917,22 +957,7 @@ let cxt_menu_tgt = "p, small, span";
         return new Promise((resolve) => setTimeout(resolve, time));
     }  
 
-    function getIndicesOf(searchStr, str, caseSensitive) {
-        var searchStrLen = searchStr.length;
-        if (searchStrLen == 0) {
-            return [];
-        }
-        var startIndex = 0, index, indices = [];
-        if (!caseSensitive) {
-            str = str.toLowerCase();
-            searchStr = searchStr.toLowerCase();
-        }
-        while ((index = str.indexOf(searchStr, startIndex)) > -1) {
-            indices.push(index);
-            startIndex = index + searchStrLen;
-        }
-        return indices;
-    }
+    
 
     function getSelectedText() {
         if (window.getSelection) {

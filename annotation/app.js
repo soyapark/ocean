@@ -171,7 +171,11 @@ let cxt_menu_tgt = "p, small, span";
     let currentTabID = 0;
     let scrollTab = [{"name": "Main", "loc": 0}];
 
-    
+    if(session_id == "[Your") {
+        alert("Wrong user name. Please try the link with your name.");
+        $("body").hide();
+        return;
+    }
 
     if(!session_id) {
         alert("Wrong URL. Please contact Soya for a correct link.");
@@ -366,21 +370,22 @@ let cxt_menu_tgt = "p, small, span";
     }
 
     var finishBridge = function(evt) {
-        args.onUpdateBody(currentPreSelect, {
-        type: 'TextualBody',
-        purpose: 'bridge',
-        value: "WHITE",
-        author: session_id,
-        ocean_id: "ocean" + Math.random(),
-        snippet: evt.target.textContent
+        args.onUpdateBody(currentPreBridges? currentPreBridges : currentPreSelect, {
+            type: 'TextualBody',
+            purpose: 'bridge',
+            author: session_id,
+            ocean_id: "ocean" + Math.random(),
+            snippet: evt.target.textContent
         });
 
         src_id = evt.target.dataset.src_id;
-        
+
+        if(currentPreBridges) { // bookmark to bookmark
+            createNewBridge(args.annotation);
+        }
 
         
-
-        // delete pending_bridges[0];
+        
     }
 
     var finishBridgeButton = function(value) {
@@ -464,7 +469,7 @@ let cxt_menu_tgt = "p, small, span";
             // Right after bridge is created for bridge ends
             document.getElementById("ok-btn").disabled = false;
 
-            if(args.annotation.id && r.getAnnotations().filter(an => an.body[0].href == args.annotation.id)) {
+            if(args.annotation.id && r.getAnnotations().filter(an => an.body[0].href == args.annotation.id).length) {
                 // before the bridge is complete
                 let a = document.createElement("button");
                 a.textContent = "Go back";
@@ -744,6 +749,7 @@ let cxt_menu_tgt = "p, small, span";
     ok_clicked = true;
     console.log("created");
     console.log(r.getAnnotations());      
+    alert();
     
     if(a.body[0].purpose == "pre-select") {
         let bridge_snippet = a.target.selector[0].exact;
@@ -758,7 +764,6 @@ let cxt_menu_tgt = "p, small, span";
 
         a.body[0] = {
         "purpose": "pre-bridge",
-        "href": a.id,
         "value": "GREY",
         "blob": a.target.selector[0].exact,
         "author": session_id
@@ -776,73 +781,7 @@ let cxt_menu_tgt = "p, small, span";
         addBookmarkDropdown(a);
 
     } else if (a.body[0].purpose == "bridge") {
-        // find the source annotation `data-id` and update the another end
-        let src_annotation = r.getAnnotations().filter(an => an.id == src_id)[0];
-
-        // get the section name of the newly created annotation
-        document.querySelector(`[data-id='${a.id}']`)
-
-        r.removeAnnotation(src_annotation);
-
-        src_annotation.body[0] = {
-        "purpose": "bridge",
-        "href": a.id,
-        "value": "here",
-        "blob": a.target.selector[0].exact,
-        "author": session_id
-        }
-        
-        r.addAnnotation(src_annotation);
-        
-        
-
-        // manually update the old annotation from db since the updateAnnotation event is not triggered
-        db.collection(COLLECTION_NAME).where("id","==", src_annotation.id).get().then(function(querySnapshot) {
-            querySnapshot.docs[0].ref.update({
-            body: [src_annotation.body[0]]
-            });   
-        })
-
-        // remove the pending bridges
-        pending_bridges = pending_bridges.filter(p => p.id != src_annotation.id)
-        
-        // add a highlight to newly added annotation
-        document.querySelectorAll(".r6o-annotation.WHITE").forEach(e => e.classList.remove("highlighted"));
-        document.querySelectorAll(`[data-id='${a.id}']`).forEach(e => e.classList.add("highlighted"));
-
-
-        // if the term is appeared multiple times, add bridges from the occurence 
-        let term = src_annotation.target.selector[0].exact;
-        let occurences = getIndicesOf(term, $("#content").text());
-        
-        // temporarily add to only first ten
-        occurences = occurences.slice(0, 10);
-        occurences.forEach(function(e) {
-            if(src_annotation.target.selector[1].start == e)
-                return;
-
-            // if this occurence is in the target part, skip this occurence 
-            if(Math.max(e, a.target.selector[1].start) <= Math.min(e + term.length, a.target.selector[1].end))
-                return;
-
-            let extra_annon = {...src_annotation};
-            extra_annon.id = "#ocean" + Math.random();
-            extra_annon.target.selector[1] = {
-                'type': 'TextPositionSelector',
-                'start': e,
-                'end': e + term.length
-            };
-            r.addAnnotation(extra_annon);
-
-            // save it to db
-            db.collection(COLLECTION_NAME).add(
-                extra_annon
-            )
-        })
-
-        // remove from dropdown
-        $(`option[value="${src_annotation.id}"]`).remove();
-
+        createNewBridge(a);
     }
 
     document.querySelector(`[data-id='${a.id}']`).id = (a.id[0] == "#" ? a.id.substr(1) : a.id);
@@ -949,6 +888,76 @@ let cxt_menu_tgt = "p, small, span";
             startIndex = index + searchStrLen;
         }
         return indices;
+    }
+
+    function createNewBridge(a) {
+        // find the source annotation `data-id` and update the another end
+        let src_annotation = r.getAnnotations().filter(an => an.id == src_id)[0];
+        
+                // get the section name of the newly created annotation
+                document.querySelector(`[data-id='${a.id}']`)
+        
+                r.removeAnnotation(src_annotation);
+        
+                src_annotation.body[0] = {
+                "purpose": "bridge",
+                "href": a.id,
+                "value": "here",
+                "blob": a.target.selector[0].exact,
+                "author": session_id
+                }
+                
+                r.addAnnotation(src_annotation);
+                
+                
+        
+                // manually update the old annotation from db since the updateAnnotation event is not triggered
+                db.collection(COLLECTION_NAME).where("id","==", src_annotation.id).get().then(function(querySnapshot) {
+                    querySnapshot.docs[0].ref.update({
+                    body: [src_annotation.body[0]]
+                    });   
+                })
+        
+                // remove the pending bridges
+                pending_bridges = pending_bridges.filter(p => p.id != src_annotation.id)
+                
+                // add a highlight to newly added annotation
+                document.querySelectorAll(".r6o-annotation.WHITE").forEach(e => e.classList.remove("highlighted"));
+                document.querySelectorAll(`[data-id='${a.id}']`).forEach(e => e.classList.add("highlighted"));
+        
+        
+                // if the term is appeared multiple times, add bridges from the occurence 
+                let term = src_annotation.target.selector[0].exact;
+                let occurences = getIndicesOf(term, $("#content").text());
+                
+                // temporarily add to only first ten
+                occurences = occurences.slice(0, 10);
+                occurences.forEach(function(e) {
+                    if(src_annotation.target.selector[1].start == e)
+                        return;
+        
+                    // if this occurence is in the target part, skip this occurence 
+                    if(Math.max(e, a.target.selector[1].start) <= Math.min(e + term.length, a.target.selector[1].end))
+                        return;
+        
+                    let extra_annon = {...src_annotation};
+                    extra_annon.id = "#ocean" + Math.random();
+                    extra_annon.target.selector[1] = {
+                        'type': 'TextPositionSelector',
+                        'start': e,
+                        'end': e + term.length
+                    };
+                    r.addAnnotation(extra_annon);
+        
+                    // save it to db
+                    db.collection(COLLECTION_NAME).add(
+                        extra_annon
+                    )
+                })
+        
+                // remove from dropdown
+                $(`option[value="${src_annotation.id}"]`).remove();
+        
     }
 
     function createNewTab(loc=0, tab_name="New tab", scroll=true) {

@@ -328,36 +328,40 @@ let cxt_menu_tgt = "p, small, span";
         // document.getElementById('ok-btn').click()
     }
 
-    var createNewTabButton = function(value) {
+    var createNewTabButton = function(clone=false) {
         var button = document.createElement('button');
 
         button.style.fontSize = "17px";
         button.dataset.tag = 'YELLOW';
         button.addEventListener('click', function(e) {
             e.preventDefault();
+            
+            let tab_target = clone ? args.annotation.id : currentBridges.href;
 
-            highlightHref(currentBridges.href);
+            if(!clone) 
+                highlightHref(tab_target);
+            else 
+                $(".r6o-editor").hide();
 
             // jump to the end of bridge and create a tab there, and open up a contextmenu at the cursor
             // set proper name for the new tab
             let new_tab_name = args.annotation.target.selector[0].exact.split(" ");
             new_tab_name = new_tab_name.length > 3 ? new_tab_name.slice(0, 3).join(" ") + " ...": new_tab_name.join(" ");
 
-            createNewTab($(currentBridges.href).offset().top, new_tab_name);
+            createNewTab($(tab_target).offset().top, new_tab_name, !clone);
 
             $(".context-menu").toggle(100).css({
-                top: ($(currentBridges.href).offset().top + 19) + "px",
-                left: $(currentBridges.href).offset().left + "px"
+                top: ($(tab_target).offset().top + 19) + "px",
+                left: $(tab_target).offset().left + "px"
             });
 
-            // alert("will create a new tab - preserving same viewport");
             this.parentNode.removeChild(this);
             let s = document.createElement("span");
             s.textContent = "A new tab is created!";
 
             container.appendChild(s);
         });
-        button.textContent = "Open in new tab";
+        button.textContent = clone? "Create a new tab" : "Open in new tab";
         return button;
     }
 
@@ -451,7 +455,7 @@ let cxt_menu_tgt = "p, small, span";
             container.appendChild(a);
 
             // Create a tab from this bookmark 
-            let tabButton= createNewTabButton("test");
+            let tabButton= createNewTabButton();
              
             container.appendChild(tabButton);
         }
@@ -504,7 +508,7 @@ let cxt_menu_tgt = "p, small, span";
         }
         
     } 
-    else if(currentPreSelect) {
+    else if(currentPreBridges || currentPreSelect) {
         let rdo = document.createElement('input');
         rdo.type = "radio";
         rdo.name= "bridge-ctl";
@@ -518,12 +522,14 @@ let cxt_menu_tgt = "p, small, span";
 
         let l = document.createElement('label');
         l.htmlFor = "start-bridge";
-        l.textContent = "Add a bookmark"
+        l.textContent = currentPreBridges? "Your bookmark (only visible to you)" : "Add a bookmark";
 
         container.appendChild(rdo);
         container.appendChild(l);
 
         container.appendChild(document.createElement('br'));
+
+        
 
         if(pending_bridges.length) {
             rdo = document.createElement('input');
@@ -537,7 +543,7 @@ let cxt_menu_tgt = "p, small, span";
                 pending_bridges.filter(p => p.id != args.annotation.id).map(p => {
                     var button1 = finishBridgeButton(p);
                     
-                    container.appendChild(button1);
+                    document.querySelector("#link-btn-container").appendChild(button1);
                     return null;
                 })
             });
@@ -549,9 +555,21 @@ let cxt_menu_tgt = "p, small, span";
             container.appendChild(rdo);
             container.appendChild(l);
 
-            container.appendChild(document.createElement('br'));
+            let link_btn_container = document.createElement('div');
+            link_btn_container.id = "link-btn-container";
+
+            container.appendChild(link_btn_container);
+
+            // container.appendChild(document.createElement('br'));
         } 
 
+        container.appendChild(document.createElement('hr'));
+
+        if(currentPreBridges) {
+            // create a new tab option
+            let tab_btn = createNewTabButton(true);
+            container.appendChild(tab_btn);    
+        }
         
     } else if (currentMaterials) {
         // fig, tables or footnotes
@@ -933,14 +951,14 @@ let cxt_menu_tgt = "p, small, span";
         return indices;
     }
 
-    function createNewTab(loc=0, tab_name="New tab") {
+    function createNewTab(loc=0, tab_name="New tab", scroll=true) {
         $(".context-menu ul").append(`<li tabID=${tabID}>${tab_name} <span class="close"></span></li>`)
         scrollTab.push({
             "name": tab_name,
             "loc": loc
         });
 
-        openTab(tabID++);
+        openTab(tabID++, scroll);
     }
 
     function highlightHref(tgt_href) {
@@ -948,7 +966,7 @@ let cxt_menu_tgt = "p, small, span";
         document.querySelectorAll(`[data-id='${tgt_href}']`).forEach(e => e.classList.add("highlighted"));
     }
 
-    function openTab(inTabID) {
+    function openTab(inTabID, scroll=true) {
         // save the current tab position
         scrollTab[currentTabID].loc = $(window).scrollTop();
 
@@ -960,7 +978,8 @@ let cxt_menu_tgt = "p, small, span";
         });
 
         // open the selected tab
-        $(window).scrollTop(scrollTab[inTabID].loc);
+        if(scroll)
+            $(window).scrollTop(scrollTab[inTabID].loc);
 
         $(`.context-menu ul li`).removeClass('selected');
         $(`.context-menu ul li[tabID=${currentTabID}]`).addClass('selected');

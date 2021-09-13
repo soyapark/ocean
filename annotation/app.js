@@ -437,7 +437,7 @@ let cxt_menu_tgt = "p, small, span";
 
             // Jump to another end of bridge
             let a = document.createElement("button");
-            a.textContent = "Go to " + currentBridges.value;
+            a.textContent = "Jump to " + currentBridges.value;
             a.style.fontSize = "17px";
             a.style.marginRight = "5px";
 
@@ -479,7 +479,7 @@ let cxt_menu_tgt = "p, small, span";
                 if($(`p:contains("${src_text}")`).length > 1) {
                     // it goes first in paper content not including title 
                     a = document.createElement("button");
-                    a.textContent = `Go to first occurence of "${src_text}"`;
+                    a.textContent = `Jump to first occurence of "${src_text}"`;
                     a.style.fontSize = "17px";
                     a.addEventListener('click', function() {
                         let jump_href = r.getAnnotations().filter(an => (an.body[0].href == args.annotation.id) && $(`[data-id='${an.id}']`).parents('p').length)[0].id;
@@ -544,7 +544,7 @@ let cxt_menu_tgt = "p, small, span";
 
             l = document.createElement('label');
             l.htmlFor = "end-bridge";
-            l.textContent = "Link with another bookmark: "
+            l.textContent = "Link from another bookmark: "
 
             container.appendChild(rdo);
             container.appendChild(l);

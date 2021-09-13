@@ -427,8 +427,15 @@ let cxt_menu_tgt = "p, small, span";
         else {
             let t = document.createElement('span');
 
-            t.textContent = currentBridges.blob;
+            t.textContent = "Link to: "
 
+            container.appendChild(t);
+            container.appendChild( document.createElement("br") );
+
+            t = document.createElement('span');
+            
+            t.textContent = currentBridges.blob;
+            
             container.appendChild(t);
 
             // let a = document.createElement('a');
@@ -749,8 +756,7 @@ let cxt_menu_tgt = "p, small, span";
     ok_clicked = true;
     console.log("created");
     console.log(r.getAnnotations());      
-    alert();
-    
+
     if(a.body[0].purpose == "pre-select") {
         let bridge_snippet = a.target.selector[0].exact;
 
@@ -793,6 +799,8 @@ let cxt_menu_tgt = "p, small, span";
         // remove option from dropdowns
         $(`option[value="${a.id}"]`).remove();
         
+        // remove from pending bridges
+        pending_bridges = pending_bridges.filter(p => p.id != a.id)
     });
     
     

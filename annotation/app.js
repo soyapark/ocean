@@ -531,14 +531,14 @@ let cxt_menu_tgt = "p, small, span";
             rdo.name= "bridge-ctl";
             rdo.id = "end-bridge"
             rdo.addEventListener('change', function() {
-            document.getElementById("ok-btn").disabled = true;
+                document.getElementById("ok-btn").disabled = true;
 
-            // bridge finishing buttons 
-            pending_bridges.map(p => {
-                var button1 = finishBridgeButton(p);
-                
-                container.appendChild(button1);
-                return null;
+                // bridge finishing buttons 
+                pending_bridges.filter(p => p.id != args.annotation.id).map(p => {
+                    var button1 = finishBridgeButton(p);
+                    
+                    container.appendChild(button1);
+                    return null;
                 })
             });
 

@@ -339,7 +339,7 @@ let cxt_menu_tgt = "p, small, span";
         button.dataset.tag = 'YELLOW';
         button.addEventListener('click', function(e) {
             e.preventDefault();
-            
+
             let tab_target = clone ? args.annotation.id : currentBridges.href;
 
             if(!clone) 
@@ -349,10 +349,11 @@ let cxt_menu_tgt = "p, small, span";
 
             // jump to the end of bridge and create a tab there, and open up a contextmenu at the cursor
             // set proper name for the new tab
-            let new_tab_name = args.annotation.target.selector[0].exact.split(" ");
+            let new_tab_name = args.annotation.target.selector[0].exact;
+            new_tab_name = new_tab_name == "that ingenious hero" ? $(args.annotation.id).text().split(" ") : new_tab_name.split(" ");
             new_tab_name = new_tab_name.length > 3 ? new_tab_name.slice(0, 3).join(" ") + " ...": new_tab_name.join(" ");
 
-            createNewTab($(tab_target).offset().top, new_tab_name, !clone);
+            createNewTab($(tab_target).offset().top, new_tab_name, args.annotation.id.includes("fig") ? true : !clone);
 
             $(".context-menu").toggle(100).css({
                 top: ($(tab_target).offset().top + 19) + "px",
@@ -477,36 +478,45 @@ let cxt_menu_tgt = "p, small, span";
             document.getElementById("ok-btn").disabled = false;
 
             if(args.annotation.id && r.getAnnotations().filter(an => an.body[0].href == args.annotation.id).length) {
-                // before the bridge is complete
-                let a = document.createElement("button");
-                a.textContent = "Go back";
-                a.style.fontSize = "17px";
-                a.style.marginRight = "5px";
-                a.addEventListener('click', function() {
-                    // goes back to where the user jumped from
-                    document.querySelector(`[data-id='${jump_src_id}']`).id = jump_src_id.substr(1);
-                    
-                    location.href = jump_src_id;
-                }); 
-                container.appendChild(a);
+                let t = document.createElement('span');
+                
+                t.textContent = "Link from: "
+                
+                container.appendChild(t);
+                container.appendChild( document.createElement("br") );
 
-                // go to first occurence
-                let src_text = r.getAnnotations().filter(an => an.body[0].href == args.annotation.id)[0].target.selector[0].exact;
-                if($(`p:contains("${src_text}")`).length > 1) {
-                    // it goes first in paper content not including title 
-                    a = document.createElement("button");
-                    a.textContent = `Jump to first occurence of "${src_text}"`;
+                // from all the sources
+                // remove redundant links
+                $.each(r.getAnnotations().filter(an => (an.body[0].href == args.annotation.id) && 
+                    ($(`[data-id="${an.id}"]`).find('span').length == 0)), function(i, v) {
+                    let a = document.createElement("button");
+                    let el = `[data-id="${v.id}"]`;
+
+                    // Get which section is from
+                    $(el).parents('section[id]').each(function (i, e) {
+                        if($(e).find("> header").length == 0) return;
+                        a.textContent = $(e).find("> header .title-info").text().trim();
+                    })
+
+                    if(!a.textContent) a.textContent = "Abstract";
+
+                    if(!$(el).attr("id"))
+                        $(el).attr("id", "ocean" + Math.random());
+
                     a.style.fontSize = "17px";
+                    a.style.marginRight = "5px";
                     a.addEventListener('click', function() {
-                        let jump_href = r.getAnnotations().filter(an => (an.body[0].href == args.annotation.id) && $(`[data-id='${an.id}']`).parents('p').length)[0].id;
-                        jump_href = (jump_href[0] == "#" ? jump_href.substr(1) : jump_href); 
-                        document.querySelector(`[data-id='#${jump_href}']`).id = jump_href
-                        
-                        location.href = "#" + jump_href;
+                        // go to the part of the content that is citing
+                        location.href = "#" + $(el).attr("id");
                     }); 
                     container.appendChild(a);
-                }
-                
+                });
+
+                container.appendChild(document.createElement('hr'));
+
+                // create a new tab
+                let tab_btn = createNewTabButton(true);
+                container.appendChild(tab_btn);
             }
             
             else {
@@ -584,11 +594,19 @@ let cxt_menu_tgt = "p, small, span";
         }
         
     } else if (currentMaterials) {
+        let t = document.createElement('span');
+        
+        t.textContent = "Link from: "
+        
+        container.appendChild(t);
+        container.appendChild( document.createElement("br") );
+
         // fig, tables or footnotes
         $(`a[href="${args.annotation.id}"]`).each(function( index, el ) {
             // el == this
             let a = document.createElement("button");
             
+            // Get which section is from
             $(el).parents('section[id]').each(function (i, e) {
                 if($(e).find("> header").length == 0) return;
                 a.textContent = $(e).find("> header .title-info").text().trim();
@@ -605,6 +623,12 @@ let cxt_menu_tgt = "p, small, span";
             }); 
             container.appendChild(a);
         });
+
+        container.appendChild(document.createElement('hr'));
+
+        // create a new tab
+        let tab_btn = createNewTabButton(true);
+        container.appendChild(tab_btn);
 
         
     } else  {
@@ -879,6 +903,12 @@ let cxt_menu_tgt = "p, small, span";
             'end': loc[0] + $.trim(el.text()).length
         }}
         r.addAnnotation({...a});
+
+        
+        $(`[data-id="${a.id}"]`).each(function(i, el) {
+            if(($(el).parents('figure').length == 0) && ($(el).parents('.table-caption').length == 0) && ($(el).parents('.bibUl').length == 0))
+                $(el).remove();
+        })
     }
     
     function getIndicesOf(searchStr, str, caseSensitive) {

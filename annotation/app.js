@@ -955,7 +955,7 @@ let cxt_menu_tgt = "#outer-container";
                 pending_bridges = pending_bridges.filter(p => p.id != src_annotation.id)
                 
                 // add a highlight to newly added annotation
-                document.querySelectorAll(".r6o-annotation.WHITE").forEach(e => e.classList.remove("highlighted"));
+                document.querySelectorAll(".r6o-annotation").forEach(e => e.classList.remove("highlighted"));
                 document.querySelectorAll(`[data-id='${a.id}']`).forEach(e => e.classList.add("highlighted"));
         
         
@@ -1004,7 +1004,7 @@ let cxt_menu_tgt = "#outer-container";
     }
 
     function highlightHref(tgt_href) {
-        document.querySelectorAll(".r6o-annotation.WHITE").forEach(e => e.classList.remove("highlighted"));
+        document.querySelectorAll(".r6o-annotation").forEach(e => e.classList.remove("highlighted"));
         document.querySelectorAll(`[data-id='${tgt_href}']`).forEach(e => e.classList.add("highlighted"));
     }
 

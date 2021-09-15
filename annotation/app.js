@@ -207,13 +207,8 @@ let cxt_menu_tgt = "p, small, span";
 
         document.querySelector(`[data-id='${this.value}']`).id = (this.value[0] == "#" ? this.value.substr(1) : this.value);
 
-        // jump to the selected bookmark
-        location.href = this.value;
-
-        var end = this.value;
-        var firstDropVal = $('#pick').val();
-
-        // alert(end);
+        // create a new tab
+        createNewTab($(this.value).offset().top, $(`[value=${this.value}]`).text())
     });
 
     var ColorSelectorWidget = function(args) {

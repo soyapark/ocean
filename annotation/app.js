@@ -472,10 +472,11 @@ let cxt_menu_tgt = "#outer-container";
             // Right after bridge is created for bridge ends
             document.getElementById("ok-btn").disabled = false;
 
-            if(args.annotation.id && r.getAnnotations().filter(an => an.body[0].href == args.annotation.id).length) {
+            let src_annotations = r.getAnnotations().filter(an => an.body[0].href == args.annotation.id);
+            if(args.annotation.id && src_annotations.length) {
                 let t = document.createElement('span');
                 
-                t.textContent = "Link from: "
+                t.textContent = "Link from: " + src_annotations[0].target.selector[0].exact;
                 
                 container.appendChild(t);
                 container.appendChild( document.createElement("br") );

@@ -157,7 +157,7 @@ function getUrlParameter(sParam) {
     }
 }
 
-let cxt_menu_tgt = "p, small, span";
+let cxt_menu_tgt = "#outer-container";
 
 (function () {
     let bridge_start = false;

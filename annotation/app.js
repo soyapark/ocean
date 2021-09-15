@@ -481,6 +481,12 @@ let cxt_menu_tgt = "#outer-container";
                 container.appendChild(t);
                 container.appendChild( document.createElement("br") );
 
+                t = document.createElement('span');
+                
+                t.textContent = "Jump to occurrence: ";
+                
+                container.appendChild(t);
+
                 // from all the sources
                 // remove redundant links
                 $.each(r.getAnnotations().filter(an => (an.body[0].href == args.annotation.id) && 

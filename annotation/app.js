@@ -595,7 +595,8 @@ let cxt_menu_tgt = "#outer-container";
             container.appendChild(tab_btn);    
         }
         
-    } else if (currentMaterials) {
+    } 
+    else if (currentMaterials) {
         let t = document.createElement('span');
         
         t.textContent = "Link from: "
@@ -620,6 +621,8 @@ let cxt_menu_tgt = "#outer-container";
             a.style.fontSize = "17px";
             a.style.marginRight = "5px";
             a.addEventListener('click', function() {
+                highlightHref("#" + $(el).attr("id"));
+
                 // go to the part of the content that is citing
                 location.href = "#" + $(el).attr("id");
             }); 
@@ -1011,7 +1014,9 @@ let cxt_menu_tgt = "#outer-container";
     }
 
     function highlightHref(tgt_href) {
-        document.querySelectorAll(".r6o-annotation").forEach(e => e.classList.remove("highlighted"));
+        document.querySelectorAll(".r6o-annotation, a").forEach(e => e.classList.remove("highlighted"));
+
+        document.getElementById(tgt_href.substring(1)).classList.add("highlighted");
         document.querySelectorAll(`[data-id='${tgt_href}']`).forEach(e => e.classList.add("highlighted"));
     }
 

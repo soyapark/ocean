@@ -454,6 +454,8 @@ let cxt_menu_tgt = "#outer-container";
             a.style.marginRight = "5px";
 
             a.addEventListener('click', function() {
+                document.querySelector(`[data-id='${currentBridges.href}']`).id = (currentBridges.href == "#" ? currentBridges.href.substr(1) : currentBridges.href);
+
                 highlightHref(currentBridges.href);
                 
                 jump_src_id = args.annotation.id;

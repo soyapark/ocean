@@ -366,21 +366,26 @@ let cxt_menu_tgt = "#outer-container";
     }
 
     var finishBridge = function(evt) {
-        args.onUpdateBody(currentPreBridges? currentPreBridges : currentPreSelect, {
-            type: 'TextualBody',
-            purpose: 'bridge',
-            author: session_id,
-            ocean_id: "ocean" + Math.random(),
-            snippet: evt.target.textContent
-        });
+        if(currentPreBridges)
+            args.onUpdateBody(currentPreBridges, {
+                type: 'TextualBody',
+                purpose: 'pre-bridge',
+                author: session_id,
+                ocean_id: args.annotation.id,
+                snippet: evt.target.textContent,
+                bookmarkToBookmark: true
+            });
+
+        else if(currentPreSelect)
+            args.onUpdateBody(currentPreSelect, {
+                type: 'TextualBody',
+                purpose: 'bridge',
+                author: session_id,
+                ocean_id: "ocean" + Math.random(),
+                snippet: evt.target.textContent
+            });
 
         src_id = evt.target.dataset.src_id;
-
-        if(currentPreBridges) { // bookmark to bookmark
-            createNewBridge(args.annotation);
-        }
-
-        
         
     }
 
@@ -535,67 +540,76 @@ let cxt_menu_tgt = "#outer-container";
         
     } 
     else if(currentPreBridges || currentPreSelect) {
-        let rdo = document.createElement('input');
-        rdo.type = "radio";
-        rdo.name= "bridge-ctl";
-        rdo.id = "start-bridge"
-        rdo.checked = true;
-        rdo.addEventListener('change', function() {
-            document.getElementById("ok-btn").disabled = false;
-
-            document.querySelectorAll(".bridge-end-btn").forEach(e => e.parentNode.removeChild(e));
-        });
-
-        let l = document.createElement('label');
-        l.htmlFor = "start-bridge";
-        l.textContent = currentPreBridges? "Your bookmark (only visible to you)" : "Add a bookmark";
-
-        container.appendChild(rdo);
-        container.appendChild(l);
-
-        container.appendChild(document.createElement('br'));
-
-        
-
-        if(pending_bridges.length) {
-            rdo = document.createElement('input');
+        if(currentPreBridges && currentPreBridges.bookmarkToBookmark) {
+            let t = document.createElement('span');
+            
+            t.textContent = `Press OK to create the link to "${currentBridges.snippet}"`;
+            container.appendChild(t);
+        }
+        else {
+            let rdo = document.createElement('input');
             rdo.type = "radio";
             rdo.name= "bridge-ctl";
-            rdo.id = "end-bridge"
+            rdo.id = "start-bridge"
+            rdo.checked = true;
             rdo.addEventListener('change', function() {
-                document.getElementById("ok-btn").disabled = true;
-
-                // bridge finishing buttons 
-                pending_bridges.filter(p => p.id != args.annotation.id).map(p => {
-                    var button1 = finishBridgeButton(p);
-                    
-                    document.querySelector("#link-btn-container").appendChild(button1);
-                    return null;
-                })
+                document.getElementById("ok-btn").disabled = false;
+    
+                document.querySelectorAll(".bridge-end-btn").forEach(e => e.parentNode.removeChild(e));
             });
-
-            l = document.createElement('label');
-            l.htmlFor = "end-bridge";
-            l.textContent = "Link from another bookmark: "
-
+    
+            let l = document.createElement('label');
+            l.htmlFor = "start-bridge";
+            l.textContent = currentPreBridges? "Your bookmark (only visible to you)" : "Add a bookmark";
+    
             container.appendChild(rdo);
             container.appendChild(l);
-
-            let link_btn_container = document.createElement('div');
-            link_btn_container.id = "link-btn-container";
-
-            container.appendChild(link_btn_container);
-
-            // container.appendChild(document.createElement('br'));
-        } 
-
-        container.appendChild(document.createElement('hr'));
-
-        if(currentPreBridges) {
-            // create a new tab option
-            let tab_btn = createNewTabButton(true);
-            container.appendChild(tab_btn);    
+    
+            container.appendChild(document.createElement('br'));
+    
+            
+    
+            if(pending_bridges.length) {
+                rdo = document.createElement('input');
+                rdo.type = "radio";
+                rdo.name= "bridge-ctl";
+                rdo.id = "end-bridge"
+                rdo.addEventListener('change', function() {
+                    document.getElementById("ok-btn").disabled = true;
+    
+                    // bridge finishing buttons 
+                    pending_bridges.filter(p => p.id != args.annotation.id).map(p => {
+                        var button1 = finishBridgeButton(p);
+                        
+                        document.querySelector("#link-btn-container").appendChild(button1);
+                        return null;
+                    })
+                });
+    
+                l = document.createElement('label');
+                l.htmlFor = "end-bridge";
+                l.textContent = "Link from another bookmark: "
+    
+                container.appendChild(rdo);
+                container.appendChild(l);
+    
+                let link_btn_container = document.createElement('div');
+                link_btn_container.id = "link-btn-container";
+    
+                container.appendChild(link_btn_container);
+    
+                // container.appendChild(document.createElement('br'));
+            } 
+    
+            container.appendChild(document.createElement('hr'));
+    
+            if(currentPreBridges) {
+                // create a new tab option
+                let tab_btn = createNewTabButton(true);
+                container.appendChild(tab_btn);    
+            }
         }
+        
         
     } 
     else if (currentMaterials) {
@@ -939,69 +953,66 @@ let cxt_menu_tgt = "#outer-container";
         // find the source annotation `data-id` and update the another end
         let src_annotation = r.getAnnotations().filter(an => an.id == src_id)[0];
         
-                // get the section name of the newly created annotation
-                document.querySelector(`[data-id='${a.id}']`)
+        r.removeAnnotation(src_annotation);
+
+        src_annotation.body[0] = {
+        "purpose": "bridge",
+        "href": a.id,
+        "value": "here",
+        "blob": a.target.selector[0].exact,
+        "author": session_id
+        }
         
-                r.removeAnnotation(src_annotation);
-        
-                src_annotation.body[0] = {
-                "purpose": "bridge",
-                "href": a.id,
-                "value": "here",
-                "blob": a.target.selector[0].exact,
-                "author": session_id
-                }
-                
-                r.addAnnotation(src_annotation);
-                
-                
-        
-                // manually update the old annotation from db since the updateAnnotation event is not triggered
-                db.collection(COLLECTION_NAME).where("id","==", src_annotation.id).get().then(function(querySnapshot) {
-                    querySnapshot.docs[0].ref.update({
-                    body: [src_annotation.body[0]]
-                    });   
-                })
-        
-                // remove the pending bridges
-                pending_bridges = pending_bridges.filter(p => p.id != src_annotation.id)
-                
-                // add a highlight to newly added annotation
-                document.querySelectorAll(".r6o-annotation").forEach(e => e.classList.remove("highlighted"));
-                document.querySelectorAll(`[data-id='${a.id}']`).forEach(e => e.classList.add("highlighted"));
+        r.addAnnotation(src_annotation);
         
         
-                // if the term is appeared multiple times, add bridges from the occurence 
-                let term = src_annotation.target.selector[0].exact;
-                let occurences = getIndicesOf(term, $("#content").text());
-                
-                // temporarily add to only first ten
-                occurences = occurences.slice(0, 10);
-                occurences.forEach(function(e) {
-                    if(src_annotation.target.selector[1].start == e)
-                        return;
+
+        // manually update the old annotation from db since the updateAnnotation event is not triggered
+        db.collection(COLLECTION_NAME).where("id","==", src_annotation.id).get().then(function(querySnapshot) {
+            querySnapshot.docs[0].ref.update({
+            body: [src_annotation.body[0]]
+            });   
+        })
+
+        // remove the pending bridges
+        pending_bridges = pending_bridges.filter(p => p.id != src_annotation.id)
         
-                    // if this occurence is in the target part, skip this occurence 
-                    if(Math.max(e, a.target.selector[1].start) <= Math.min(e + term.length, a.target.selector[1].end))
-                        return;
+        // add a highlight to newly added annotation
+        document.querySelectorAll(".r6o-annotation").forEach(e => e.classList.remove("highlighted"));
+        document.querySelectorAll(`[data-id='${a.id}']`).forEach(e => e.classList.add("highlighted"));
+
+
+        // if the term is appeared multiple times, add bridges from the occurence 
+        let term = src_annotation.target.selector[0].exact;
+        let occurences = getIndicesOf(term, $("#content").text());
         
-                    let extra_annon = {...src_annotation};
-                    extra_annon.id = "#ocean" + Math.random();
-                    extra_annon.target.selector[1] = {
-                        'type': 'TextPositionSelector',
-                        'start': e,
-                        'end': e + term.length
-                    };
-                    r.addAnnotation(extra_annon);
-        
-                    // save it to db
-                    db.collection(COLLECTION_NAME).add(
-                        extra_annon
-                    )
-                })
-        
-                // remove from dropdown
-                $(`option[value="${src_annotation.id}"]`).remove();
+        // temporarily add to only first ten
+        occurences = occurences.slice(0, 10);
+        occurences.forEach(function(e) {
+            if(src_annotation.target.selector[1].start == e)
+                return;
+
+            // if this occurence is in the target part, skip this occurence 
+            if(Math.max(e, a.target.selector[1].start) <= Math.min(e + term.length, a.target.selector[1].end))
+                return;
+
+            let extra_annon = {...src_annotation};
+            extra_annon.id = "#ocean" + Math.random();
+            extra_annon.target.selector[1] = {
+                'type': 'TextPositionSelector',
+                'start': e,
+                'end': e + term.length
+            };
+            r.addAnnotation(extra_annon);
+
+            // save it to db
+            db.collection(COLLECTION_NAME).add(
+                extra_annon
+            )
+        })
+
+        // remove from dropdown
+        $(`option[value="${src_annotation.id}"]`).remove();
         
     }
 

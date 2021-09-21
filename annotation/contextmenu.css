@@ -19,11 +19,12 @@
             padding: 5px 2px;
             margin-bottom: 3px;
             color: #004242;
-            background-color: white;
+            background-color: lightgray;
+            
         }
 
             .context-menu ul li.selected {
-                background-color: lightgray;
+                background-color: white;
                 font-weight: bold;
             }
 

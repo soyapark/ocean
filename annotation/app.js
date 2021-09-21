@@ -279,7 +279,7 @@ let cxt_menu_tgt = "#outer-container";
 
         var currentPreBridges = args.annotation ? 
             args.annotation.bodies.find(function(b) {
-            return b.purpose == 'pre-bridge';
+            return b.purpose.includes('pre-bridge');
             }) : null;  
 
         var currentPreSelect = args.annotation ? 
@@ -369,7 +369,7 @@ let cxt_menu_tgt = "#outer-container";
         if(currentPreBridges)
             args.onUpdateBody(currentPreBridges, {
                 type: 'TextualBody',
-                purpose: 'pre-bridge',
+                purpose: 'pre-bridge2', // change the purpose to trigger re-rendering of pop-up
                 author: session_id,
                 ocean_id: args.annotation.id,
                 snippet: evt.target.textContent,
@@ -459,7 +459,7 @@ let cxt_menu_tgt = "#outer-container";
             a.style.marginRight = "5px";
 
             a.addEventListener('click', function() {
-                document.querySelector(`[data-id='${currentBridges.href}']`).id = (currentBridges.href == "#" ? currentBridges.href.substr(1) : currentBridges.href);
+                document.querySelector(`[data-id='${currentBridges.href}']`).id = (currentBridges.href[0] == "#" ? currentBridges.href.substr(1) : currentBridges.href);
 
                 highlightHref(currentBridges.href);
                 
@@ -541,9 +541,11 @@ let cxt_menu_tgt = "#outer-container";
     } 
     else if(currentPreBridges || currentPreSelect) {
         if(currentPreBridges && currentPreBridges.bookmarkToBookmark) {
+            document.getElementById("ok-btn").disabled = false;
+
             let t = document.createElement('span');
             
-            t.textContent = `Press OK to create the link to "${currentBridges.snippet}"`;
+            t.textContent = `Press OK to create the link to "${currentPreBridges.snippet}"`;
             container.appendChild(t);
         }
         else {
@@ -849,9 +851,37 @@ let cxt_menu_tgt = "#outer-container";
     });
     
     
-    // r.on('updateAnnotation', function (annotation, previous) {
-    //   alert('updated', previous, 'with', annotation);
-    // });
+    r.on('updateAnnotation', function (a, previous) {
+        // when bookmark became link
+
+        // update a's purpose to bridge
+        // find the source annotation `data-id` and update the another end
+        let a_cpy = {...a};
+        
+        r.removeAnnotation(a_cpy);
+
+        a_cpy.body[0] = {
+        "purpose": "bridge",
+        "href": a_cpy.href,
+        "value": "here",
+        "blob": a_cpy.target.selector[0].exact,
+        "author": a_cpy.session_id
+        }
+        
+        r.addAnnotation(a_cpy);
+        
+        
+
+        // manually update the old annotation from db since the updateAnnotation event is not triggered
+        db.collection(COLLECTION_NAME).where("id","==", a_cpy.id).get().then(function(querySnapshot) {
+            querySnapshot.docs[0].ref.update({
+            body: [a_cpy.body[0]]
+            });   
+        })
+      
+        // update source bookmarks
+        createNewBridge(a_cpy);
+    });
 
     // Wire the Add/Update/Remove buttons
     // document.getElementById('add-annotation').addEventListener('click', function () {

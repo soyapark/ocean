@@ -218,6 +218,7 @@ let cxt_menu_tgt = "#outer-container";
             openTab(0);
     })
 
+    // create a new tab from dropdown
     $("body").on("change", "#bookmark-nav", function () {
         if(this.value == "default") {
             // no jump 
@@ -363,7 +364,7 @@ let cxt_menu_tgt = "#outer-container";
 
             // jump to the end of bridge and create a tab there, and open up a contextmenu at the cursor
             // set proper name for the new tab
-            let new_tab_name = args.annotation.target.selector[0].exact;
+            let new_tab_name = $(`[data-id="${tab_target}"]`).text();
             new_tab_name = new_tab_name == "that ingenious hero" ? $(args.annotation.id).text().split(" ") : new_tab_name.split(" ");
             new_tab_name = new_tab_name.length > 3 ? new_tab_name.slice(0, 3).join(" ") + " ...": new_tab_name.join(" ");
 

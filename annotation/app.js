@@ -1077,6 +1077,13 @@ let cxt_menu_tgt = "#outer-container";
             "loc": loc
         });
 
+        // do effect of flashing
+        $("body").css("visibility", "hidden");
+        sleep(300).then(() => {
+            // Do something after the sleep!
+            $("body").css("visibility", "visible");
+        });
+
         openTab(tabID++, scroll);
     }
 

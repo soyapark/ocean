@@ -515,8 +515,12 @@ let cxt_menu_tgt = "#outer-container";
 
                 // from all the sources
                 // remove redundant links
-                $.each(r.getAnnotations().filter(an => (an.body[0].href == args.annotation.id) && 
-                    ($(`[data-id="${an.id}"]`).find('span').length == 0)), function(i, v) {
+                $.each(r.getAnnotations().filter(an => (an.body[0].href == args.annotation.id)).reduce((unique, o) => {
+                    if(!unique.some(obj => obj.target.selector[1].start === o.target.selector[1].start)) {
+                      unique.push(o);
+                    }
+                    return unique;
+                },[]), function(i, v) {
                     let a = document.createElement("button");
                     let el = `[data-id="${v.id}"]`;
 
@@ -534,6 +538,7 @@ let cxt_menu_tgt = "#outer-container";
                     a.style.fontSize = "17px";
                     a.style.marginRight = "5px";
                     a.addEventListener('click', function() {
+                        highlightHref("#" + $(el).attr("id"));
                         // go to the part of the content that is citing
                         location.href = "#" + $(el).attr("id");
                     }); 
@@ -881,10 +886,9 @@ let cxt_menu_tgt = "#outer-container";
 
         a_cpy.body[0] = {
         "purpose": "bridge",
-        "href": a_cpy.href,
         "value": "here",
         "blob": a_cpy.target.selector[0].exact,
-        "author": a_cpy.session_id
+        "author": session_id
         }
         
         r.addAnnotation(a_cpy);
@@ -1038,6 +1042,7 @@ let cxt_menu_tgt = "#outer-container";
         // temporarily add to only first ten
         occurences = occurences.slice(0, 10);
         occurences.forEach(function(e) {
+            
             if(src_annotation.target.selector[1].start == e)
                 return;
 
@@ -1045,7 +1050,7 @@ let cxt_menu_tgt = "#outer-container";
             if(Math.max(e, a.target.selector[1].start) <= Math.min(e + term.length, a.target.selector[1].end))
                 return;
 
-            let extra_annon = {...src_annotation};
+            let extra_annon = JSON.parse(JSON.stringify(src_annotation));
             extra_annon.id = "#ocean" + Math.random();
             extra_annon.target.selector[1] = {
                 'type': 'TextPositionSelector',

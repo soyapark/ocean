@@ -29,7 +29,10 @@ $(document).ready(function () {
     $(document).bind('contextmenu click', function (e) {
         console.log(e.target.tagName);
         let is_safari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-        if(["SPAN", "LI", "BUTTON", "INPUT", "SELECT"].includes(e.target.tagName)) {
+        if($(e.target).parents(".context-menu").length)
+            return;
+
+        if(["LI", "BUTTON", "INPUT", "SELECT"].includes(e.target.tagName)) {
             return;
         }
 

@@ -175,13 +175,32 @@ let cxt_menu_tgt = "#outer-container";
         alert("Wrong user name. Please try the link with your name.");
         $("body").hide();
         return;
-    }
-
-    if(!session_id) {
+    } else if(!session_id) {
         alert("Wrong URL. Please contact Soya for a correct link.");
         $("body").hide();
         return;
     }
+
+    // ctrl-f detection
+    var keydown = null;
+    $(window).keydown(function(e) {
+        if ( ( e.keyCode == 70 && ( e.ctrlKey || e.metaKey ) ) ||
+             ( e.keyCode == 191 ) ) {
+            keydown = new Date().getTime();
+        }
+        
+        return true;
+    }).blur(function() {
+        if ( keydown !== null ) {
+            var delta = new Date().getTime() - keydown;
+            if ( delta > 0 && delta < 1000 )
+                document.dispatchEvent(new CustomEvent('ctrlF', { detail: {
+                    "ctrlF": "text-search"
+                }}));
+            
+            keydown = null;
+        }
+    });
 
     $("body").on("click", ".context-menu li", function(e) {
         if(e.target !== e.currentTarget) return;

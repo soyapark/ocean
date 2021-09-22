@@ -17,12 +17,7 @@ var EVENT_TYPES_TO_LOG = {
   mousedown: true,
   keydown: true,
   log: true,
-  finishTutorial: true,
-  finishSurvey: true,
-  doneRationale: true, // when finish a question of rationale
-  rationale: true,
-  conceptNextstage: true,
-  conceptSubmit: true
+  ctrlF: true,
 };
 
 // These event properties are copied to the log if present.

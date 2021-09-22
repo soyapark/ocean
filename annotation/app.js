@@ -889,7 +889,7 @@ let cxt_menu_tgt = "#outer-container";
         
         r.addAnnotation(a_cpy);
         
-        
+        pending_bridges = pending_bridges.filter(p => p.id != a_cpy.id)
 
         // manually update the old annotation from db since the updateAnnotation event is not triggered
         db.collection(COLLECTION_NAME).where("id","==", a_cpy.id).get().then(function(querySnapshot) {

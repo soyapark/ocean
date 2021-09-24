@@ -1,0 +1,851 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Self-E: Smartphone-Supported Guidance for Customizable Self-Experimentation</title>
+
+  <!-- <link media="screen, print" rel="stylesheet" href="./webreader_files/bootstrap.min.css">
+  <link media="screen, print" rel="stylesheet" href="./webreader_files/bootstrap-theme.min.css"> -->
+  
+  <link media="screen, print" rel="stylesheet" href="./contextmenu.css">
+  <link href="recogito.min.css" rel="stylesheet">
+  <link media="screen, print" rel="stylesheet" href="./TiltChair_ Manipulative Posture Guidance by Actively Inclining the Seat of an Office Chair_files/main.css">
+  <style>
+    html,
+    body {
+      padding: 10px 20px;
+      margin: 0;
+      /* font-family: stix,Georgia,serif; */
+    }
+
+    h1 {
+      font-size: 22px;
+      margin-top: 30px;
+      margin-bottom: 20px;
+    }
+
+    #outer-container {
+      position: relative;
+    }
+
+    #content {
+      max-width: 920px;
+      /* font-family: 'Lato', sans-serif; */
+      font-size: 17px;
+      line-height: 27px;
+    }
+  </style>
+  <style>
+      .navbar {
+        overflow: hidden;
+        background-color: transparent;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 99;
+        min-height: 30px;
+        max-height: 30px;
+        border-top: 5px solid grey;
+      }
+  
+      .navbar select, .navbar button {
+        /* font-size: 50px; */
+        float:left;
+      }
+  
+      .navbar.closed {
+        visibility: hidden;
+      }
+  
+      .navbar .nav{
+        visibility: hidden;
+  
+      }
+  
+      .navbar:hover .nav {
+        visibility: visible;
+      }
+  
+      .nav > li > a {
+        /* float: left;
+        display: block; */
+        color: #f2f2f2;
+        text-align: center;
+        padding-top: 0;
+        text-decoration: none;
+        font-size: 17px;
+      }
+  
+      .navbar a:hover {
+        background: #ddd;
+        color: black;
+      }
+  
+      .navbar .close {
+        float:right;
+      }
+  
+      .widget {
+        background:#85D5AC;
+      }
+  
+      /* 5. CSS styles for the color selector widget */
+      .colorselector-widget {
+        padding:5px;
+        border-bottom:1px solid #e5e5e5;
+      }
+  
+      .colorselector-widget button {
+        outline:none;
+        border:none;
+        display:inline-block;
+        width:20px;
+        height:20px;
+        border-radius:50%;
+        cursor:pointer;
+        opacity:0.5;
+        margin:4px;
+      }
+  
+      .colorselector-widget button.selected,
+      .colorselector-widget button:hover {
+        opacity:1;
+      }
+  
+      .r6o-annotation {
+        border-bottom: 0px;
+      }
+  
+      .r6o-annotation.RED {
+        background-color: rgba(255, 0, 0, 0.3);
+        border-bottom: 2px solid orange;
+        cursor: pointer;
+      }
+  
+      .r6o-annotation.GREY {
+        background-color: rgba(220, 220, 220, 0.9);
+        border-bottom: 2px solid orange;
+        cursor: pointer;
+      }
+  
+      .r6o-annotation.WHITE {
+        background-color: initial;
+        border-bottom: 0px;
+        cursor: default;
+      }
+  
+      .highlighted {
+        background-color: yellowgreen;
+      }
+  
+      svg.a9s-annotationlayer .a9s-annotation.RED .a9s-outer {
+        stroke:red;
+        stroke-width:3;
+        fill:rgba(255, 0, 0, 0.3);
+      }
+  
+      svg.a9s-annotationlayer .a9s-annotation.GREEN .a9s-outer {
+        stroke:green;
+        stroke-width:3;
+        fill:rgba(0, 255, 0, 0.3);
+      }
+  
+      svg.a9s-annotationlayer .a9s-annotation.BLUE .a9s-outer {
+        stroke:blue;
+        stroke-width:3;
+        fill:rgba(0, 0, 255, 0.3);
+      }
+  
+      svg.a9s-annotationlayer .a9s-annotation.RED .a9s-inner,
+      svg.a9s-annotationlayer .a9s-annotation.GREEN .a9s-inner,
+      svg.a9s-annotationlayer .a9s-annotation.BLUE .a9s-inner {
+        fill:transparent;
+        stroke:none;
+      }
+  
+      .close {
+        position: absolute;
+        right: 2px;
+        /* top: 32px; */
+        width: 12px;
+        height: 12px;
+        /* opacity: 0.3; */
+      }
+      .close:hover {
+        opacity: 1;
+      }
+      .close:before, .close:after {
+        position: absolute;
+        /* left: 15px; */
+        content: ' ';
+        height: 17px;
+        width: 2px;
+        background-color: #333;
+      }
+      .close:before {
+        transform: rotate(45deg);
+      }
+      .close:after {
+        transform: rotate(-45deg);
+      }
+  
+      li:before{
+        content:attr(label);
+        padding-right:13px;
+        font-weight:700
+      }
+  
+      .bibUl li span {
+        /* margin-bottom: 5px; */
+        cursor: pointer;
+        background-color: #D4D585;
+      }
+  
+      .bibUl li .r6o-annotation {
+        background-color: initial;
+      }
+  
+      .table-number .r6o-annotation, figure .r6o-annotation {
+        background-color: #D4D585;
+      }
+    </style>
+  
+  <script>
+    // self executing function here
+(function() {
+   // your page initialization code here
+   // the DOM will be available here
+   function getSelectedText() {
+          if (window.getSelection) {
+              return window.getSelection().toString();
+          } else if (document.selection) {
+              return document.selection.createRange().text;
+          }
+          return '';}
+          
+   window.addEventListener('mouseup', function(event){
+    //  debugger;
+        console.log(event);
+        // alert();
+        var text=getSelectedText();
+          if (text!='') console.log(text);
+// do logic here
+})
+
+//     (function () {
+      
+//       document.querySelectorAll('div').addEventListener('click',(event) => {
+//         var text=getSelectedText();
+//           if (text!='') alert(text);
+// });
+    });
+    
+    </script>
+<script src="./lib/jquery.min.js" type="text/javascript"></script>
+<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/@recogito/annotorious@2.1.6/dist/annotorious.min.js"></script> -->
+<script src="recogito-firebase-storage.js"></script>
+
+  
+
+  <script src="recogito.min.js"></script>
+  <script src="logging-selfe-apple.js"></script>
+
+
+</head>
+
+<body>
+  <!-- <div><button id="add-annotation">Add Annotation</button> <button id="update-annotation">Update Annotation</button>
+    <button id="remove-annotation">Remove Annotation</button> <button id="toggle-mode">MODE: ANNOTATION</button></div> -->
+  <!-- <div class="navbar" style="width:100%">
+      <ul id="tab-list" style="background: white;" class="nav nav-tabs" role="tablist">
+        <li class="active"><a href="#paper-tab1" role="tab" data-toggle="tab"><span>Main </span>
+                </a></li>
+      </ul>
+  </div> -->
+  <!-- Context-menu -->
+  <div class='context-menu'>
+      <div style="text-align: center;width: 100%;">Current tab</div>
+      <ul>
+          <li tabID=0 class="selected">Main</li>
+      </ul>
+      <span style="margin-left: 5px;">+ New tab: </span>
+      <select id="bookmark-nav">
+        <option value="default">Select a bookmark to create a new tab</option>
+      </select>
+  </div>  
+  <div id="outer-container">
+      <div id="content" class="plaintext">
+        
+      <main> 
+          <section class="front-matter"> 
+           <section> 
+            <header class="title-info"> 
+             <div class="journal-title"> 
+              <h1> <span class="title">Self-E: Smartphone-Supported Guidance for Customizable Self-Experimentation</span> <br> <span class="subTitle"></span> </h1> 
+             </div> 
+            </header> 
+            <div class="authorGroup"> 
+             <div class="author"> 
+              <span class="givenName">Nediyana </span> 
+              <span class="surName">Daskalova</span>, Brown University, United States, 
+              <a href="mailto:nediyana_daskalova@brown.edu">nediyana_daskalova@brown.edu</a> 
+             </div> 
+             <div class="author"> 
+              <span class="givenName">Eindra </span> 
+              <span class="surName">Kyi</span>, Smith College, United States, 
+              <a href="mailto:ekyi@smith.edu">ekyi@smith.edu</a> 
+             </div> 
+             <div class="author"> 
+              <span class="givenName">Kevin </span> 
+              <span class="surName">Ouyang</span>, Brown University, United States, 
+              <a href="mailto:kevin_ouyang@brown.edu">kevin_ouyang@brown.edu</a> 
+             </div> 
+             <div class="author"> 
+              <span class="givenName">Arthur </span> 
+              <span class="surName">Borem</span>, Brown University, United States, 
+              <a href="mailto:arthur_borem@brown.edu">arthur_borem@brown.edu</a> 
+             </div> 
+             <div class="author"> 
+              <span class="givenName">Sally </span> 
+              <span class="surName">Chen</span>, Brown University, United States, 
+              <a href="mailto:sally_chen@brown.edu">sally_chen@brown.edu</a> 
+             </div> 
+             <div class="author"> 
+              <span class="givenName">Sung Hyun </span> 
+              <span class="surName">Park</span>, Grinnell College, United States, 
+              <a href="mailto:andrewpark9898@gmail.com">andrewpark9898@gmail.com</a> 
+             </div> 
+             <div class="author"> 
+              <span class="givenName">Nicole </span> 
+              <span class="surName">Nugent</span>, Bradley/Hasbro Children's Research Center Rhode Island Hospital, United States, 
+              <a href="mailto:nicole_nugent@brown.edu">nicole_nugent@brown.edu</a> 
+             </div> 
+             <div class="author"> 
+              <span class="givenName">Jeff </span> 
+              <span class="surName">Huang</span>, Department of Computer Science Brown University, United States, 
+              <a href="mailto:jeff_huang@brown.edu">jeff_huang@brown.edu</a> 
+             </div> 
+            </div> 
+            <br> 
+            <div class="pubInfo"> 
+             <p>DOI: <a href="https://doi.org/10.1145/3411764.3445100" target="_blank">https://doi.org/10.1145/3411764.3445100</a> <br>CHI '21: <a href="https://doi.org/10.1145/3411764" target="_blank">CHI Conference on Human Factors in Computing Systems</a>, Yokohama, Japan, May 2021</p> 
+            </div> 
+            <div class="abstract"> 
+             <p><small> The ubiquity of self-tracking devices and smartphone apps has empowered people to collect data about themselves and try to self-improve. However, people with little to no personal analytics experience may not be able to analyze data or run experiments on their own (self-experiments). To lower the barrier to intervention-based self-experimentation, we developed an app called Self-E, which guides users through the experiment. We conducted a 2-week diary study with 16 participants from the local population and a second study with a more advanced group of users to investigate how they perceive and carry out self-experiments with the help of Self-E, and what challenges they face. We find that users are influenced by their preconceived notions of how healthy a given behavior is, making it difficult to follow Self-E's directions and trusting its results. We present suggestions to overcome this challenge, such as by incorporating empathy and scaffolding in the system.</small> </p> 
+            </div> 
+            <div class="CCSconcepts"> 
+             <ccs2012>
+              <small> <span style="font-weight:bold;">CCS Concepts:</span> • <strong>Human-centered computing → Empirical studies in HCI</strong>; <em>Empirical studies in ubiquitous and mobile computing;</em> </small>
+             </ccs2012> 
+            </div> 
+            <br> 
+            <div class="classifications"> 
+             <div class="author"> 
+              <span style="font-weight:bold;"><small>Keywords:</small></span> 
+              <span class="keyword"><small>self-experiments</small>, </span> 
+              <span class="keyword"> <small>personal informatics</small>, </span> 
+              <span class="keyword"> <small>self-tracking</small></span> 
+             </div> 
+             <br> 
+             <div class="AcmReferenceFormat"> 
+              <p><small> <span style="font-weight:bold;">ACM Reference Format:</span> <br>Nediyana Daskalova, Eindra Kyi, Kevin Ouyang, Arthur Borem, Sally Chen, Sung Hyun Park, Nicole Nugent, and Jeff Huang. 2021. Self-E: Smartphone-Supported Guidance for Customizable Self-Experimentation. In <em>CHI Conference on Human Factors in Computing Systems (CHI '21), May 8–13, 2021, Yokohama, Japan.</em> ACM, New York, NY, USA 13 Pages. <a href="https://doi.org/10.1145/3411764.3445100" class="link-inline force-break" target="_blank">https://doi.org/10.1145/3411764.3445100</a></small></p> 
+             </div> 
+            </div> 
+           </section> 
+          </section> 
+          <section class="body"> 
+           <section id="sec-2"> 
+            <header> 
+             <div class="title-info"> 
+              <h2> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">1</span></span> INTRODUCTION</h2> 
+             </div> 
+            </header> 
+            <p>Significant aspects of our life such as sleep&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0006" data-original-title="" title="" id="auto-BibPLXBIB00061">6</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0017" data-original-title="" title="" id="auto-BibPLXBIB00172">17</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0019" data-original-title="" title="" id="auto-BibPLXBIB00193">19</a>] and nutrition&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0013" data-original-title="" title="" id="auto-BibPLXBIB00134">13</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0014" data-original-title="" title="" id="auto-BibPLXBIB00145">14</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0036" data-original-title="" title="" id="auto-BibPLXBIB00366">36</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0077" data-original-title="" title="" id="auto-BibPLXBIB00777">77</a>] can be tracked with the help of technology, and research has shown that 69% of U.S. adults already engage in self-tracking practices&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0027" data-original-title="" title="" id="auto-BibPLXBIB00278">27</a>]. Numerous studies have focused on developing personal informatics systems to help people collect and review personally relevant information&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0042" data-original-title="" title="" id="auto-BibPLXBIB00429">42</a>]. Some people self-track as a step towards behavior change&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0042" data-original-title="" title="" id="auto-BibPLXBIB004210">42</a>], in order to implement a generally recommended behavior that they have heard such as “meditate to lower stress”&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0058" data-original-title="" title="" id="auto-BibPLXBIB005811">58</a>].</p> 
+            <p>However, since traditional health studies emphasize the average person's response to a given treatment&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0008" data-original-title="" title="" id="auto-BibPLXBIB000812">8</a>], even interventions widely believed to be beneficial and harmless, such as meditation, may not be advisable for some individuals&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0024" data-original-title="" title="" id="auto-BibPLXBIB002413">24</a>]. In contrast, to discover what works specifically for them, people can conduct “self-experiments,” which allow them to vary aspects of their lifestyle in a controlled way and uncover potential causal relationships&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0053" data-original-title="" title="" id="auto-BibPLXBIB005314">53</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0071" data-original-title="" title="" id="auto-BibPLXBIB007115">71</a>].</p> 
+            <p>Self-experimentation, however, can be challenging for people as it entails systematically collecting and analyzing data. Even “extreme users,” as defined by Choe et al.&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0010" data-original-title="" title="" id="auto-BibPLXBIB001016">10</a>], with experience in self-tracking, encounter difficulties in rigorous self-experimentation.</p> 
+            <p>Existing studies of self-experimentation systems have focused either (1) on the <em>self-tracking</em> aspect, which helps little in determining potential causation and generating actionable goals&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0051" data-original-title="" title="" id="auto-BibPLXBIB005117">51</a>], or (2) on domain-specific&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0001" data-original-title="" title="" id="auto-BibPLXBIB000118">1</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0018" data-original-title="" title="" id="auto-BibPLXBIB001819">18</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0036" data-original-title="" title="" id="auto-BibPLXBIB003620">36</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0069" data-original-title="" title="" id="auto-BibPLXBIB006921">69</a>] or population-specific applications&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0002" data-original-title="" title="" id="auto-BibPLXBIB000222">2</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0010" data-original-title="" title="" id="auto-BibPLXBIB001023">10</a>]. Evaluations of these systems have shown a gap between what is available and what users desire: a general-purpose self-experimentation system that balances guidance with freedom of choice, so they can incorporate the experiment into their daily lives and conduct experiments across multiple domains with the help of a single tool&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0002" data-original-title="" title="" id="auto-BibPLXBIB000224">2</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0037" data-original-title="" title="" id="auto-BibPLXBIB003725">37</a>]. Accordingly, in this work, we pose the following research questions:</p> 
+            <ul class="list-no-style"> 
+             <li id="list1" label="•"><strong>RQ1</strong>: What functionality should a <em>general</em> self-experimentation tool contain so that people can use it to investigate potential causal relationships in their daily lives across multiple domains?<br></li> 
+             <li id="list2" label="•"><strong>RQ2</strong>: What lessons can we learn from the way people use such a system for their experiments?<br></li> 
+            </ul> 
+            <p>To answer <strong>RQ1</strong>, we designed, implemented, and deployed Self-E: an app and server combination that serves as a general-purpose tool for self-experimentation. Our system uses scaffolding to guide users through the steps of designing and conducting a practical experiment on their own. Simultaneously, it allows users to set goals and procedures for data collection that can be incorporated most easily into their lives. Thus, we define “practical” as experiments in real circumstances where users might not adhere to the recommendation sometimes, or drop out after uneventful periods.</p> 
+            <p>To answer <strong>RQ2</strong>, we evaluated the system with two studies. First, we conducted in-person semi-structured interviews with 16 participants from the local population, supplemented by a two-week diary study during which they used the Self-E app. Next, we redesigned the system to include the ability to create custom experiments. We then asked a set of users with experimental design experience to download and use the app while conducting custom experiments.</p> 
+            <p>We found that the most common use of self-tracking data among participants was as a motivator to enact behavior change. When designing their self-experiments, participants also instinctively started with a general goal in mind, so the additional guidance was beneficial in narrowing down the scope and setup of their experiments. We also identified issues that cause potential mistrust in the system, as well as reasons people sometimes disregard its instructions. We conclude by presenting critical considerations for the design and development of future general-purpose self-experimentation systems, including suggestions about how to better match users’ mental models of self-experiments and build trust in the app.</p> 
+           </section> 
+           <section id="sec-3"> 
+            <header> 
+             <div class="title-info"> 
+              <h2> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">2</span></span> RELATED WORK</h2> 
+             </div> 
+            </header> 
+            <p>Self-experiments have been of interest to a diverse group of research communities. We first review relevant work done on self-tracking in personal informatics, which provides the infrastructure for self-experiments. We then discuss single-subject research design, a departure from traditional clinical research studies, which has influenced work in self-experiments. Finally, we summarize previous self-experimentation systems and build on their findings.</p> 
+            <section id="sec-4"> 
+             <header> 
+              <div class="title-info"> 
+               <h3> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">2.1</span></span> Self-Tracking in Personal Informatics</h3> 
+              </div> 
+             </header> 
+             <p>Due to the ubiquity of tracking devices and smartphones, people can collect various data about themselves. Previous studies of self-tracking have addressed areas such as food intake&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0011" data-original-title="" title="" id="auto-BibPLXBIB001126">11</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0013" data-original-title="" title="" id="auto-BibPLXBIB001327">13</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0014" data-original-title="" title="" id="auto-BibPLXBIB001428">14</a>], personal fitness&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0028" data-original-title="" title="" id="auto-BibPLXBIB002829">28</a>], multiple sclerosis&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0002" data-original-title="" title="" id="auto-BibPLXBIB000230">2</a>], mindfulness&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0003" data-original-title="" title="" id="auto-BibPLXBIB000331">3</a>], migraines&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0062" data-original-title="" title="" id="auto-BibPLXBIB006232">62</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0070" data-original-title="" title="" id="auto-BibPLXBIB007033">70</a>], menstrual tracking&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0021" data-original-title="" title="" id="auto-BibPLXBIB002134">21</a>], personal finance&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0038" data-original-title="" title="" id="auto-BibPLXBIB003835">38</a>], mental wellness&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0039" data-original-title="" title="" id="auto-BibPLXBIB003936">39</a>], and productivity&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0034" data-original-title="" title="" id="auto-BibPLXBIB003437">34</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0044" data-original-title="" title="" id="auto-BibPLXBIB004438">44</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0045" data-original-title="" title="" id="auto-BibPLXBIB004539">45</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0065" data-original-title="" title="" id="auto-BibPLXBIB006540">65</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0080" data-original-title="" title="" id="auto-BibPLXBIB008041">80</a>]. Prototypes for manual and automatic self-tracking of general factors in one's life have been developed by Kim et al.&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0046" data-original-title="" title="" id="auto-BibPLXBIB004642">46</a>].</p> 
+             <p>Research has shown that self-tracking can encourage <em>reactivity</em> in people, meaning that they can monitor a behavior and decide if they want to change or maintain it&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0010" data-original-title="" title="" id="auto-BibPLXBIB001043">10</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0047" data-original-title="" title="" id="auto-BibPLXBIB004744">47</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0057" data-original-title="" title="" id="auto-BibPLXBIB005745">57</a>]. However, it has been observed that even experienced users fail to make the most of their personal data even if they desire to do so&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0009" data-original-title="" title="" id="auto-BibPLXBIB000946">9</a>]. Interpreting the collected data is challenging, so people often turn to health providers for help&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0010" data-original-title="" title="" id="auto-BibPLXBIB001047">10</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0052" data-original-title="" title="" id="auto-BibPLXBIB005248">52</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0070" data-original-title="" title="" id="auto-BibPLXBIB007049">70</a>]. It is important to note that there is nuance in prior work: while challenges with paper-based self-tracking approaches have been identified (such as inaccurate and incomplete data&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0031" data-original-title="" title="" id="auto-BibPLXBIB003150">31</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0036" data-original-title="" title="" id="auto-BibPLXBIB003651">36</a>]), such practices also lead to mindful and joyful experiences&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0076" data-original-title="" title="" id="auto-BibPLXBIB007652">76</a>]. While self-tracking tools can help people make their own interpretations about their data&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0002" data-original-title="" title="" id="auto-BibPLXBIB000253">2</a>], that agency alone does not lead to actionable changes&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0051" data-original-title="" title="" id="auto-BibPLXBIB005154">51</a>]. However, such tools can be useful in gathering the appropriate data to then determine causal relationships for effective lifestyle interventions&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0016" data-original-title="" title="" id="auto-BibPLXBIB001655">16</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0036" data-original-title="" title="" id="auto-BibPLXBIB003656">36</a>]. These tools can be complemented by previous research in persuasive technology to develop encouraging and trustworthy software&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0007" data-original-title="" title="" id="auto-BibPLXBIB000757">7</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0025" data-original-title="" title="" id="auto-BibPLXBIB002558">25</a>].</p> 
+             <p>Li et al. have developed a five-stage model of personal informatics that includes <em>preparation</em>, <em>data collection</em>, <em>data integration</em>, <em>reflection</em>, and <em>action</em>, through which people can choose how they will act on “their newfound understanding of themselves”&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0052" data-original-title="" title="" id="auto-BibPLXBIB005259">52</a>]. Self-experimentation technologies incorporate elements of all stages. For example, previous work has aimed to minimize user burden by providing semi-automation in the <em>preparation</em> and <em>integration</em> stages&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0017" data-original-title="" title="" id="auto-BibPLXBIB001760">17</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0036" data-original-title="" title="" id="auto-BibPLXBIB003661">36</a>]. Both Li et al.&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0052" data-original-title="" title="" id="auto-BibPLXBIB005262">52</a>]’s and Epstein et al.&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0022" data-original-title="" title="" id="auto-BibPLXBIB002263">22</a>]’s models for personal informatics note similarities with the transtheoretical model of behavior change&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0063" data-original-title="" title="" id="auto-BibPLXBIB006364">63</a>], highlighting how often users turn to the mental model of using self-tracking for behavior change.</p> 
+            </section> 
+            <section id="sec-5"> 
+             <header> 
+              <div class="title-info"> 
+               <h3> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">2.2</span></span> Single-Subject Research Design</h3> 
+              </div> 
+             </header> 
+             <p>Randomized controlled trials (RCTs) are a traditional method in clinical studies involving numerous subjects&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0012" data-original-title="" title="" id="auto-BibPLXBIB001265">12</a>]. Due to inherent limitations, RCTs are not ideal study designs for self-experimentation. For example, most findings from RCTs are based on the responses of average persons in a study; therefore, they cannot directly inform an individual about their specific case, as the study sample may not be representative of this individual&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0054" data-original-title="" title="" id="auto-BibPLXBIB005466">54</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0056" data-original-title="" title="" id="auto-BibPLXBIB005667">56</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0079" data-original-title="" title="" id="auto-BibPLXBIB007968">79</a>].</p> 
+             <p>In contrast, individuals in single-case study designs (SCDs) serve as their own controls, which can reduce the inferential errors of group analysis in RCTs&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0040" data-original-title="" title="" id="auto-BibPLXBIB004069">40</a>]. SCDs allow the empirical testing of whether an intervention is effective for an individual. This feature makes them more suitable for self-experiments, as they provide personalized interventions and more flexibility than RCTs&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0036" data-original-title="" title="" id="auto-BibPLXBIB003670">36</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0053" data-original-title="" title="" id="auto-BibPLXBIB005371">53</a>].</p> 
+             <p>Self-experiments in the form of SCDs have been conducted by academics from medicine&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0041" data-original-title="" title="" id="auto-BibPLXBIB004172">41</a>] and psychology&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0064" data-original-title="" title="" id="auto-BibPLXBIB006473">64</a>], as well as by non-academics in areas involving well-being in QuantifiedSelf and its practitioners&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0010" data-original-title="" title="" id="auto-BibPLXBIB001074">10</a>]. The most common SCD is the AB phase design, in which the A phase represents the baseline condition, and the B phase represents the intervention. To mitigate the commonly cited limitations of SCDs such as internal validity&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0030" data-original-title="" title="" id="auto-BibPLXBIB003075">30</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0036" data-original-title="" title="" id="auto-BibPLXBIB003676">36</a>], one can apply the phases at random, as we did in the Self-E system&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0033" data-original-title="" title="" id="auto-BibPLXBIB003377">33</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0036" data-original-title="" title="" id="auto-BibPLXBIB003678">36</a>]. We further evolved our system by using Bayesian techniques in the data analysis, which aim to increase rigor while maintaining practicality&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0071" data-original-title="" title="" id="auto-BibPLXBIB007179">71</a>].</p> 
+             <p>It is important to note that self-experiments and SCDs in general suffer from numerous potential downsides and limitations, such as “the inability of the experimenter to be objective, [and] the problematic aspects of self-reported data,” among others&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0075" data-original-title="" title="" id="auto-BibPLXBIB007580">75</a>]. Self-experiments, however, do not have to aim to match the high level of scientific rigor of RCTs. In our work, we are focused on finding ways to incorporate simple self-experiments in a practical fashion into a person's daily life, but we acknowledge the limitations that the nature of these experiments presents.</p> 
+            </section> 
+            <section id="sec-6"> 
+             <header> 
+              <div class="title-info"> 
+               <h3> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">2.3</span></span> Existing Self-Experimentation Studies</h3> 
+              </div> 
+             </header> 
+             <p>The goal of self-experiments in the context of personal informatics is to find knowledge about oneself that is individually meaningful&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0010" data-original-title="" title="" id="auto-BibPLXBIB001081">10</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0051" data-original-title="" title="" id="auto-BibPLXBIB005182">51</a>]. Previous systems have explored self-experimentation in specific domains: e.g., SleepCoacher and SleepBandits for sleep&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0017" data-original-title="" title="" id="auto-BibPLXBIB001783">17</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0018" data-original-title="" title="" id="auto-BibPLXBIB001884">18</a>], TummyTrials for IBS management&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0036" data-original-title="" title="" id="auto-BibPLXBIB003685">36</a>], Trackly for multiple sclerosis&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0001" data-original-title="" title="" id="auto-BibPLXBIB000186">1</a>], or Trialist for chronic pain management&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0004" data-original-title="" title="" id="auto-BibPLXBIB000487">4</a>]. QuantifyMe, another self-experimentation app, asked users to follow a rigid experimental schedule that only allowed 1 of the 13 participants to finish their experiment&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0069" data-original-title="" title="" id="auto-BibPLXBIB006988">69</a>]. These studies contributed to self-experimentation literature through collecting and analyzing qualitative data&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0020" data-original-title="" title="" id="auto-BibPLXBIB002089">20</a>], providing a rationale for SCD experiments&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0036" data-original-title="" title="" id="auto-BibPLXBIB003690">36</a>], and improving quantitative data evaluation methods&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0016" data-original-title="" title="" id="auto-BibPLXBIB001691">16</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0036" data-original-title="" title="" id="auto-BibPLXBIB003692">36</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0037" data-original-title="" title="" id="auto-BibPLXBIB003793">37</a>]. Two systems, Paco&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0023" data-original-title="" title="" id="auto-BibPLXBIB002394">23</a>] and Galileo&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0061" data-original-title="" title="" id="auto-BibPLXBIB006195">61</a>], exist to help people conduct experiments outside of a study setting. However, they are not optimized to help people conduct self-experiments with only their own data.</p> 
+             <p>Previous work has identified challenges that people face in self-experiments, such as tracking fatigue and flawed experimental designs. Even “extreme users,” with above-average background experience in self-tracking and experimentation, face common pitfalls, such as tracking too many things, having non-actionable and under-specified goals, and not knowing what to track nor how to analyze or interpret data to extract insights&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0051" data-original-title="" title="" id="auto-BibPLXBIB005196">51</a>]. Karkar et al.’s TummyTrials system is based on the researchers’ framework that could be applied to the design of a general self-experimentation tool&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0037" data-original-title="" title="" id="auto-BibPLXBIB003797">37</a>]. Daskalova et al. built on this framework to outline guidelines for self-experiments that can be helpful for novices&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0016" data-original-title="" title="" id="auto-BibPLXBIB001698">16</a>]. Lee et al. developed a prototype for self-experiments on pen and paper&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0051" data-original-title="" title="" id="auto-BibPLXBIB005199">51</a>]. Most recently, Daskalova et al.’s open-source SleepBandits system was focused on guiding users through the steps of self-experiments in the domain of sleep. While we build on existing work, we are taking a more general approach: rather than focus on a specific domain, we explore how a system can guide people through general self-experiments in a practical and less burdensome way, and how it can help them create their own customized experiments without the help of professionals.</p> 
+             <p>Overall, recent work in HCI has highlighted the need for and importance of n-of-one studies for supporting people's health&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0043" data-original-title="" title="" id="auto-BibPLXBIB0043100">43</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0055" data-original-title="" title="" id="auto-BibPLXBIB0055101">55</a>]. Our study contributes to the literature by evaluating a different approach toward conducting self-experiments, one which is aimed at increasing <em>flexibility</em> and user <em>agency</em> in order to conduct more <em>practical</em> self-experiments, while minimizing user burden in accordance with lived informatics principles. Self-E is a guided self-experimentation system that aids people in data-driven self-discovery so that they can make better-informed decisions.</p> 
+            </section> 
+           </section> 
+           <section id="sec-7"> 
+            <header> 
+             <div class="title-info"> 
+              <h2> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">3</span></span> SELF-E DESIGN AND IMPLEMENTATION</h2> 
+             </div> 
+            </header> 
+            <p>In this section, we present the initial implementation of Self-E, followed by the diary study we conducted to evaluate it in the next section. In this original version, Self-E presents users with a list of pre-configured experiments and lets them select one while tweaking small aspects of it. Next, in Section 5, we present a redesigned implementation of the app that lets users create their own customizable experiments in addition to the ones from the pre-configured list.</p> 
+            <p>Self-E first asks users to select an experiment, which is comprised of two conditions: on any given day, the user either conducts the given behavior (e.g., meditate) or not. Then, it asks the user which condition they conducted that day and how they would rate the effect of that behavior on their well-being. After a few days of data collection, Self-E automatically computes the probability that the new behavior improves the user's well-being, as well as the size of the effect of this behavior change.</p> 
+            <p>When designing Self-E, we focused on creating a tool that uses self-tracked data to deliver individualized health and behavioral insights to the user. Our exploration of prior work led us to identify several persistent issues among self-experimentation systems. First, challenges at various stages of self-experimentation can reduce adherence rates, particularly in unstructured evaluation environments&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0018" data-original-title="" title="" id="auto-BibPLXBIB0018102">18</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0069" data-original-title="" title="" id="auto-BibPLXBIB0069103">69</a>], which leads to failure to obtain results&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0010" data-original-title="" title="" id="auto-BibPLXBIB0010104">10</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0016" data-original-title="" title="" id="auto-BibPLXBIB0016105">16</a>]. Second, users require significant amounts of guidance and restriction during setup to prevent poor experimental design&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0037" data-original-title="" title="" id="auto-BibPLXBIB0037106">37</a>]. A third theme, in tension with the previous, is user desire for greater freedom, whether in making minor changes such as adjusting timing or altering the entire purpose of the experiment&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0036" data-original-title="" title="" id="auto-BibPLXBIB0036107">36</a>]. Lastly, a consideration that arises specifically within the context of a general-purpose self-experimentation system is that experimental design, scaffolding, and guidance should generalize to the different self-experiments that users are likely to run.</p> 
+            <section id="sec-8"> 
+             <header> 
+              <div class="title-info"> 
+               <h3> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">3.1</span></span> Prototype Iteration</h3> 
+              </div> 
+             </header> 
+             <p>Our design goals were to provide guidance and flexibility during the experiment setup and to reduce friction for accurate self-reporting during the experiment. To tackle these challenges, we iterated upon several prototypes of varying fidelity to gather feedback from users in a nearby coffee shop. Some insights that we gathered from these iterations were that many users approached the experimentation process with an objective in mind first (“I want to improve my productivity”) before developing a behavior modification (“meditate”). Additionally, technical concepts such as “independent variable” created significant confusion. Thus, we replaced jargon with simpler keywords which we further contextualized with illustrative examples (e.g., “independent variable” is referred to as “cause” or “intervention” and “dependent variable” is “effect” or “outcome”). Lastly, similar to findings from SleepBandits&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0018" data-original-title="" title="" id="auto-BibPLXBIB0018108">18</a>], we learned that users prefer having some preset examples of common self-experiments to choose from for their initial experiments.</p> 
+             <div class="table-responsive" id="tab1"> 
+              <div class="table-caption"> 
+               <span class="table-number">Table 1:</span> 
+               <span class="table-title">Experimental design attributes with examples and the level of customization offered in the initial implementation of Self-E.</span> 
+              </div> 
+              <table class="table"> 
+               <tbody> 
+                <tr> 
+                 <td> <img src="./Self-E_ Smartphone-Supported Guidance for Customizable Self-Experimentation_files/chi21-61-fig1.jpg" class="img-responsive" alt=""> </td> 
+                </tr> 
+               </tbody> 
+              </table> 
+             </div> 
+             <figure id="fig1"> 
+              <img src="./Self-E_ Smartphone-Supported Guidance for Customizable Self-Experimentation_files/chi21-61-fig2.jpg" class="img-responsive" alt="Figure 1"> 
+              <figcaption> 
+               <span class="figure-number">Figure 1</span>: 
+               <span class="figure-title"><strong>(a) User prompt for the independent variable (</strong> <em>“the cause”</em> <strong>/ the intervention). (b) User prompt for dependent variable (</strong> <em>“the effect”</em> <strong>/ the outcome). (c) History of past experiments: each experiment's graph is moved to this tab when the user switches to a new experiment. (d) Home screen explaining that meditating in the morning leads to 0.8 increase in energy levels with a 73% likelihood based on 8 days of data. Also, a new point appears on the graph for each day of tracking.</strong></span> 
+              </figcaption> 
+             </figure> 
+             <section id="sec-9"> 
+              <p><em>3.1.1 Guidance at Different Levels of Expertise.</em> Another design consideration we addressed in Self-E was to strike a balance between providing guidance and not sacrificing user agency so that people of different experience levels could always learn something through the app. Self-E minimizes user burden by employing design strategies such as notifications to schedule interventions (Figure<a class="fig" href="#fig2">2</a>b), data abstraction, and automatic analysis of the results to simplify aspects that are otherwise challenging even for experienced users&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0010" data-original-title="" title="" id="auto-BibPLXBIB0010109">10</a>]. To lower the barrier for users at different levels of learning, we incorporate both guidance as well as opportunities for more fine-tuned customization.</p> 
+             </section> 
+             <section id="sec-10"> 
+              <p><em>3.1.2 Improving Quality of Self-reported Data.</em> Self-E aims to strengthen the quality of data collected by presenting the option to use the Experience Sampling Method (ESM) to gather dependent variable data (Figure<a class="fig" href="#fig2">2</a>b). ESM is commonly used to assess affective state and technology usage&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0078" data-original-title="" title="" id="auto-BibPLXBIB0078110">78</a>] since it better captures variables that may fluctuate throughout the day, in addition to reducing reliance on human memory by asking participants to reflect on shorter periods of time&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0049" data-original-title="" title="" id="auto-BibPLXBIB0049111">49</a>]. This results in more holistic data about aspects such as productivity, mood, and energy level. Fixed scheduling may be more appropriate when the aspect should be measured at a consistent time every day or when assessing aspects that do not vary throughout the day.</p> 
+              <p>Self-E imposes a maximum of 5 check-ins per day between 6:00am and 11:45pm. Each check-in measures the effect using only a 1–5 rating questionnaire (Figure 1b). These decisions were based on prior research that suggested self-reported data quality is negatively impacted by lengthy questionnaires and tracking fatigue&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0078" data-original-title="" title="" id="auto-BibPLXBIB0078112">78</a>], a common occurrence for self-experimenters who perform multiple check-ins per day&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0016" data-original-title="" title="" id="auto-BibPLXBIB0016113">16</a>].</p> 
+             </section> 
+            </section> 
+            <section id="sec-11"> 
+             <header> 
+              <div class="title-info"> 
+               <h3> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">3.2</span></span> Architecture</h3> 
+              </div> 
+             </header> 
+             <p>The Self-E system is comprised of a backend server built in Python and a mobile client built in Android (Self-E is now also available on iPhones, but was not during the user studies). The open source Self-E system is available online at <a class="link-inline force-break" href="https://selfe.cs.brown.edu/">https://selfe.cs.brown.edu/</a>. </p> 
+             <p>User profiles are created upon registration with an email and are stored in the backend server. Any configurations made or data tracked are sent to the server throughout the use of the application. Daily check-ins are sent to users’ phones via app notifications from the backend server. </p>
+             <figure id="fig2"> 
+              <img src="./Self-E_ Smartphone-Supported Guidance for Customizable Self-Experimentation_files/chi21-61-fig6.jpg" class="img-responsive" alt="Figure 2"> 
+              <figcaption> 
+               <span class="figure-number">Figure 2</span>: 
+               <span class="figure-title"><strong>Self-E screens. (a) Experiment selection: users first select an experiment during onboarding, but then are free to change it at any point. (b) Experiment Setup: choose a time to be prompted and edit the goal amount. (c) Revise the labels of the scale. (d) Home: tonight's condition on top and current results below.</strong></span> 
+              </figcaption> 
+             </figure> 
+             <p></p> 
+            </section> 
+            <section id="sec-12"> 
+             <header> 
+              <div class="title-info"> 
+               <h3> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">3.3</span></span> User Interface</h3> 
+              </div> 
+             </header> 
+             <section id="sec-13"> 
+              <p><em>3.3.1 Experiment Setup.</em> When a new user begins using Self-E, they are taken through an on-boarding process that introduces self-experimentation and its benefits. Upon completing registration, users are required to select an experiment from a list of pre-configured experiments. These are meant to be easy starting points, as they are each configured by our team using recommended settings backed by research. To curate our list, we drew from self-tracking literature to determine commonly-tracked aspects&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0066" data-original-title="" title="" id="auto-BibPLXBIB0066114">66</a>] and then consulted with clinicians to generate interventions that would be both interesting for single-case experimentation and viable for our specific experimental design (e.g., unlikely to have carryover effect). The list contains 24 experiments, each of which is a combination of one of the five independent variables (meditation, physical activity, food &amp; drink, walking, and hours slept) and one of the five dependent variables (energy level, mood, pain level, productivity, and sleep quality). The only combination that we did not include in the list was hours slept and pain level due to the lack of background research to support the viability of such experiments.</p> 
+             </section> 
+             <section id="sec-14"> 
+              <p><em>3.3.2 Experiment Operationalization.</em> After selecting an experiment, users are taken to a settings page (Figure<a class="fig" href="#fig2">2</a>b) where they can customize other aspects of the experiment, as summarized in Table&nbsp;<a class="tbl" href="#tab1">1</a>: <em>the independent variable/intervention</em> check-in time, <em>the dependent variable</em> check-in time window, the check-in style (fixed sampling or ESM), and the amount of the intervention they will be applying (e.g., 10 minutes of meditation). This flexibility was intended to allow users to fit self-experimentation into their schedules and to encourage better adherence. As previously discussed, users can also customize the labels of the scale used to rate the dependent variable because the ranges of experience with something like pain can vary among individuals (Figure<a class="fig" href="#fig2">2</a>c). By default, labels are populated with the commonly accepted scale for a given variable (except for “Productivity,” which does not have a widely accepted scale and so is measured from “very productive” to “very unproductive”).</p> 
+              <p>Once the user sets up the experiment, they are taken to the home screen of the app (Figure<a class="fig" href="#fig2">2</a>d). Users check in daily with the app at a fixed time for the intervention they are tracking. We chose 8:00pm as it was most appropriate for our list of experiments. Check-ins are initiated via a notification from the app, which takes the user to a pop-up dialog in the app that asks a “yes” or “no” adherence question for the intervention (Figure<a class="fig" href="#fig1">1</a>a), or a rating scale for the effect (Figure<a class="fig" href="#fig1">1</a>b). Should a user miss the notification or close the pop-up, they can log their data manually via the “Log Behavior”/“Log Effect” buttons on the home screen (Figure<a class="fig" href="#fig2">2</a>d).</p> 
+              <p>As a user continues to use Self-E, their data is displayed on a graph (Figure<a class="fig" href="#fig1">1</a>c). Self-E requires at least three data points in each condition (e.g., “meditate” and “don't meditate”) to calculate a result. This length is based on the minimum length required by the single-case intervention research design standards&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0048" data-original-title="" title="" id="auto-BibPLXBIB0048115">48</a>]. Self-E applies an “as-treated” analysis&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0032" data-original-title="" title="" id="auto-BibPLXBIB0032116">32</a>], meaning that it only considers the condition users actually followed on a given day, rather than whether they adhered to what they were instructed to do by the app. This type of analysis is recommended when adherence rates are low&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0032" data-original-title="" title="" id="auto-BibPLXBIB0032117">32</a>]. With the understanding that users will not always consistently check their phones or go into the app, we elected to prioritize overall adherence over rigidity. This choice exemplifies the balance we attempted to achieve between experimental rigor and practicality.</p> 
+             </section> 
+             <section id="sec-15"> 
+              <p><em>3.3.3 Experiment Conclusion and Reflection.</em> Results in Self-E include a likelihood percentage and an effect size (Figure<a class="fig" href="#fig1">1</a>d). Presenting a likelihood percentage rather than p-value has been shown to be more understandable for users not well-versed in statistics&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0018" data-original-title="" title="" id="auto-BibPLXBIB0018118">18</a>]. Past experiment results and data can be viewed in the “History” tab (Figure<a class="fig" href="#fig1">1</a>c), providing further opportunity for user reflection. Once results are attained, users may opt to continue tracking data or to start a new experiment.</p> 
+              <p>Similarly to the approach in the open-source SleepBandits system&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0018" data-original-title="" title="" id="auto-BibPLXBIB0018119">18</a>], Self-E implements Thompson Sampling, in order to estimate the likelihood that a given condition is helpful. Overall, the goal of the algorithm shown in Equation&nbsp;<a class="eqn" href="#eq1">1</a> is to find the action (in this case the condition) that is most likely to lead to an improvement based on the data that has been collected so far&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0067" data-original-title="" title="" id="auto-BibPLXBIB0067120">67</a>]. With each new data point, the algorithm updates the beta distributions for each condition, which are based on the <em>α</em> and <em>β</em> shape parameters. These parameters are calculated from the prior probabilities of the given condition and the number of data points so far that either lead to improvement or not, over the running average of the intervention's effect&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0067" data-original-title="" title="" id="auto-BibPLXBIB0067121">67</a>]. </p>
+              <div class="table-responsive" id="eq1"> 
+               <div class="display-equation"> 
+                <img src="./Self-E_ Smartphone-Supported Guidance for Customizable Self-Experimentation_files/chi21-61-display1.svg" class="img-responsive" alt="Math 1"> 
+                <br> 
+                <span class="equation-number">(1)</span> 
+               </div> 
+              </div> 
+              <p></p> 
+              <p>Once we have the beta distributions of the two conditions, we sample 1,000 times from each and keep track of which distribution returned a higher probability (meaning that condition has a higher likelihood to improve the dependent variable). After 1,000 samplings, we count how many times each condition was returned as the better one, which we transform into the percentage likelihood that the condition is helpful. Figure<a class="fig" href="#fig1">1</a>d shows an example result where the likelihood is estimated to be 73%: “Based on the 8 days of data tracked so far, it is most likely (about 73% likelihood) that your energy level is 0.8 levels higher when you meditate in the morning.”</p> 
+             </section> 
+            </section> 
+           </section> 
+           <section id="sec-16"> 
+            <header> 
+             <div class="title-info"> 
+              <h2> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">4</span></span> DIARY STUDY AND FINDINGS</h2> 
+             </div> 
+            </header> 
+            <p>To understand how people use the Self-E system and to draw implications for the design of future self-experimentation systems, we conducted an IRB-approved diary study with participants from the local population.</p> 
+            <section id="sec-17"> 
+             <header> 
+              <div class="title-info"> 
+               <h3> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">4.1</span></span> Procedure</h3> 
+              </div> 
+             </header> 
+             <p>The study was conducted in three parts: (1) an initial semi-structured interview to gather the participant's background and experience with self-tracking and self-experimentation, (2) a 2-week diary study with daily voicemails, (3) and a semi-structured exit interview to discuss the user's experiences with the Self-E app.</p> 
+             <p>After the initial interviews, we emailed participants a list of the questions to answer in the voicemails. We set up a Google Voice number, and asked them to leave voicemails regardless of how they used the app that day (their pay depended only on leaving the voicemail). For the voicemails, participants were asked to share any challenges they encountered with the app that day, and whether they changed experiments. We list the complete set of questions that were asked in our diary study in the supplementary materials.</p> 
+             <p>Diary studies are high in ecological value since they allow in-situ remote data collection on the real experiences of users&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0015" data-original-title="" title="" id="auto-BibPLXBIB0015122">15</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0029" data-original-title="" title="" id="auto-BibPLXBIB0029123">29</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0035" data-original-title="" title="" id="auto-BibPLXBIB0035124">35</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0044" data-original-title="" title="" id="auto-BibPLXBIB0044125">44</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0059" data-original-title="" title="" id="auto-BibPLXBIB0059126">59</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0072" data-original-title="" title="" id="auto-BibPLXBIB0072127">72</a>]. We followed recommendations to limit the duration of similar studies to two weeks&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0078" data-original-title="" title="" id="auto-BibPLXBIB0078128">78</a>]. The diary study provided further qualitative feedback to support interview insights.</p> 
+            </section> 
+            <section id="sec-18"> 
+             <header> 
+              <div class="title-info"> 
+               <h3> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">4.2</span></span> Participants</h3> 
+              </div> 
+             </header> 
+             <p>We recruited 16 participants, (P1 – P16), 4 male and 12 female, from the local area by posting flyers in public spaces such as cafes and supermarkets and by posting online in location-based communities such as Reddit and NextDoor. We specifically recruited participants who self-identified as being overall healthy, since the use of Self-E and its single-case design methodology might be inappropriate for people with severe health concerns&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0053" data-original-title="" title="" id="auto-BibPLXBIB0053129">53</a>]. To be eligible, they also had to (1) own an Android phone and (2) be over 18 years old. While we recruited broadly, one limitation of our study is that our sample was skewed towards undergraduate students (four research assistants, three undergraduate students, an auditor, an engineer, a librarian, and a barista, among others), likely due to the location where interviews were conducted. Participants’ ages ranged from 20 to 70 (M=33.7, SD=15.4), and their familiarity with mathematical statistics ranged from none to expert or professional levels. Participants were compensated on a pro-rated basis: <font style="normal">$</font>10 for each interview, and <font style="normal">$</font>2 for each daily voicemail, for up to <font style="normal">$</font>30 for the duration of the study (including a <font style="normal">$</font>2 bonus if they completed all 14 days of the study).</p> 
+            </section> 
+            <section id="sec-19"> 
+             <header> 
+              <div class="title-info"> 
+               <h3> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">4.3</span></span> Analysis</h3> 
+              </div> 
+             </header> 
+             <p>In our analysis, we first performed inductive thematic analysis&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0005" data-original-title="" title="" id="auto-BibPLXBIB0005130">5</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0068" data-original-title="" title="" id="auto-BibPLXBIB0068131">68</a>] on the voicemails and the open-ended interview questions. Then, similarly to Ye et al., we used an “iterative coding process with open and axial coding to identify emergent themes in the data”&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0081" data-original-title="" title="" id="auto-BibPLXBIB0081132">81</a>] because the semi-structured interviews led us to themes that we had not identified in advance (axial coding is a grounded theory method&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0074" data-original-title="" title="" id="auto-BibPLXBIB0074133">74</a>]). Examples of codes included ‘attitude towards self-experimentation concept’ and ‘reasons for changing experiments.’ Each coded response was reviewed by at least two authors, who wrote summaries for the emerging themes for each code.</p> 
+             <p>After multiple coding meetings, we reached a consensus on the following themes: (1) mental model mismatch and goal-oriented experiment instincts, (2) using the Self-E app: substituting and disregarding instructions, (3) mistrust in the app's results, and (4) most helpful aspects of the system. The first theme helps us answer <strong>RQ1</strong> by summarizing what people's mental models and instincts for self-experiments are, and thus clarifying what functionality a general self-experimentation tool should contain. The rest of the themes help us answer <strong>RQ2</strong> by outlining how people use such a system and what attributes they find most helpful.</p> 
+            </section> 
+            <section id="sec-20"> 
+             <header> 
+              <div class="title-info"> 
+               <h3> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">4.4</span></span> Mental Model Mismatch and Goal-Oriented Experiment Instincts</h3> 
+              </div> 
+             </header> 
+             <p>For this study, we recruited participants who had never used technology to conduct self-experiments. Thus, we were interested in their pre-existing views on and attitudes towards self-tracking and self-experiments.</p> 
+             <p>Our participants reported that their <strong>most common use of self-tracking data was to motivate themselves to change their behavior</strong>. Usually, this desire meant that they would decide to enact a change such as increasing some good behavior or reducing a bad behavior and would track their data to make sure they were following through. This finding echoes prior insights that self-tracking apps have the potential to support habit formation and behavior change&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0073" data-original-title="" title="" id="auto-BibPLXBIB0073134">73</a>]. The mental model of using self-tracking as a method towards <em>behavior change</em> is not a form of self-experimentation itself, but it does reveal that participants were interested in implementing changes to improve some aspects of their lives. Thus, the common mental model in participants was to start with implementing a behavior change based on an assumption about how helpful it would be. In contrast, self-experimentation in the context of Self-E was the opposite: the goal is to learn something new and <em>then</em> use that as motivation for implementing the change. Thus, although Self-E was built on the mental model of self-tracking for the purpose of experimentation, not automatic behavior change, it was going to be used by people who did not necessarily share that model of thinking, a discrepancy which led to some interesting findings, described in Section&nbsp;<a class="sec" href="#sec-21">4.5</a>.</p> 
+             <p>Furthermore, most of our participants had not heard of <strong>the concept of “self-experiments”</strong> before. However, they had intuitions about what self-experiments were (P10: <em>“doing an experiment except you do it on yourself to see if there's any changes based on what you changed in your life”</em>). Interestingly, two participants thought the word itself carried negative connotations: <em>“when I think of an experiment, I think of something that may be harmful”</em> (P4), and <em>“I'm actually a little put off by it because it's not a super intuitive way to think about it. To me it's just an attempt to get better”</em> (P11).</p> 
+             <p>Overall, participants said that if they were to conduct a self-experiment, their <strong>main goal would be to identify what general advice works specifically for them</strong>. Three participants brought up the idea that their bodies were perpetually changing with time (both with age and on a monthly or seasonal basis), so that behaviors which were once helpful may no longer be as beneficial to them. As P11 explained, <em>“you're always just kind of readjusting parameters,”</em>, so it would be useful for users to learn what works for them at a given time.</p> 
+             <p>We asked study participants to design their own self-experiments, which helped us gain insight into how people think such experiments should be conducted. Prior work suggests that tutorials can help people set and achieve behavioral goals throughout an unstructured form of self-experimentation&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0051" data-original-title="" title="" id="auto-BibPLXBIB0051135">51</a>]. We noticed that <strong>users first state a general goal</strong> such as “I want to improve my sleep.” However, that statement in itself does not constitute an experiment, so the interviewer often had to nudge participants to specify their goals (e.g., “wake up less”) and to clarify what changes they would implement and observe (e.g., “wear earplugs”). It was also necessary to further probe how long they would experiment for, how they would keep track of the variables, and how they would measure success.</p> 
+             <p>Regarding <strong>the setup of the experiment</strong>, fifteen of the sixteen participants said that they would simply implement the change for a given period of time (between 2 weeks and 1 month). When that period passed, they would reflect whether there was an improvement relative to how they felt before the experiment. In essence, they would instinctively conjure an interrupted time-series setup for understanding the effects of their behavior change. Only three participants brought up and tried to mitigate the effects of possible confounding variables, such as how weekends would affect their experiments. This behavior is similar to how participants in previous studies instinctively set up self-experiments without considering temporal effects, and without randomizing when to implement the behavior change, which could lead to internally flawed experiments&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0016" data-original-title="" title="" id="auto-BibPLXBIB0016136">16</a>].</p> 
+            </section> 
+            <section id="sec-21"> 
+             <header> 
+              <div class="title-info"> 
+               <h3> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">4.5</span></span> Using Self-E: Substituting and Disregarding Instructions</h3> 
+              </div> 
+             </header> 
+             <p>At the end of each pre-study interview, we asked participants to download the Self-E app and to use it every day for two weeks. They were free to select whichever experiment from the app's list that they wanted (e.g., ‘Meditation and Energy Level’), as well as to change to a new one whenever they wanted. As described in Section&nbsp;<a class="sec" href="#sec-12">3.3</a>, the app also instructed which condition to follow every given day (‘Today, meditate’ or ‘Today, don't meditate’). On average, the compliance rate for those instructions was 73%. As a comparison, prior work has reported varying degrees of average adherence rates among similiar studies (from 22.5% in QuantifyMe&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0069" data-original-title="" title="" id="auto-BibPLXBIB0069137">69</a>], to 60% in Sleepbandits&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0018" data-original-title="" title="" id="auto-BibPLXBIB0018138">18</a>], and 95% in TummyTrials&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0036" data-original-title="" title="" id="auto-BibPLXBIB0036139">36</a>]).</p> 
+             <p>A common trend, when following the instructions was not possible, was for participants to <em>“do the best [they] could,”</em> meaning that &nbsp;<strong>they substituted the exact behavior that the app required with something more feasible</strong>. For example, P1 exercised at night instead of in the morning because that was what her schedule allowed. Furthermore, most participants also said that they would gradually build up to a certain goal amount of the intervention. P15, for example, wanted to decrease her sugar intake, but would <em>“try to make it gradual rather than cold turkey—decrease per day for a while until it's down to quite a little.”</em> This is in accordance with Fogg's behavioral model of Tiny Habits&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0026" data-original-title="" title="" id="auto-BibPLXBIB0026140">26</a>] in which people are advised to start with the smallest effort in order to build up to a new habit.</p> 
+             <p>A novel trend we noticed was that participants willfully <strong>disregarded the instructions when asked to follow the behavior they considered less healthy</strong>. While previous work cites reasons for lack of adherence, this one has not been discussed in detail in the context of self-experimentation systems. P11, for example, also chose to run an experiment on the effects of decreasing the amount of sugar, so on some days, the app asked her to have some cookies and on others to avoid them. When the app asked her to have cookies, however, she said that <em>“I'm not going to intentionally do something bad for me.”</em></p> 
+             <p>Overall, diary study participants who disregarded the app's instructions had preconceived notions of how helpful the new behavior would be for them, so they chose to avoid the “harmful” condition, even though they set up the experiment and goal amount themselves. We consider the implications of this finding in the Discussion section, as it presents an opportunity both for further educating users on the randomization in the experiment, and for revising the app in a way that accounts for the users’ prior beliefs about the new behavior's effect.</p> 
+            </section> 
+            <section id="sec-22"> 
+             <header> 
+              <div class="title-info"> 
+               <h3> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">4.6</span></span> Mistrust in the App's Results</h3> 
+              </div> 
+             </header> 
+             <p>Once each user had completed at least three days in each condition, Self-E calculated the result with the help of Thompson Sampling. The graph and the sentence summarizing the result (Figure<a class="fig" href="#fig1">1</a>d) were mostly clear and easy to understand for users. P14 said that <em>“what was ultimately more helpful was the result sentence”</em> and P2 particularly liked that the app <em>“organized everything in my brain.”</em></p> 
+             <p>Overall, some participants revealed that they trusted and agreed with the results that the Self-E was showing them (P2, P6, P8, P10), especially when it confirmed how they already felt (P5, P10, P15). However, it is important to focus on the three main reasons for mistrust in the results as they carry important implications for future systems.</p> 
+             <p>First, some participants felt that <strong>the effect of the intervention was too negligible</strong> compared to the effects of other things in their daily life (P15). P11 elaborated that there were many other confounding variables that were affecting her more than the one cookie she was eating a day: <em>“So like reporting how my sleep was and whether I eat a cookie or not, like literally one cookie... What if I took a nap that day? Or what if I run every other day... There's so many variables that, I assume anecdotally, have a stronger effect on my sleep.”</em></p> 
+             <p>Second, if <strong>the results contradicted a previously held belief</strong>, some participants expressed skepticism and found excuses for why the results were ‘inaccurate.’ P15, for example, thought the result was just calculated too early: <em>“I was thinking maybe it'll be lower energy for the first couple of days, and then overall higher energy. But it just said it was overall less which is a little bit unexpected to me. But maybe it's just something that needed more time.”</em> P14, on the other hand, said that <em>“If it weren't for the extreme data points, I would have trusted it.”</em></p> 
+             <p>Third, as suggested by prior work&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0018" data-original-title="" title="" id="auto-BibPLXBIB0018141">18</a>], <strong>the high likelihood percentage or its drastic fluctuation</strong> over the course of the experiment raised suspicion. P12 and P15 were skeptical because the result either fluctuated too quickly (from 66% to 58% to 97%) or was too high on the first day (96%). P5, P9, and P11 noted that the fluctuations were likely due to unclear distinctions between the two experimental conditions. P13 thought that he was not varying his hours slept enough to lead to a difference, and P5 said that on the days she was not meditating, she was reading before bed, but she realized over time that <em>“it had the same effect on sleep.”</em></p> 
+            </section> 
+            <section id="sec-23"> 
+             <header> 
+              <div class="title-info"> 
+               <h3> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">4.7</span></span> Most Helpful Aspects of Self-E</h3> 
+              </div> 
+             </header> 
+             <p>Overall, twelve participants (75%) found Self-E useful for their self-experimentation needs. Ten participants said they would recommend Self-E to someone without self-experimentation experience who is interested in exploring if an intervention works for them.</p> 
+             <p>In line with previous work&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0018" data-original-title="" title="" id="auto-BibPLXBIB0018142">18</a>], six participants specifically appreciated <strong>the list of suggested experiments</strong> which was meant to guide new users. P14, for example, said<em>“I really like that it had setup experiments because it gives you a place to start if you're like ‘I want to improve my health.’ But if you just Google ‘improve your health,’ it'll tell you 1,200 different ways to do that. And that's not particularly helpful.”</em> Some participants expressed the desire to make their own experiments where they have the freedom to choose their own variables, yet stressed that the default list should be kept for structural guidance.</p> 
+             <p>Nine participants said that <strong>the scaffolding aspect of the app</strong> was particularly helpful in running a self-experiment because it guided them through: (1) the choice of the experiment, (2) the process of what to do and when to do it, and (3) the input and analysis of their data to provide <em>“credible results”</em> (P10). P9 elaborated that <em>“I don't fully trust myself to design a rigorous self-experiment.”</em> P12 and P15 expressed how they would not have incorporated aspects such Experience Sampling Methods (ESM) for collection of user data or randomizing what condition to follow on a given day.</p> 
+             <p>Additionally, most participants appreciated the <strong>low level of effort</strong> required to add data points. Most participants (60%) liked how brief the data entry questions were, and thought the scales for reporting the dependent variables did not need any modification. Six participants expressed that while they might be capable of conducting such experiments without the app, it would be too tedious or challenging. P14 pointed out that it <em>“provides a minimal amount of structure what would still give you some flexibility to play with, while making it drastically easier to track it all.”</em></p> 
+            </section> 
+           </section> 
+           <section id="sec-24"> 
+            <header> 
+             <div class="title-info"> 
+              <h2> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">5</span></span> CUSTOMIZED EXPERIMENTS REDESIGN AND FINDINGS</h2> 
+             </div> 
+            </header> 
+            <figure id="fig3"> 
+             <img src="./Self-E_ Smartphone-Supported Guidance for Customizable Self-Experimentation_files/chi21-61-fig10.jpg" class="img-responsive" alt="Figure 3"> 
+             <figcaption> 
+              <span class="figure-number">Figure 3</span>: 
+              <span class="figure-title">Self-E customized experiment flow. (a) First screen explaining the need for a cause and effect. (b) The user can define their own <em>cause</em> and <em>effect</em> and the guiding text only appears if they tap on the “Need an example?” (c) The user has to pick two conditions by filling in the blanks. (d) In addition to selecting scheduled or randomized sampling, and the length of their experiment, users can also revise the labels for their “effect” scale.</span> 
+             </figcaption> 
+            </figure> 
+            <p>In our diary study, six participants expressed a desire for more flexibility in choosing their own independent and dependent variables, so we iterated on Self-E's design to allow custom experiments from scratch while maintaining the balance of practicality and usability. In setting up a custom experiment, users can determine the independent variable, dependent variable (Figure<a class="fig" href="#fig3">3</a>b), two conditions to compare (Figure<a class="fig" href="#fig3">3</a>c), and experiment length, on top of existing configurations that can already be made (such as rating scale labels (Figure<a class="fig" href="#fig3">3</a>d), check-in time, etc). Unlike existing research systems, the custom experiments feature presents the user with an unprecedented amount of freedom in self-experimentation, allowing them to run a vast variety of potential experiments.</p> 
+            <section id="sec-25"> 
+             <header> 
+              <div class="title-info"> 
+               <h3> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">5.1</span></span> Customized Experiments Study Method</h3> 
+              </div> 
+             </header> 
+             <p>To learn how potential users create customized experiments on their own with this more configurable version of Self-E, we sought to have more experimentally-minded users, a sort of extreme group, with the idea that if more advanced users are not able to benefit from Self-E, then it is likely a more general population would not. We asked 16 students (S1 – S16) who had received experimental design instruction in a Human-Computer Interaction research seminar course to download and use the app. They were tasked with running two iterations of a self-experiment: the first using their own methods to track and record data and the second using the Self-E application. They were also required to use statistical methods other than those present in Self-E to measure the significance of their findings. While they were encouraged to run experiments relating to mood, many also opted to measure productivity or focus levels. They were asked to keep a journal recording every decision they made and action they pursued.</p> 
+             <p>We conducted thematic analysis on the students’ journals and identified two main themes: (1) need for iteration on the experiment setup and, similar to the local population, (2) a mistrust in the app's results.</p> 
+            </section> 
+            <section id="sec-26"> 
+             <header> 
+              <div class="title-info"> 
+               <h3> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">5.2</span></span> Need for Iteration</h3> 
+              </div> 
+             </header> 
+             <p>Participants in the diary study were encouraged to change their experiments whenever they wanted. However, they were not specifically instructed to iterate on their experiments, so most of them did not modify their experiment for the duration of the two-week study. The seminar students, however, were specifically asked to run two iterations. The first iteration of the self-experiment was intended to give participants practice with self-experimentation and identify and later address issues and challenges during the second iteration. However, some issues remained, primarily around bias and validity, and new issues arose with the introduction of Self-E in the second iteration.</p> 
+             <p>Ten participants altered their dependent variables to account for newly-discovered confounding factors. S14, for example, removed the measurement of a productivity scale since it was <em>“heavily dependent on other activities during the day.”</em> Others removed dependent variables that caused validity issues, such as S12 who <em>“found that eliminating the to-do list significantly mitigated the carryover effect.”</em> Half of the participants found that mood and other broad qualifiers were too challenging to pin down and therefore narrowed the scope or merged dependent variables (S7) to more specific indicators, such as irritability, engagement, and sleep quality.</p> 
+             <p>Despite the adjustments made after the first iteration of the self-experiment, some participants still struggled with their dependent variables. S2 had trouble distinguishing between positive and negative moods and S15 had trouble <em>“scoring”</em> these moods on a fixed scale. Additionally, many of these participants questioned the construct validity of their measurements and dependent variables, wondering, such as S5, if their chosen measure, <em>“roughly [equated]”</em> to their dependent variable.</p> 
+             <p>Lastly, the class study was conducted during Spring 2020, when the COVID-19 global pandemic disrupted usual routines. Three participants reported constrained timelines in addition to highly unusual emotional circumstances as debilitating to the smooth running of the experiment, primarily those related to attention, productivity, or focus. To combat the unexpected burdens of the pandemic and other confounds, these experiments tended to have controls for sleep and wake up times while experiments that involved food or drinks tended to have controls for the quantity and frequency in which these were consumed.</p> 
+            </section> 
+            <section id="sec-27"> 
+             <header> 
+              <div class="title-info"> 
+               <h3> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">5.3</span></span> Mistrust in App's Results</h3> 
+              </div> 
+             </header> 
+             <p>As part of the experimental requirements, students in the class used statistical methods other than those present in Self-E to measure their results. Ten participants preferred their own method to Self-E's (including two stating their own method and Self-E's method are more preferable in different situations), regardless of whether their results aligned with Self-E's. Four participants thought Self-E's Thompson Sampling was insufficiently detailed, unable to capture <em>“actual observed effect of the condition”</em> (S7) or take into account <em>“external circumstances”</em> (S9). Three also believed that there were insufficient data points for Thompson Sampling to perform well.</p> 
+             <p>Five participants’ own calculations or feelings towards the experiment did not align with Self-E results. Amongst them, four were more convinced by their own results. Justifications were attributed to learning new things about themselves or noticing changes in themselves with regard to the interventions. S8, for example, realized that the intervention unexpectedly made them <em>“want to end the day earlier”</em> and thus the high probability of sleeping earlier found by Self-E might have been <em>“just based on chance.”</em> In the end, nine of the sixteen participants classified their interventions as effective and ten received Self-E results that aligned with their own calculations or perceptions.</p> 
+            </section> 
+           </section> 
+           <section id="sec-28"> 
+            <header> 
+             <div class="title-info"> 
+              <h2> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">6</span></span> OPPORTUNITIES FOR SELF-EXPERIMENTATION APPS</h2> 
+             </div> 
+            </header> 
+            <p>These studies helped us identify three main opportunities for improving an app-based approach to practical self-experiments. They focus on the themes from our findings and highlight the need to build trust in what the app is doing in collaboration with the user, so that the app is more than a data entry and statistical calculator.</p> 
+            <section id="sec-29"> 
+             <header> 
+              <div class="title-info"> 
+               <h3> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">6.1</span></span> Even More Guidance</h3> 
+              </div> 
+             </header> 
+             <p>Participants expressed a desire for more guidance from the app in three key areas. First, they kept bringing up confounding variables that might have affected their experiments and at the same time participants themselves did not always comply with the randomized schedule from the app. The practical approach could be improved by <strong>explaining why randomization is important</strong> and how it could address problems raised by the confounding variables. Second, some participants were not sure how to go about applying the suggested interventions in their lives. In the diary experiment, P2 wanted the ability to read more about the interventions before changing experiments, and P11 wanted to learn more about the science behind self-experimentation in general. So it would have been helpful, for example, to either have <strong>a short tutorial</strong> on how to meditate or to point people to a specific app that can help them with meditation. Third, participants said that they wished the app would <strong>nudge them to change experiments</strong> once they received their calculated result or would just suggest any other relevant ones to try.</p> 
+            </section> 
+            <section id="sec-30"> 
+             <header> 
+              <div class="title-info"> 
+               <h3> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">6.2</span></span> Revising the Data</h3> 
+              </div> 
+             </header> 
+             <p>Contextualizing the data entered and shown was an important consideration for participants, but the existing app did not provide enough flexibility to account for the data after-the-fact. Some participants mentioned that their experimental data had outliers, which led to a distrust of the results due to the potential influence of these outliers. P13 wanted to restart his experiment because he noticed that some of his data were faulty, so he changed to an entirely different experiment, then immediately reverted to the original. P6 wanted to be able to revise the timing of the sampling after her experiment began.</p> 
+             <p>Meanwhile, P4, P10, and P9 asked for a clearer indication of what has been logged so far to be able to verify the recorded data. Participants proposed that the app should allow users to edit data directly at a later time or label them as outliers so they would be interpreted differently during the analysis. Another suggestion was to let users <strong>add extra comments and text to data points</strong> purely for illustrative purposes (P5).</p> 
+            </section> 
+            <section id="sec-31"> 
+             <header> 
+              <div class="title-info"> 
+               <h3> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">6.3</span></span> In-App Motivation</h3> 
+              </div> 
+             </header> 
+             <p>P4 wanted a more visual and interactive interface of the app that would motivate her, give her rewards, and push her limits. She was hoping the app would be more like a coach/personal trainer: <em>“let's make a plan, let's push your boundaries, let's do another mile today.”</em> For this, we believe the concept of “streaks,” where users are encouraged to follow the recommendation multiple days in a row, could be helpful. Streaks would map well to self-experiments, both as a reward for compliance as well as a motivator to collect data daily, while increasing the experimental validity of the results.</p> 
+             <p>Additionally, most participants were enthusiastic about the idea of <strong>sharing and comparing their results with friends and family.</strong> Interestingly, P14 and P5 saw self-experiments as a potential <em>“bonding experience”</em> to see how a given intervention affected people they know: <em>“I would compare my result, to see the difference between two people doing the same thing... With my brother, we don't live in the same place”</em> (P5). P14 wanted to share her results with online communities of people who are interested in improving the same dependent variable (pain level). She said that <em>“People tell us so many garbage things that don't work. I cannot tell you how many times people told me to do yoga.”</em> Other participants did not want to compare or share results because <em>“everyone has their own rate”</em> of exercising (P6) and they would not be surprised if other people had different results (P15, P16).</p> 
+            </section> 
+           </section> 
+           <section id="sec-32"> 
+            <header> 
+             <div class="title-info"> 
+              <h2> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">7</span></span> DISCUSSION</h2> 
+             </div> 
+            </header> 
+            <p>The study revealed insights about how people intuitively design self-experiments, and how they interact with an app that aimed to guide them through the steps of a practical self-experiment. There were some overlapping themes, despite one population having more experimental design training.</p> 
+            <section id="sec-33"> 
+             <header> 
+              <div class="title-info"> 
+               <h3> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">7.1</span></span> Instinctive versus Scientific Experimental Design</h3> 
+              </div> 
+             </header> 
+             <p>Most participants in our diary study used their self-experiments as a way to start implementing a behavior change that they had been thinking about for a while. People's mental models did not match Self-E's attempts to nudge them to implement the intervention on some days, and to avoid it on others. The participants saw the experiment as a catalyst that finally helped them act on the new behavior, and they were reluctant to stop doing it. It was simply easier to continue doing a behavior than to have to check and switch between experimental conditions.</p> 
+             <p>On a related note, most participants brought up the notion of building up to a goal amount of the intervention they were trying to implement. This mental model is in accordance with Fogg's Tiny Habits behavioral model, in which one should start a behavior change with the smallest increment possible&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0026" data-original-title="" title="" id="auto-BibPLXBIB0026143">26</a>]. However, existing self-experimentation systems such as TummyTrials, QuantifyMe, SleepCoacher, and even Self-E, are not designed to handle this behavior&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0017" data-original-title="" title="" id="auto-BibPLXBIB0017144">17</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0036" data-original-title="" title="" id="auto-BibPLXBIB0036145">36</a>, <a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0069" data-original-title="" title="" id="auto-BibPLXBIB0069146">69</a>].</p> 
+             <p>In order to bridge the two paradigms, future self-experimentation systems could leverage the motivational and gamifying aspects of self-tracking systems as powerful tools for helping people conduct and finish their self-experiments. Future systems could give themselves the role of providing the initial inertia for users to commence a behavior change. Self-tracking tools could, in turn, benefit from richer data analysis to help users gain actionable insights. Larger block sizes may be a useful parameter for users who wish to balance between the convenience of inertia, and the efficiency of the number times the condition is randomized to gain more probabilistic confidence in the causal outcome.</p> 
+            </section> 
+            <section id="sec-34"> 
+             <header> 
+              <div class="title-info"> 
+               <h3> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">7.2</span></span> Need for Iteration</h3> 
+              </div> 
+             </header> 
+             <p>It is important to note that fully customizable experiments pose risks as people might setup ones that cause them harm. With the help of our ethics review board, we decided on including a disclaimer on the first page of the setup process (Figure<a class="fig" href="#fig3">3</a>a) encouraging users to consult a physician.</p> 
+             <p>As our findings from the study with the seminar students showed, even advanced users struggle with the design and implementation of self-experiments. This is in accordance with prior research that suggests running iterations of self-experiments is helpful for users to conduct higher quality self-experimentation&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0016" data-original-title="" title="" id="auto-BibPLXBIB0016147">16</a>]. Thus, such systems for self-experimentation should be designed with iteration in mind and allow users to easily revise and restart their experiments when necessary. For example, as mentioned in the previous point, Self-E users often wanted to start with a small amount of the new behavior and build their way up. However, while we allowed participants to revise the default goal amount at the beginning of the study, they were not able to change it without restarting the experiment. Therefore, future systems for self-experimentation should take this into consideration. In addition to that, as noted in our findings, some participants had to be nudged to specify their goals as they were under-specified and not actionable, which resonates with prior studies&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0051" data-original-title="" title="" id="auto-BibPLXBIB0051148">51</a>]. This suggests that there is a need for scaffolding around the setup of the self-experiment to educate the user about why it is necessary to have a specific and measurable goal in mind&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0050" data-original-title="" title="" id="auto-BibPLXBIB0050149">50</a>] rather than a broad one (“improve sleep” is too broad, but “wake up less” is more actionable) in order to make meaningful science&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0060" data-original-title="" title="" id="auto-BibPLXBIB0060150">60</a>].</p> 
+            </section> 
+            <section id="sec-35"> 
+             <header> 
+              <div class="title-info"> 
+               <h3> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">7.3</span></span> Need for Empathy</h3> 
+              </div> 
+             </header> 
+             <p>Our findings related to labeling and handling data outliers, acknowledging and accounting for result preconceptions, and building user trust in the system, all demonstrate the need both for more empathy to be built into the system and for better communication between the user and the app. For example, we see that participants are aware that their data sometimes is faulty or contains outliers, so they want to be able to exclude certain data points from analysis. Thus, future systems could let users label extreme data points and then take that additional information into account when calculating the result.</p> 
+             <p>Additionally, most participants in our study also had preconceived notions about whether an experiment would be helpful to them before they even started it. Our findings suggest that they thought the intervention would be beneficial, so when Self-E presented results that contradicted that belief, users found excuses for confounding factors that could have interfered with the data. A more empathetic app might explain, “we know you think this is bad, but let's test once just to confirm.”</p> 
+             <p>Another way to account for this bias while calculating the results is to allow the participants to feed these assumptions as the priors in the Thompson Sampling approach. That way, if participants are very certain something might be helpful for them, the more helpful condition will have a high prior likelihood than the other condition, which in turn will be reflected in how often they are asked to try each condition. However, we need to be cautious because feeding assumptions as priors might lead to potential biases in the results.</p> 
+            </section> 
+            <section id="sec-36"> 
+             <header> 
+              <div class="title-info"> 
+               <h3> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">7.4</span></span> Future Research Directions</h3> 
+              </div> 
+             </header> 
+             <p>We released the Self-E app to the Google Play Store on March 1, 2020, for anyone to download and use for free. Users who download the app are asked to sign an IRB-approved informed consent form if they wish to continue using the app. Users are free to use or delete Self-E whenever they wish. With Self-E widely available on the app store, we plan on analyzing the way people are creating customized experiments on their own and the challenges they face at the different stages and with different experiments. Additionally, we hope to explore what levels of scaffolding in the customized experiments process are most applicable for different populations.</p> 
+             <p>A future iteration of Self-E could also educate users and give advanced ones more agency to conduct complex experiments with different data measures and study designs with multiple conditions. Future research will also aim to answer whether incorporating social features such as sharing and commenting on other people's experiment designs mitigates some of the negative aspects of customized experiments.</p> 
+            </section> 
+            <section id="sec-37"> 
+             <header> 
+              <div class="title-info"> 
+               <h3> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">7.5</span></span> Limitations</h3> 
+              </div> 
+             </header> 
+             <p>As with other empirical and diary studies, ours has limitations that should be acknowledged while interpreting our findings. Our studies are limited by their small sample size and duration, as a broader sample might have been able to tease apart what health conditions or variables self-experimentation is most beneficial for. Furthermore, we recruited a generally healthy population sample, who are not representative of users who might be conducting self-experiments with the goal of ameliorating a specific health condition. While participants were encouraged to use the app as they normally would, their participation in this study might have biased their natural use of the system. Future work can explore a more naturalistic approach which would better reflect how people adopt Self-E in the wild.</p> 
+            </section> 
+           </section> 
+           <section id="sec-38"> 
+            <header> 
+             <div class="title-info"> 
+              <h2> <span class="section-number"><span class="nav-open" role="button" onclick="openNav(this)" title="article navigation" tabindex="0">8</span></span> CONCLUSION</h2> 
+             </div> 
+            </header> 
+            <p>This work presents Self-E, an app that guides users through the steps of a self-experiment. We conducted a two-week diary study and interviews with 16 participants who used Self-E to conduct general self-experiments in their own lives. Our qualitative study sought to expand on the field's understanding of how people with little experience in personal analytics perceive self-tracking and self-experimentation with the help of mobile tools. Because users bring in self-conceived notions about what affects them, the constant challenge is for the app to build trust with the user, that it is interpreting the data within the user's context. Based on those findings, we redesigned the system to include completely customizable experiments and asked a group of advanced users for feedback. Overall, we find that the instinctive way users conduct self-experiments does not match the implementations in existing systems, so future research can explore ways to help people conduct such experiments in more intuitive ways.</p> 
+           </section> 
+          </section> 
+          <section class="back-matter"> 
+           <section id="sec-39"> 
+            <header> 
+             <div class="title-info"> 
+              <h2><span class="nav-open" role="button" onclick="openNav(this)" tabindex="0" title="article navigation">ACKNOWLEDGMENTS</span></h2> 
+             </div> 
+            </header> 
+            <p>We thank Diana Lee for the editing help. This research is funded in part by the Brown University Seed Award and National Science Foundation IIS-1656763.</p> 
+           </section> 
+           <section id="ref-001"> 
+            <header> 
+             <div class="title-info"> 
+              <h2 class="page-brake-head"><span class="nav-open" role="button" onclick="openNav(this)" tabindex="0" title="article navigation">REFERENCES</span></h2> 
+             </div> 
+            </header> 
+            <ul class="bibUl"> 
+             <li id="BibPLXBIB0001" label="[1]" value="1">Amid Ayobi, Paul Marshall, and Anna&nbsp;L Cox. 2020. Trackly: A Customisable and Pictorial Self-Tracking App to Support Agency in Multiple Sclerosis Self-Care. In <em>Proceedings of the 2020 CHI Conference on Human Factors in Computing Systems</em>. ACM, 1–15. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 1" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB000118" aria-label="citation 1 reference 1">citation 1</option><option value="#auto-BibPLXBIB000186" aria-label="citation 2 reference 1">citation 2</option></select></li> 
+             <li id="BibPLXBIB0002" label="[2]" value="2">Amid Ayobi, Paul Marshall, Anna&nbsp;L Cox, and Yunan Chen. 2017. Quantifying the body and caring for the mind: self-tracking in multiple sclerosis. In <em>Proceedings of the 2017 CHI Conference on Human Factors in Computing Systems</em>. ACM, 6889–6901. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 2" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB000222" aria-label="citation 1 reference 2">citation 1</option><option value="#auto-BibPLXBIB000224" aria-label="citation 2 reference 2">citation 2</option><option value="#auto-BibPLXBIB000230" aria-label="citation 3 reference 2">citation 3</option><option value="#auto-BibPLXBIB000253" aria-label="citation 4 reference 2">citation 4</option></select></li> 
+             <li id="BibPLXBIB0003" label="[3]" value="3">Amid Ayobi, Tobias Sonne, Paul Marshall, and Anna&nbsp;L Cox. 2018. Flexible and Mindful Self-Tracking: Design Implications from Paper Bullet Journals. In <em>Proceedings of the 2018 CHI Conference on Human Factors in Computing Systems</em>. ACM, 28. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 3" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB000331" aria-label="citation 1 reference 3">citation 1</option></select></li> 
+             <li id="BibPLXBIB0004" label="[4]" value="4">Colin Barr, Maria Marois, Ida Sim, Christopher&nbsp;H Schmid, Barth Wilsey, Deborah Ward, Naihua Duan, Ron&nbsp;D Hays, Joshua Selsky, Joseph Servadio, <em>et al.</em> 2015. The PREEMPT study-evaluating smartphone-assisted n-of-1 trials in patients with chronic pain: study protocol for a randomized controlled trial. <em><em>Trials</em></em> 16, 1 (2015), 67. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 4" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB000487" aria-label="citation 1 reference 4">citation 1</option></select></li> 
+             <li id="BibPLXBIB0005" label="[5]" value="5">Virginia Braun and Victoria Clarke. 2006. Using thematic analysis in psychology. <em><em>Qualitative research in psychology</em></em> 3, 2 (2006), 77–101. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 5" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB0005130" aria-label="citation 1 reference 5">citation 1</option></select></li> 
+             <li id="BibPLXBIB0006" label="[6]" value="6">Colleen&nbsp;E Carney, Daniel&nbsp;J Buysse, Sonia Ancoli-Israel, Jack&nbsp;D Edinger, Andrew&nbsp;D Krystal, Kenneth&nbsp;L Lichstein, and Charles&nbsp;M Morin. 2012. The consensus sleep diary: standardizing prospective sleep self-monitoring. <em><em>Sleep</em></em> 35, 2 (2012), 287–302. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 6" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB00061" aria-label="citation 1 reference 6">citation 1</option></select></li> 
+             <li id="BibPLXBIB0007" label="[7]" value="7">Ting-Ray Chang, Eija Kaasinen, and Kirsikka Kaipainen. 2012. What influences users’ decisions to take apps into use?: A framework for evaluating persuasive and engaging design in mobile Apps for well-being. In Proceedings of the 11th International Conference on Mobile and Ubiquitous Multimedia. ACM. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 7" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB000757" aria-label="citation 1 reference 7">citation 1</option></select></li> 
+             <li id="BibPLXBIB0008" label="[8]" value="8">Connie Chen, David Haddad, Joshua Selsky, Julia&nbsp;E Hoffman, Richard&nbsp;L Kravitz, Deborah&nbsp;E Estrin, and Ida Sim. 2012. Making sense of mobile health data: an open architecture to improve individual-and population-level health. <em><em>Journal of medical Internet research</em></em> 14, 4 (2012), e112. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 8" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB000812" aria-label="citation 1 reference 8">citation 1</option></select></li> 
+             <li id="BibPLXBIB0009" label="[9]" value="9">Eun&nbsp;Kyoung Choe, Bongshin Lee, Haining Zhu, Nathalie&nbsp;Henry Riche, and Dominikus Baur. 2017. Understanding self-reflection: how people reflect on personal data through visual data exploration. In <em>Proceedings of the 11th EAI International Conference on Pervasive Computing Technologies for Healthcare</em>. ACM, 173–182. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 9" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB000946" aria-label="citation 1 reference 9">citation 1</option></select></li> 
+             <li id="BibPLXBIB0010" label="[10]" value="10">Eun&nbsp;Kyoung Choe, Nicole&nbsp;B Lee, Bongshin Lee, Wanda Pratt, and Julie&nbsp;A Kientz. 2014. Understanding quantified-selfers’ practices in collecting and exploring personal data. In <em>Proceedings of the SIGCHI Conference on Human Factors in Computing Systems</em>. ACM, 1143–1152. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 10" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB001016" aria-label="citation 1 reference 10">citation 1</option><option value="#auto-BibPLXBIB001023" aria-label="citation 2 reference 10">citation 2</option><option value="#auto-BibPLXBIB001043" aria-label="citation 3 reference 10">citation 3</option><option value="#auto-BibPLXBIB001047" aria-label="citation 4 reference 10">citation 4</option><option value="#auto-BibPLXBIB001074" aria-label="citation 5 reference 10">citation 5</option><option value="#auto-BibPLXBIB001081" aria-label="citation 6 reference 10">citation 6</option><option value="#auto-BibPLXBIB0010104" aria-label="citation 7 reference 10">citation 7</option><option value="#auto-BibPLXBIB0010109" aria-label="citation 8 reference 10">citation 8</option></select></li> 
+             <li id="BibPLXBIB0011" label="[11]" value="11">Chia-Fang Chung, Elena Agapie, Jessica Schroeder, Sonali Mishra, James Fogarty, and Sean&nbsp;A Munson. 2017. When personal tracking becomes social: Examining the use of Instagram for healthy eating. In <em>Proceedings of the 2017 CHI Conference on Human Factors in Computing Systems</em>. ACM, 1674–1687. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 11" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB001126" aria-label="citation 1 reference 11">citation 1</option></select></li> 
+             <li id="BibPLXBIB0012" label="[12]" value="12">John Concato, Nirav Shah, and Ralph&nbsp;I Horwitz. 2000. Randomized, controlled trials, observational studies, and the hierarchy of research designs. <em><em>New England journal of medicine</em></em> 342, 25 (2000), 1887–1892. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 12" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB001265" aria-label="citation 1 reference 12">citation 1</option></select></li> 
+             <li id="BibPLXBIB0013" label="[13]" value="13">Felicia Cordeiro, Elizabeth Bales, Erin Cherry, and James Fogarty. 2015. Rethinking the mobile food journal: Exploring opportunities for lightweight photo-based capture. In <em>Proceedings of the 33rd Annual ACM Conference on Human Factors in Computing Systems</em>. ACM, 3207–3216. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 13" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB00134" aria-label="citation 1 reference 13">citation 1</option><option value="#auto-BibPLXBIB001327" aria-label="citation 2 reference 13">citation 2</option></select></li> 
+             <li id="BibPLXBIB0014" label="[14]" value="14">Felicia Cordeiro, Daniel&nbsp;A Epstein, Edison Thomaz, Elizabeth Bales, Arvind&nbsp;K Jagannathan, Gregory&nbsp;D Abowd, and James Fogarty. 2015. Barriers and negative nudges: Exploring challenges in food journaling. In <em>Proceedings of the 33rd Annual ACM Conference on Human Factors in Computing Systems</em>. ACM, 1159–1162. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 14" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB00145" aria-label="citation 1 reference 14">citation 1</option><option value="#auto-BibPLXBIB001428" aria-label="citation 2 reference 14">citation 2</option></select></li> 
+             <li id="BibPLXBIB0015" label="[15]" value="15">Mary Czerwinski, Eric Horvitz, and Susan Wilhite. 2004. A diary study of task switching and interruptions. In <em>Proceedings of the SIGCHI conference on Human factors in computing systems</em>. ACM, 175–182. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 15" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB0015122" aria-label="citation 1 reference 15">citation 1</option></select></li> 
+             <li id="BibPLXBIB0016" label="[16]" value="16">Nediyana Daskalova, Karthik Desingh, Alexandra Papoutsaki, Diane Schulze, Han Sha, and Jeff Huang. 2017. Lessons learned from two cohorts of personal informatics self-experiments. <em><em>Proceedings of the ACM on Interactive, Mobile, Wearable and Ubiquitous Technologies</em></em> 1, 3 (2017), 46. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 16" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB001655" aria-label="citation 1 reference 16">citation 1</option><option value="#auto-BibPLXBIB001691" aria-label="citation 2 reference 16">citation 2</option><option value="#auto-BibPLXBIB001698" aria-label="citation 3 reference 16">citation 3</option><option value="#auto-BibPLXBIB0016105" aria-label="citation 4 reference 16">citation 4</option><option value="#auto-BibPLXBIB0016113" aria-label="citation 5 reference 16">citation 5</option><option value="#auto-BibPLXBIB0016136" aria-label="citation 6 reference 16">citation 6</option><option value="#auto-BibPLXBIB0016147" aria-label="citation 7 reference 16">citation 7</option></select></li> 
+             <li id="BibPLXBIB0017" label="[17]" value="17">Nediyana Daskalova, Danaë Metaxa-Kakavouli, Adrienne Tran, Nicole Nugent, Julie Boergers, John McGeary, and Jeff Huang. 2016. SleepCoacher: A personalized automated self-experimentation system for sleep recommendations. In <em>Proceedings of the 29th Annual Symposium on User Interface Software and Technology</em>. ACM, 347–358. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 17" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB00172" aria-label="citation 1 reference 17">citation 1</option><option value="#auto-BibPLXBIB001760" aria-label="citation 2 reference 17">citation 2</option><option value="#auto-BibPLXBIB001783" aria-label="citation 3 reference 17">citation 3</option><option value="#auto-BibPLXBIB0017144" aria-label="citation 4 reference 17">citation 4</option></select></li> 
+             <li id="BibPLXBIB0018" label="[18]" value="18">Nediyana Daskalova, Jina Yoon, Yibing Wang, Cintia Araujo, Guillermo Beltran&nbsp;Jr, Nicole Nugent, John McGeary, Joseph&nbsp;Jay Williams, and Jeff Huang. 2020. SleepBandits: Guided Flexible Self-Experiments for Sleep. In <em>Proceedings of the 2020 CHI Conference on Human Factors in Computing Systems</em>. ACM, 1–13. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 18" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB001819" aria-label="citation 1 reference 18">citation 1</option><option value="#auto-BibPLXBIB001884" aria-label="citation 2 reference 18">citation 2</option><option value="#auto-BibPLXBIB0018102" aria-label="citation 3 reference 18">citation 3</option><option value="#auto-BibPLXBIB0018108" aria-label="citation 4 reference 18">citation 4</option><option value="#auto-BibPLXBIB0018118" aria-label="citation 5 reference 18">citation 5</option><option value="#auto-BibPLXBIB0018119" aria-label="citation 6 reference 18">citation 6</option><option value="#auto-BibPLXBIB0018138" aria-label="citation 7 reference 18">citation 7</option><option value="#auto-BibPLXBIB0018141" aria-label="citation 8 reference 18">citation 8</option><option value="#auto-BibPLXBIB0018142" aria-label="citation 9 reference 18">citation 9</option></select></li> 
+             <li id="BibPLXBIB0019" label="[19]" value="19">Orianna DeMasi, Sidney Feygin, Aluma Dembo, Adrian Aguilera, and Benjamin Recht. 2017. Well-being tracking via smartphone-measured activity and sleep: cohort study. <em><em>JMIR mHealth and uHealth</em></em> 5, 10 (2017), e137. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 19" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB00193" aria-label="citation 1 reference 19">citation 1</option></select></li> 
+             <li id="BibPLXBIB0020" label="[20]" value="20">Markéta Dolejšová and Denisa Kera. 2017. Soylent Diet Self-Experimentation: Design Challenges in Extreme Citizen Science Projects. In <em>Proceedings of the 2017 ACM Conference on Computer Supported Cooperative Work and Social Computing</em>. ACM, 2112–2123. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 20" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB002089" aria-label="citation 1 reference 20">citation 1</option></select></li> 
+             <li id="BibPLXBIB0021" label="[21]" value="21">Daniel&nbsp;A Epstein, Nicole&nbsp;B Lee, Jennifer&nbsp;H Kang, Elena Agapie, Jessica Schroeder, Laura&nbsp;R Pina, James Fogarty, Julie&nbsp;A Kientz, and Sean Munson. 2017. Examining menstrual tracking to inform the design of personal informatics tools. In <em>Proceedings of the 2017 CHI Conference on Human Factors in Computing Systems</em>. ACM, 6876–6888. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 21" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB002134" aria-label="citation 1 reference 21">citation 1</option></select></li> 
+             <li id="BibPLXBIB0022" label="[22]" value="22">Daniel&nbsp;A Epstein, An Ping, James Fogarty, and Sean&nbsp;A Munson. 2015. A lived informatics model of personal informatics. In <em>Proceedings of the 2015 ACM International Joint Conference on Pervasive and Ubiquitous Computing</em>. 731–742. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 22" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB002263" aria-label="citation 1 reference 22">citation 1</option></select></li> 
+             <li id="BibPLXBIB0023" label="[23]" value="23">Bob Evans. 2019. PACO: The Personal Analytics Companion. <a class="link-inline force-break" href="https://pacoapp.com/">https://pacoapp.com/</a> <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 23" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB002394" aria-label="citation 1 reference 23">citation 1</option></select></li> 
+             <li id="BibPLXBIB0024" label="[24]" value="24">Miguel Farias and Catherine Wikholm. 2016. Has the science of mindfulness lost its mind?<em><em>BJPsych bulletin</em></em> 40, 6 (2016), 329–332. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 24" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB002413" aria-label="citation 1 reference 24">citation 1</option></select></li> 
+             <li id="BibPLXBIB0025" label="[25]" value="25">Brian&nbsp;J Fogg. 2002. Persuasive technology: using computers to change what we think and do. <em><em>Ubiquity</em></em> 2002, December (2002), 5. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 25" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB002558" aria-label="citation 1 reference 25">citation 1</option></select></li> 
+             <li id="BibPLXBIB0026" label="[26]" value="26">Brian&nbsp;J Fogg. 2019. <em>Tiny Habits: The Small Changes That Change Everything</em>. Houghton Mifflin Harcourt. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 26" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB0026140" aria-label="citation 1 reference 26">citation 1</option><option value="#auto-BibPLXBIB0026143" aria-label="citation 2 reference 26">citation 2</option></select></li> 
+             <li id="BibPLXBIB0027" label="[27]" value="27">Susannah Fox and Maeve Duggan. 2013. Tracking for Health. <a class="link-inline force-break" href="https://www.pewinternet.org/2013/01/28/tracking-for-health/"></a><a class="link-inline force-break" href="https://www.pewinternet.org/2013/01/28/tracking-for-health/">https://www.pewinternet.org/2013/01/28/tracking-for-health/</a>  <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 27" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB00278" aria-label="citation 1 reference 27">citation 1</option></select></li> 
+             <li id="BibPLXBIB0028" label="[28]" value="28">Daniel Harrison, Paul Marshall, Nadia Bianchi-Berthouze, and Jon Bird. 2015. Activity tracking: barriers, workarounds and customisation. In <em>Proceedings of the 2015 ACM International Joint Conference on Pervasive and Ubiquitous Computing</em>. ACM, 617–621. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 28" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB002829" aria-label="citation 1 reference 28">citation 1</option></select></li> 
+             <li id="BibPLXBIB0029" label="[29]" value="29">Eiji Hayashi and Jason Hong. 2011. A diary study of password usage in daily life. In <em>Proceedings of the SIGCHI Conference on Human Factors in Computing Systems</em>. ACM, 2627–2630. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 29" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB0029123" aria-label="citation 1 reference 29">citation 1</option></select></li> 
+             <li id="BibPLXBIB0030" label="[30]" value="30">Steven&nbsp;C Hayes. 1981. Single case experimental design and empirical clinical practice.<em><em>Journal of consulting and clinical psychology</em></em> 49, 2(1981), 193. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 30" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB003075" aria-label="citation 1 reference 30">citation 1</option></select></li> 
+             <li id="BibPLXBIB0031" label="[31]" value="31">Reetta Heinonen, Riitta Luoto, Pirjo Lindfors, and Clas-Håkan Nygård. 2012. Usability and feasibility of mobile phone diaries in an experimental physical exercise study. <em><em>Telemedicine and e-Health</em></em> 18, 2 (2012), 115–119. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 31" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB003150" aria-label="citation 1 reference 31">citation 1</option></select></li> 
+             <li id="BibPLXBIB0032" label="[32]" value="32">Miguel&nbsp;A Hernán and Sonia Hernández-Díaz. 2012. Beyond the intention-to-treat in comparative effectiveness research. <em><em>Clinical Trials</em></em> 9, 1 (2012), 48–55. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 32" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB0032116" aria-label="citation 1 reference 32">citation 1</option><option value="#auto-BibPLXBIB0032117" aria-label="citation 2 reference 32">citation 2</option></select></li> 
+             <li id="BibPLXBIB0033" label="[33]" value="33">Mieke Heyvaert and Patrick Onghena. 2014. Randomization tests for single-case experiments: State of the art, state of the science, and state of the application. <em><em>Journal of Contextual Behavioral Science</em></em> 3, 1 (2014), 51–64. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 33" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB003377" aria-label="citation 1 reference 33">citation 1</option></select></li> 
+             <li id="BibPLXBIB0034" label="[34]" value="34">Alexis Hiniker, Sungsoo&nbsp;Ray Hong, Tadayoshi Kohno, and Julie&nbsp;A Kientz. 2016. Mytime: Designing and evaluating an intervention for smartphone non-use. In <em>Proceedings of the 2016 CHI Conference on Human Factors in Computing Systems</em>. ACM, 4746–4757. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 34" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB003437" aria-label="citation 1 reference 34">citation 1</option></select></li> 
+             <li id="BibPLXBIB0035" label="[35]" value="35">Tero Jokela, Jarno Ojala, and Thomas Olsson. 2015. A diary study on combining multiple information devices in everyday activities and tasks. In <em>Proceedings of the 33rd Annual ACM Conference on Human Factors in Computing Systems</em>. ACM, 3903–3912. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 35" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB0035124" aria-label="citation 1 reference 35">citation 1</option></select></li> 
+             <li id="BibPLXBIB0036" label="[36]" value="36">Ravi Karkar, Jessica Schroeder, Daniel&nbsp;A Epstein, Laura&nbsp;R Pina, Jeffrey Scofield, James Fogarty, Julie&nbsp;A Kientz, Sean&nbsp;A Munson, Roger Vilardaga, and Jasmine Zia. 2017. Tummytrials: a feasibility study of using self-experimentation to detect individualized food triggers. In <em>Proceedings of the 2017 CHI Conference on Human Factors in Computing Systems</em>. ACM, 6850–6863. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 36" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB00366" aria-label="citation 1 reference 36">citation 1</option><option value="#auto-BibPLXBIB003620" aria-label="citation 2 reference 36">citation 2</option><option value="#auto-BibPLXBIB003651" aria-label="citation 3 reference 36">citation 3</option><option value="#auto-BibPLXBIB003656" aria-label="citation 4 reference 36">citation 4</option><option value="#auto-BibPLXBIB003661" aria-label="citation 5 reference 36">citation 5</option><option value="#auto-BibPLXBIB003670" aria-label="citation 6 reference 36">citation 6</option><option value="#auto-BibPLXBIB003676" aria-label="citation 7 reference 36">citation 7</option><option value="#auto-BibPLXBIB003678" aria-label="citation 8 reference 36">citation 8</option><option value="#auto-BibPLXBIB003685" aria-label="citation 9 reference 36">citation 9</option><option value="#auto-BibPLXBIB003690" aria-label="citation 10 reference 36">citation 10</option><option value="#auto-BibPLXBIB003692" aria-label="citation 11 reference 36">citation 11</option><option value="#auto-BibPLXBIB0036107" aria-label="citation 12 reference 36">citation 12</option><option value="#auto-BibPLXBIB0036139" aria-label="citation 13 reference 36">citation 13</option><option value="#auto-BibPLXBIB0036145" aria-label="citation 14 reference 36">citation 14</option></select></li> 
+             <li id="BibPLXBIB0037" label="[37]" value="37">Ravi Karkar, Jasmine Zia, Roger Vilardaga, Sonali&nbsp;R Mishra, James Fogarty, Sean&nbsp;A Munson, and Julie&nbsp;A Kientz. 2015. A framework for self-experimentation in personalized health. <em><em>Journal of the American Medical Informatics Association</em></em> 23, 3(2015), 440–448. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 37" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB003725" aria-label="citation 1 reference 37">citation 1</option><option value="#auto-BibPLXBIB003793" aria-label="citation 2 reference 37">citation 2</option><option value="#auto-BibPLXBIB003797" aria-label="citation 3 reference 37">citation 3</option><option value="#auto-BibPLXBIB0037106" aria-label="citation 4 reference 37">citation 4</option></select></li> 
+             <li id="BibPLXBIB0038" label="[38]" value="38">Joseph&nbsp;Jofish Kaye, Mary McCuistion, Rebecca Gulotta, and David&nbsp;A Shamma. 2014. Money talks: tracking personal finances. In <em>Proceedings of the SIGCHI Conference on Human Factors in Computing Systems</em>. ACM, 521–530. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 38" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB003835" aria-label="citation 1 reference 38">citation 1</option></select></li> 
+             <li id="BibPLXBIB0039" label="[39]" value="39">Christina Kelley, Bongshin Lee, and Lauren Wilcox. 2017. Self-tracking for mental wellness: understanding expert perspectives and student experiences. In <em>Proceedings of the 2017 CHI Conference on Human Factors in Computing Systems</em>. ACM, 629–641. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 39" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB003936" aria-label="citation 1 reference 39">citation 1</option></select></li> 
+             <li id="BibPLXBIB0040" label="[40]" value="40">John&nbsp;M Kelley and Ted&nbsp;J Kaptchuk. 2010. Group analysis versus individual response: the inferential limits of randomized controlled trials. <em><em>Contemporary clinical trials</em></em> 31, 5 (2010), 423–428. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 40" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB004069" aria-label="citation 1 reference 40">citation 1</option></select></li> 
+             <li id="BibPLXBIB0041" label="[41]" value="41">Ian Kerridge. 2003. Altruism or reckless curiosity? A brief history of self experimentation in medicine. <em><em>Internal medicine journal</em></em> 33, 4 (2003), 203–207. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 41" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB004172" aria-label="citation 1 reference 41">citation 1</option></select></li> 
+             <li id="BibPLXBIB0042" label="[42]" value="42">Elisabeth&nbsp;T Kersten-van Dijk, Joyce&nbsp;HDM Westerink, Femke Beute, and Wijnand&nbsp;A IJsselsteijn. 2017. Personal informatics, self-insight, and behavior change: A critical review of current literature. <em><em>Human–Computer Interaction</em></em> 32, 5-6 (2017), 268–296. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 42" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB00429" aria-label="citation 1 reference 42">citation 1</option><option value="#auto-BibPLXBIB004210" aria-label="citation 2 reference 42">citation 2</option></select></li> 
+             <li id="BibPLXBIB0043" label="[43]" value="43">Julie&nbsp;A Kientz. 2019. In Praise of Small Data: When You Might Consider N-of-1 Studies. <em><em>GetMobile: Mobile Computing and Communications</em></em> 22, 4(2019), 5–8. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 43" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB0043100" aria-label="citation 1 reference 43">citation 1</option></select></li> 
+             <li id="BibPLXBIB0044" label="[44]" value="44">Young-Ho Kim, Eun&nbsp;Kyoung Choe, Bongshin Lee, and Jinwook Seo. 2019. Understanding Personal Productivity: How Knowledge Workers Define, Evaluate, and Reflect on Their Productivity. In <em>Proceedings of the 2019 CHI Conference on Human Factors in Computing Systems</em>. ACM, 615. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 44" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB004438" aria-label="citation 1 reference 44">citation 1</option><option value="#auto-BibPLXBIB0044125" aria-label="citation 2 reference 44">citation 2</option></select></li> 
+             <li id="BibPLXBIB0045" label="[45]" value="45">Young-Ho Kim, Jae&nbsp;Ho Jeon, Eun&nbsp;Kyoung Choe, Bongshin Lee, KwonHyun Kim, and Jinwook Seo. 2016. TimeAware: Leveraging framing effects to enhance personal productivity. In <em>Proceedings of the 2016 CHI Conference on Human Factors in Computing Systems</em>. ACM, 272–283. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 45" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB004539" aria-label="citation 1 reference 45">citation 1</option></select></li> 
+             <li id="BibPLXBIB0046" label="[46]" value="46">Young-Ho Kim, Jae&nbsp;Ho Jeon, Bongshin Lee, Eun&nbsp;Kyoung Choe, and Jinwook Seo. 2017. OmniTrack: A Flexible Self-Tracking Approach Leveraging Semi-Automated Tracking. <em><em>Proceedings of the ACM on Interactive, Mobile, Wearable and Ubiquitous Technologies</em></em> 1, 3 (2017), 67. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 46" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB004642" aria-label="citation 1 reference 46">citation 1</option></select></li> 
+             <li id="BibPLXBIB0047" label="[47]" value="47">Judy Kopp. 1988. Self-monitoring: A literature review of research and practice. In <em>Social Work Research and Abstracts</em>, Vol.&nbsp;24. Oxford University Press, 8–20. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 47" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB004744" aria-label="citation 1 reference 47">citation 1</option></select></li> 
+             <li id="BibPLXBIB0048" label="[48]" value="48">Thomas&nbsp;R Kratochwill, John&nbsp;H Hitchcock, Robert&nbsp;H Horner, Joel&nbsp;R Levin, Samuel&nbsp;L Odom, David&nbsp;M Rindskopf, and William&nbsp;R Shadish. 2013. Single-case intervention research design standards. <em><em>Remedial and Special Education</em></em> 34, 1 (2013), 26–38. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 48" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB0048115" aria-label="citation 1 reference 48">citation 1</option></select></li> 
+             <li id="BibPLXBIB0049" label="[49]" value="49">Reed Larson and Mihaly Csikszentmihalyi. 2014. The experience sampling method. In <em>Flow and the foundations of positive psychology</em>. Springer, 21–34. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 49" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB0049111" aria-label="citation 1 reference 49">citation 1</option></select></li> 
+             <li id="BibPLXBIB0050" label="[50]" value="50">Gary&nbsp;P Latham. 2003. Goal setting: A five-step approach to behavior change.<em><em>Organizational Dynamics</em></em>(2003), 309–318. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 50" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB0050149" aria-label="citation 1 reference 50">citation 1</option></select></li> 
+             <li id="BibPLXBIB0051" label="[51]" value="51">Jisoo Lee, Erin Walker, Winslow Burleson, Matthew Kay, Matthew Buman, and Eric&nbsp;B Hekler. 2017. Self-experimentation for behavior change: Design and formative evaluation of two approaches. In <em>Proceedings of the 2017 CHI Conference on Human Factors in Computing Systems</em>. ACM, 6837–6849. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 51" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB005117" aria-label="citation 1 reference 51">citation 1</option><option value="#auto-BibPLXBIB005154" aria-label="citation 2 reference 51">citation 2</option><option value="#auto-BibPLXBIB005182" aria-label="citation 3 reference 51">citation 3</option><option value="#auto-BibPLXBIB005196" aria-label="citation 4 reference 51">citation 4</option><option value="#auto-BibPLXBIB005199" aria-label="citation 5 reference 51">citation 5</option><option value="#auto-BibPLXBIB0051135" aria-label="citation 6 reference 51">citation 6</option><option value="#auto-BibPLXBIB0051148" aria-label="citation 7 reference 51">citation 7</option></select></li> 
+             <li id="BibPLXBIB0052" label="[52]" value="52">Ian Li, Anind Dey, and Jodi Forlizzi. 2010. A stage-based model of personal informatics systems. In <em>Proceedings of the SIGCHI Conference on Human Factors in Computing Systems</em>. ACM, 557–566. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 52" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB005248" aria-label="citation 1 reference 52">citation 1</option><option value="#auto-BibPLXBIB005259" aria-label="citation 2 reference 52">citation 2</option><option value="#auto-BibPLXBIB005262" aria-label="citation 3 reference 52">citation 3</option></select></li> 
+             <li id="BibPLXBIB0053" label="[53]" value="53">Elizabeth&nbsp;O Lillie, Bradley Patay, Joel Diamant, Brian Issell, Eric&nbsp;J Topol, and Nicholas&nbsp;J Schork. 2011. The n-of-1 clinical trial: the ultimate strategy for individualizing medicine?<em><em>Personalized medicine</em></em> 8, 2 (2011), 161–173. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 53" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB005314" aria-label="citation 1 reference 53">citation 1</option><option value="#auto-BibPLXBIB005371" aria-label="citation 2 reference 53">citation 2</option><option value="#auto-BibPLXBIB0053129" aria-label="citation 3 reference 53">citation 3</option></select></li> 
+             <li id="BibPLXBIB0054" label="[54]" value="54">David Mant. 1999. Can randomised trials inform clinical decisions about individual patients?<em><em>The Lancet</em></em> 353, 9154 (1999), 743–746. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 54" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB005466" aria-label="citation 1 reference 54">citation 1</option></select></li> 
+             <li id="BibPLXBIB0055" label="[55]" value="55">Sean&nbsp;A Munson, Jessica Schroeder, Ravi Karkar, Julie&nbsp;A Kientz, Chia-Fang Chung, and James Fogarty. 2020. The Importance of Starting With Goals in N-of-1 Studies. <em><em>Frontiers in Digital Health</em></em> 2 (2020), 3. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 55" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB0055101" aria-label="citation 1 reference 55">citation 1</option></select></li> 
+             <li id="BibPLXBIB0056" label="[56]" value="56">Gina Neff and Dawn Nafus. 2016. <em>Self-tracking</em>. MIT Press. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 56" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB005667" aria-label="citation 1 reference 56">citation 1</option></select></li> 
+             <li id="BibPLXBIB0057" label="[57]" value="57">Rosemery&nbsp;O Nelson and Steven&nbsp;C Hayes. 1981. Theoretical explanations for reactivity in self-monitoring. <em><em>Behavior Modification</em></em> 5, 1 (1981), 3–14. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 57" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB005745" aria-label="citation 1 reference 57">citation 1</option></select></li> 
+             <li id="BibPLXBIB0058" label="[58]" value="58">Doug Oman, Shauna&nbsp;L Shapiro, Carl&nbsp;E Thoresen, Thomas&nbsp;G Plante, and Tim Flinders. 2008. Meditation lowers stress and supports forgiveness among college students: A randomized controlled trial. <em><em>Journal of American College Health</em></em> 56, 5 (2008), 569–578. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 58" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB005811" aria-label="citation 1 reference 58">citation 1</option></select></li> 
+             <li id="BibPLXBIB0059" label="[59]" value="59">Leysia Palen and Marilyn Salzman. 2002. Voice-mail diary studies for naturalistic data capture under mobile conditions. In <em>Proceedings of the 2002 ACM conference on Computer supported cooperative work</em>. ACM, 87–95. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 59" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB0059126" aria-label="citation 1 reference 59">citation 1</option></select></li> 
+             <li id="BibPLXBIB0060" label="[60]" value="60">Vineet Pandey. 2018. Creating Scientific Theories with Online Communities using Gut Instinct. In <em>Companion of the 2018 ACM Conference on Computer Supported Cooperative Work and Social Computing</em>. 109–112. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 60" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB0060150" aria-label="citation 1 reference 60">citation 1</option></select></li> 
+             <li id="BibPLXBIB0061" label="[61]" value="61">Vineet Pandey, Tushar Koul, Chen Yang, Daniel McDonald, Mad&nbsp;Price Ball, Bastian&nbsp;Greshake Tzovaras, and Scott Klemmer. 2021. Galileo: Citizen-led Experimentation using a Social Computing System. In <em>Proceedings of the 2021 CHI Conference on Human Factors in Computing Systems</em>. ACM. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 61" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB006195" aria-label="citation 1 reference 61">citation 1</option></select></li> 
+             <li id="BibPLXBIB0062" label="[62]" value="62">Sun&nbsp;Young Park and Yunan Chen. 2015. Individual and social recognition: challenges and opportunities in migraine management. In <em>Proceedings of the 18th ACM Conference on Computer Supported Cooperative Work &amp; Social Computing</em>. ACM, 1540–1551. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 62" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB006232" aria-label="citation 1 reference 62">citation 1</option></select></li> 
+             <li id="BibPLXBIB0063" label="[63]" value="63">James&nbsp;O Prochaska and Wayne&nbsp;F Velicer. 1997. The transtheoretical model of health behavior change. <em><em>American journal of health promotion</em></em> 12, 1 (1997), 38–48. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 63" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB006364" aria-label="citation 1 reference 63">citation 1</option></select></li> 
+             <li id="BibPLXBIB0064" label="[64]" value="64">Seth Roberts and Allen Neuringer. 1998. Self-experimentation. In <em>Handbook of research methods in human operant behavior</em>. Springer, 619–655. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 64" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB006473" aria-label="citation 1 reference 64">citation 1</option></select></li> 
+             <li id="BibPLXBIB0065" label="[65]" value="65">John Rooksby, Parvin Asadzadeh, Mattias Rost, Alistair Morrison, and Matthew Chalmers. 2016. Personal tracking of screen time on digital devices. In <em>Proceedings of the 2016 CHI Conference on Human Factors in Computing Systems</em>. ACM, 284–296. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 65" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB006540" aria-label="citation 1 reference 65">citation 1</option></select></li> 
+             <li id="BibPLXBIB0066" label="[66]" value="66">John Rooksby, Mattias Rost, Alistair Morrison, and Matthew Chalmers. 2014. Personal tracking as lived informatics. In <em>Proceedings of the 2014 CHI Conference on Human Factors in Computing Systems</em>. ACM, 1163–1172. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 66" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB0066114" aria-label="citation 1 reference 66">citation 1</option></select></li> 
+             <li id="BibPLXBIB0067" label="[67]" value="67">Daniel&nbsp;J Russo, Benjamin Van&nbsp;Roy, Abbas Kazerouni, Ian Osband, Zheng Wen, <em>et al.</em> 2018. A tutorial on Thompson sampling. <em><em>Foundations and Trends® in Machine Learning</em></em> 11, 1(2018), 1–96. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 67" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB0067120" aria-label="citation 1 reference 67">citation 1</option><option value="#auto-BibPLXBIB0067121" aria-label="citation 2 reference 67">citation 2</option></select></li> 
+             <li id="BibPLXBIB0068" label="[68]" value="68">Johnny Saldaña. 2015. <em>The coding manual for qualitative researchers</em>. Sage. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 68" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB0068131" aria-label="citation 1 reference 68">citation 1</option></select></li> 
+             <li id="BibPLXBIB0069" label="[69]" value="69">Akane Sano, Sara Taylor, Craig Ferguson, Akshay Mohan, and Rosalind&nbsp;W Picard. 2017. QuantifyMe: An Automated Single-Case Experimental Design Platform. In <em>International Conference on Wireless Mobile Communication and Healthcare</em>. Springer, 199–206. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 69" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB006921" aria-label="citation 1 reference 69">citation 1</option><option value="#auto-BibPLXBIB006988" aria-label="citation 2 reference 69">citation 2</option><option value="#auto-BibPLXBIB0069103" aria-label="citation 3 reference 69">citation 3</option><option value="#auto-BibPLXBIB0069137" aria-label="citation 4 reference 69">citation 4</option><option value="#auto-BibPLXBIB0069146" aria-label="citation 5 reference 69">citation 5</option></select></li> 
+             <li id="BibPLXBIB0070" label="[70]" value="70">Jessica Schroeder, Chia-Fang Chung, Daniel&nbsp;A Epstein, Ravi Karkar, Adele Parsons, Natalia Murinova, James Fogarty, and Sean&nbsp;A Munson. 2018. Examining self-tracking by people with migraine: goals, needs, and opportunities in a chronic health condition. In <em>Proceedings of the 2018 on Designing Interactive Systems Conference 2018</em>. ACM, 135–148. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 70" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB007033" aria-label="citation 1 reference 70">citation 1</option><option value="#auto-BibPLXBIB007049" aria-label="citation 2 reference 70">citation 2</option></select></li> 
+             <li id="BibPLXBIB0071" label="[71]" value="71">Jessica Schroeder, Ravi Karkar, James Fogarty, Julie&nbsp;A Kientz, Sean&nbsp;A Munson, and Matthew Kay. 2019. A Patient-Centered Proposal for Bayesian Analysis of Self-Experiments for Health. <em><em>Journal of healthcare informatics research</em></em> 3, 1 (2019), 124–155. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 71" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB007115" aria-label="citation 1 reference 71">citation 1</option><option value="#auto-BibPLXBIB007179" aria-label="citation 2 reference 71">citation 2</option></select></li> 
+             <li id="BibPLXBIB0072" label="[72]" value="72">Timothy Sohn, Kevin&nbsp;A Li, William&nbsp;G Griswold, and James&nbsp;D Hollan. 2008. A diary study of mobile information needs. In <em>Proceedings of the SIGCHI Conference on Human Factors in Computing Systems</em>. ACM, 433–442. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 72" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB0072127" aria-label="citation 1 reference 72">citation 1</option></select></li> 
+             <li id="BibPLXBIB0073" label="[73]" value="73">Katarzyna Stawarz, Anna&nbsp;L Cox, and Ann Blandford. 2015. Beyond self-tracking and reminders: designing smartphone apps that support habit formation. In <em>Proceedings of the 33rd annual ACM conference on Human Factors in Computing Systems</em>. ACM, 2653–2662. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 73" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB0073134" aria-label="citation 1 reference 73">citation 1</option></select></li> 
+             <li id="BibPLXBIB0074" label="[74]" value="74">Anselm Strauss and Juliet Corbin. 1998. <em>Basics of qualitative research techniques</em>. Sage publications Thousand Oaks, CA. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 74" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB0074133" aria-label="citation 1 reference 74">citation 1</option></select></li> 
+             <li id="BibPLXBIB0075" label="[75]" value="75">Melanie Swan. 2013. The quantified self: Fundamental disruption in big data science and biological discovery. <em><em>Big data</em></em> 1, 2 (2013), 85–99. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 75" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB007580" aria-label="citation 1 reference 75">citation 1</option></select></li> 
+             <li id="BibPLXBIB0076" label="[76]" value="76">Jakob Tholander and Maria Normark. 2020. Crafting Personal Information-Resistance, Imperfection, and Self-Creation in Bullet Journaling. In <em>Proceedings of the 2020 CHI Conference on Human Factors in Computing Systems</em>. 1–13. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 76" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB007652" aria-label="citation 1 reference 76">citation 1</option></select></li> 
+             <li id="BibPLXBIB0077" label="[77]" value="77">Eric Topol. 2019. The A.I. Diet. <em><em>The New York Times</em></em> (Mar 2019). <a class="link-inline force-break" href="https://www.nytimes.com/2019/03/02/opinion/sunday/diet-artificial-intelligence-diabetes.html"></a><a class="link-inline force-break" href="https://www.nytimes.com/2019/03/02/opinion/sunday/diet-artificial-intelligence-diabetes.html">https://www.nytimes.com/2019/03/02/opinion/sunday/diet-artificial-intelligence-diabetes.html</a>  <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 77" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB00777" aria-label="citation 1 reference 77">citation 1</option></select></li> 
+             <li id="BibPLXBIB0078" label="[78]" value="78">Niels van Berkel, Jorge Goncalves, Peter Koval, Simo Hosio, Tilman Dingler, Denzil Ferreira, and Vassilis Kostakos. 2019. Context-Informed Scheduling and Analysis: Improving Accuracy of Mobile Self-Reports. In <em>Proceedings of the 2019 CHI Conference on Human Factors in Computing Systems</em>. ACM, 1–12. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 78" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB0078110" aria-label="citation 1 reference 78">citation 1</option><option value="#auto-BibPLXBIB0078112" aria-label="citation 2 reference 78">citation 2</option><option value="#auto-BibPLXBIB0078128" aria-label="citation 3 reference 78">citation 3</option></select></li> 
+             <li id="BibPLXBIB0079" label="[79]" value="79">Heather&nbsp;P Whitley and Wesley Lindsey. 2009. Sex-based differences in drug activity. <em><em>American family physician</em></em> 80, 11 (2009), 1254–1258. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 79" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB007968" aria-label="citation 1 reference 79">citation 1</option></select></li> 
+             <li id="BibPLXBIB0080" label="[80]" value="80">Steve Whittaker, Vaiva Kalnikaite, Victoria Hollis, and Andrew Guydish. 2016. ‘Don't Waste My Time’: Use of Time Information Improves Focus. In <em>Proceedings of the 2016 CHI Conference on Human Factors in Computing Systems</em>. ACM, 1729–1738. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 80" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB008041" aria-label="citation 1 reference 80">citation 1</option></select></li> 
+             <li id="BibPLXBIB0081" label="[81]" value="81">Hanlu Ye, Meethu Malu, Uran Oh, and Leah Findlater. 2014. Current and future mobile and wearable device use by people with visual impairments. In <em>Proceedings of the SIGCHI Conference on Human Factors in Computing Systems</em>. ACM, 3123–3132. <span class="link-das"> </span><select class="bib-ref-num" aria-label="Jump to citation for reference 81" style="display:inline-block;"><option>Navigate to</option><option value="#auto-BibPLXBIB0081132" aria-label="citation 1 reference 81">citation 1</option></select></li> 
+            </ul> 
+           </section> 
+          </section> 
+          <section id="foot-001" class="footnote"> 
+           <header> 
+            <div class="title-info"> 
+             <h2><span class="nav-open" role="button" onclick="openNav(this)" tabindex="0" title="article navigation">FOOTNOTE</span></h2> 
+            </div> 
+           </header> 
+           <p id="fn1"> <a href="#foot-fn1"><sup>⁎</sup></a>Work was conducted while author was at Brown University.</p> 
+           <p id="fn2"> <a href="#foot-fn2"><sup>†</sup></a>These authors contributed equally.</p> 
+           <div class="bibStrip"> 
+            <p>Permission to make digital or hard copies of all or part of this work for personal or classroom use is granted without fee provided that copies are not made or distributed for profit or commercial advantage and that copies bear this notice and the full citation on the first page. Copyrights for components of this work owned by others than the author(s) must be honored. Abstracting with credit is permitted. To copy otherwise, or republish, to post on servers or to redistribute to lists, requires prior specific permission and/or a fee. Request permissions from <a href="mailto:permissions@acm.org">permissions@acm.org</a>.</p> 
+            <p><em>CHI '21, May 08–13, 2021, Yokohama, Japan</em></p> 
+            <p>© 2021 Copyright held by the owner/author(s). Publication rights licensed to ACM.<br> ACM ISBN 978-1-4503-8096-6/21/05…$15.00.<br>DOI: <a class="link-inline force-break" target="_blank" href="https://doi.org/10.1145/3411764.3445100">https://doi.org/10.1145/3411764.3445100</a> </p> 
+           </div> 
+          </section> 
+         </main>  
+  
+      </div></div>
+  <script src="app.js"></script>
+  <script src="./contextmenu.js" type="text/javascript"></script>
+</body>
+
+</html>

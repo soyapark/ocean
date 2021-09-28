@@ -1,4 +1,3 @@
-let COLLECTION_NAME = "self-e-apple";
 
 var myAnnotation = {
     '@context': 'http://www.w3.org/ns/anno.jsonld',
@@ -369,7 +368,7 @@ let cxt_menu_tgt = "#outer-container";
             new_tab_name = new_tab_name == "that ingenious hero" ? $(args.annotation.id).text().split(" ") : new_tab_name.split(" ");
             new_tab_name = new_tab_name.length > 3 ? new_tab_name.slice(0, 3).join(" ") + " ...": new_tab_name.join(" ");
 
-            createNewTab($(tab_target).offset().top, new_tab_name, args.annotation.id.includes("fig") ? true : !clone);
+            createNewTab($(`[data-id="${tab_target}"]`).offset().top, new_tab_name, args.annotation.id.includes("fig") ? true : !clone);            
 
             $(".context-menu").toggle(100).css({
                 top: ($(tab_target).offset().top + 19) + "px",

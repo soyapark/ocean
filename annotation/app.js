@@ -1,3 +1,4 @@
+let COLLECTION_NAME = "ziva";
 
 var myAnnotation = {
     '@context': 'http://www.w3.org/ns/anno.jsonld',
@@ -748,7 +749,7 @@ let cxt_menu_tgt = "#outer-container";
     appId: "1:109351838437:web:a96c9d256173e20d63ea0c"
     };
 
-    let COLLECTION_NAME = "webreader";
+    
 
     var settings = {
     annotationTarget: "test",  // mandatory

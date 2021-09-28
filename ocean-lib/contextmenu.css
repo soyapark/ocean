@@ -8,6 +8,7 @@
     background: white;
     box-shadow: 10px 10px 5px #888888;
     z-index: 9;
+    background: #9C978B;
 }
 
     .context-menu ul {
@@ -19,7 +20,7 @@
             padding: 5px 2px;
             margin-bottom: 3px;
             color: #004242;
-            background-color: lightgray;
+            background-color: #9C978B;
             
         }
 

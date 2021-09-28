@@ -1056,7 +1056,7 @@ ol li,ul li{
     position:relative;
     margin-bottom:.7em;
     padding-left:13px;
-    text-indent:-35px
+    /* text-indent:-35px */
 }
 li:before{
     content:attr(label);

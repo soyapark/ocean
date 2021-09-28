@@ -7,14 +7,15 @@
 
   <!-- <link media="screen, print" rel="stylesheet" href="./webreader_files/bootstrap.min.css">
   <link media="screen, print" rel="stylesheet" href="./webreader_files/bootstrap-theme.min.css"> -->
-  
+  <link media="screen, print" rel="stylesheet" href="./webreader_files/bootstrap.min.css">
+  <link media="screen, print" rel="stylesheet" href="./webreader_files/bootstrap-theme.min.css">
   <link media="screen, print" rel="stylesheet" href="../ocean-lib/contextmenu.css">  
   <link href="recogito.min.css" rel="stylesheet">
   <link media="screen, print" rel="stylesheet" href="./webreader_files/main.css">
   <style>
     html,
     body {
-      padding: 10px 20px;
+      /* padding: 10px 20px; */
       margin: 0;
       /* font-family: stix,Georgia,serif; */
     }
@@ -472,7 +473,7 @@
                       </header> 
                       <p>This section introduces the interface of Ziva. Ziva provides features for domain experts to create domain concepts and elicit justification from representative instances that are automatically curated by Ziva. We discuss Ziva's different components and how they meet the design requirements in detail. </p>
                       <figure id="fig1"> 
-                       <img src="./fig/iui21-3-fig1.jpg" class="img-responsive" alt="Figure 1"> 
+                       <img src="./fig/iui21-3-fig1.jpg" class="" alt="Figure 1"> 
                        <figcaption> 
                         <span class="figure-number">Figure 1:</span> 
                         <span class="figure-title">To facilitate domain knowledge sharing, Ziva presents representative instances and to interfaces to review the instances to domain experts, then which will be used by data scientists.</span> 
@@ -504,7 +505,7 @@
                        <p>Once a domain expert finishes the concept extraction, they review each instance using one of elicitation interfaces, which ask the domain expert to justify an instance's label (this information is then intended for consumption by data scientists (R3)). We used Materialize to implement the justification elicitation conditions.</p> 
                        <p>The <tt>justification elicitation</tt> interfaces were designed through an iterative process of paper prototyping, starting with initial designs inspired by our preliminary interviews. As we conducted paper prototyping, we examined if (1) the answers from different participants were consistent and (2) the information from participants’ answers were useful to data scientists. We now describe the five different justification elicitation methods that we created and evaluated, and highlight the design rationale where appropriate. </p>
                        <figure id="fig2"> 
-                        <img src="./fig/iui21-3-fig2.jpg" class="img-responsive" alt="Figure 2"> 
+                        <img src="./fig/iui21-3-fig2.jpg" class="" alt="Figure 2"> 
                         <figcaption> 
                          <span class="figure-number">Figure 2:</span> 
                          <span class="figure-title">Ziva interface: domain experts first extract domain knowledge with curated instances. Then they review each instance one by one using one of justification-elicitation interfaces.</span> 
@@ -611,7 +612,7 @@
                         </table> 
                        </div> 
                        <figure id="fig3"> 
-                        <img src="./fig/iui21-3-fig3.jpg" class="img-responsive" alt="Figure 3"> 
+                        <img src="./fig/iui21-3-fig3.jpg" class="" alt="Figure 3"> 
                         <figcaption> 
                          <span class="figure-number">Figure 3:</span> 
                          <span class="figure-title">Post-question responses in NASA TLX (1- Very low, 7- Very high) (Crowd experiment participants, n=88).</span> 
@@ -888,7 +889,7 @@
       
         </div></div>
   <script src="app.js"></script>
-  <script src="./contextmenu.js" type="text/javascript"></script>
+  <script src="../ocean-lib/contextmenu.js" type="text/javascript"></script>
 </body>
 
 </html>

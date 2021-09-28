@@ -5,6 +5,8 @@ $(document).ready(function () {
 
     // disable right click and show custom context menu
     $('body').on('contextmenu', cxt_menu_tgt, function (e) {
+        if(e.target.tagName == "IMG")
+            return true;
         var id = this.id;
         $("#txt_id").val(id);
 

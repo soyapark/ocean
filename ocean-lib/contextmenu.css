@@ -34,6 +34,9 @@
                 background-color: #7fffd4;
             }
 
+    .context-menu select {
+        width:200px;
+    }
 /* Colors */
 .Gainsboro, .Orange, .Plum {
     width: 15px;

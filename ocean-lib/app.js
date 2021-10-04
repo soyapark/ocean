@@ -368,7 +368,12 @@ let cxt_menu_tgt = "#outer-container";
             new_tab_name = new_tab_name == "that ingenious hero" ? $(args.annotation.id).text().split(" ") : new_tab_name.split(" ");
             new_tab_name = new_tab_name.length > 3 ? new_tab_name.slice(0, 3).join(" ") + " ...": new_tab_name.join(" ");
 
-            createNewTab($(`[data-id="${tab_target}"]`).offset().top, new_tab_name, args.annotation.id.includes("fig") ? true : !clone);            
+            // if opening a new tab for figure, adjust the offset so it starts from figure not the caption
+            if(args.annotation.id.includes("fig")) {
+                createNewTab($(`[data-id="${tab_target}"]`).parents("figure").offset().top, new_tab_name, !clone);  
+            }
+            else 
+                createNewTab($(`[data-id="${tab_target}"]`).offset().top, new_tab_name, !clone);            
 
             $(".context-menu").toggle(100).css({
                 top: ($(tab_target).offset().top + 19) + "px",
@@ -1076,20 +1081,30 @@ let cxt_menu_tgt = "#outer-container";
     }
 
     function createNewTab(loc=0, tab_name="New tab", scroll=true) {
-        $(".context-menu ul").append(`<li tabID=${tabID}>${tab_name} <span class="close"></span></li>`)
+        $("li").removeClass("glow");
+        $(".label-warning").remove();
+
+        // add the new tab after Main tab
+        $(`<li class="glow" tabID=${tabID}>${tab_name} <span class="label label-warning" style="color:black">New</span> <span class="close"></span></li>`).insertAfter(".context-menu ul li:first");
+
         scrollTab.push({
             "name": tab_name,
             "loc": loc
         });
 
-        // do effect of flashing
-        $("body").css("visibility", "hidden");
-        sleep(300).then(() => {
-            // Do something after the sleep!
-            $("body").css("visibility", "visible");
-        });
+        if(scroll) {
+            // do effect of flashing only when "open in new tab"
+            $("body").css("visibility", "hidden");
+            sleep(300).then(() => {
+                // Do something after the sleep!
+                $("body").css("visibility", "visible");
+            });
 
-        openTab(tabID++, scroll);
+            openTab(tabID, scroll);
+        }
+        
+        tabID++;
+        
     }
 
     function highlightHref(tgt_href) {

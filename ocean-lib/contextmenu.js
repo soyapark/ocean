@@ -14,6 +14,10 @@ $(document).ready(function () {
             $(e.target).parents(".appended-text") 
             : $(e.target);
 
+        // remove the new item effect if there is anything lingering 
+        $("li").removeClass("glow");
+        $(".label-warning").remove();
+
         var top = e.pageY + 5;
         var left = e.pageX;
 
@@ -31,7 +35,7 @@ $(document).ready(function () {
     $(document).bind('contextmenu click', function (e) {
         console.log(e.target.tagName);
         let is_safari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-        if($(e.target).parents(".context-menu").length)
+        if($(e.target).parents(".context-menu").length || $(e.target).hasClass('close'))
             return;
 
         if(["LI", "BUTTON", "INPUT", "SELECT"].includes(e.target.tagName)) {

@@ -432,13 +432,13 @@
               <table class="table"> 
                <tbody> 
                 <tr> 
-                 <td> <img src="./Self-E_ Smartphone-Supported Guidance for Customizable Self-Experimentation_files/chi21-61-fig1.jpg" class="img-responsive" alt=""> </td> 
+                 <td> <img src="./Self-E_ Smartphone-Supported Guidance for Customizable Self-Experimentation_files/chi21-61-fig1.jpg" class="" alt=""> </td> 
                 </tr> 
                </tbody> 
               </table> 
              </div> 
              <figure id="fig1"> 
-              <img src="./Self-E_ Smartphone-Supported Guidance for Customizable Self-Experimentation_files/chi21-61-fig2.jpg" class="img-responsive" alt="Figure 1"> 
+              <img src="./Self-E_ Smartphone-Supported Guidance for Customizable Self-Experimentation_files/chi21-61-fig2.jpg" class="" alt="Figure 1"> 
               <figcaption> 
                <span class="figure-number">Figure 1</span>: 
                <span class="figure-title"><strong>(a) User prompt for the independent variable (</strong> <em>“the cause”</em> <strong>/ the intervention). (b) User prompt for dependent variable (</strong> <em>“the effect”</em> <strong>/ the outcome). (c) History of past experiments: each experiment's graph is moved to this tab when the user switches to a new experiment. (d) Home screen explaining that meditating in the morning leads to 0.8 increase in energy levels with a 73% likelihood based on 8 days of data. Also, a new point appears on the graph for each day of tracking.</strong></span> 
@@ -461,7 +461,7 @@
              <p>The Self-E system is comprised of a backend server built in Python and a mobile client built in Android (Self-E is now also available on iPhones, but was not during the user studies). The open source Self-E system is available online at <a class="link-inline force-break" href="https://selfe.cs.brown.edu/">https://selfe.cs.brown.edu/</a>. </p> 
              <p>User profiles are created upon registration with an email and are stored in the backend server. Any configurations made or data tracked are sent to the server throughout the use of the application. Daily check-ins are sent to users’ phones via app notifications from the backend server. </p>
              <figure id="fig2"> 
-              <img src="./Self-E_ Smartphone-Supported Guidance for Customizable Self-Experimentation_files/chi21-61-fig6.jpg" class="img-responsive" alt="Figure 2"> 
+              <img src="./Self-E_ Smartphone-Supported Guidance for Customizable Self-Experimentation_files/chi21-61-fig6.jpg" class="" alt="Figure 2"> 
               <figcaption> 
                <span class="figure-number">Figure 2</span>: 
                <span class="figure-title"><strong>Self-E screens. (a) Experiment selection: users first select an experiment during onboarding, but then are free to change it at any point. (b) Experiment Setup: choose a time to be prompted and edit the goal amount. (c) Revise the labels of the scale. (d) Home: tonight's condition on top and current results below.</strong></span> 
@@ -488,7 +488,7 @@
               <p>Similarly to the approach in the open-source SleepBandits system&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0018" data-original-title="" title="" id="auto-BibPLXBIB0018119">18</a>], Self-E implements Thompson Sampling, in order to estimate the likelihood that a given condition is helpful. Overall, the goal of the algorithm shown in Equation&nbsp;<a class="eqn" href="#eq1">1</a> is to find the action (in this case the condition) that is most likely to lead to an improvement based on the data that has been collected so far&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0067" data-original-title="" title="" id="auto-BibPLXBIB0067120">67</a>]. With each new data point, the algorithm updates the beta distributions for each condition, which are based on the <em>α</em> and <em>β</em> shape parameters. These parameters are calculated from the prior probabilities of the given condition and the number of data points so far that either lead to improvement or not, over the running average of the intervention's effect&nbsp;[<a class="bib" data-trigger="hover" data-toggle="popover" data-placement="top" href="#BibPLXBIB0067" data-original-title="" title="" id="auto-BibPLXBIB0067121">67</a>]. </p>
               <div class="table-responsive" id="eq1"> 
                <div class="display-equation"> 
-                <img src="./Self-E_ Smartphone-Supported Guidance for Customizable Self-Experimentation_files/chi21-61-display1.svg" class="img-responsive" alt="Math 1"> 
+                <img src="./Self-E_ Smartphone-Supported Guidance for Customizable Self-Experimentation_files/chi21-61-display1.svg" class="" alt="Math 1"> 
                 <br> 
                 <span class="equation-number">(1)</span> 
                </div> 
@@ -587,7 +587,7 @@
              </div> 
             </header> 
             <figure id="fig3"> 
-             <img src="./Self-E_ Smartphone-Supported Guidance for Customizable Self-Experimentation_files/chi21-61-fig10.jpg" class="img-responsive" alt="Figure 3"> 
+             <img src="./Self-E_ Smartphone-Supported Guidance for Customizable Self-Experimentation_files/chi21-61-fig10.jpg" class="" alt="Figure 3"> 
              <figcaption> 
               <span class="figure-number">Figure 3</span>: 
               <span class="figure-title">Self-E customized experiment flow. (a) First screen explaining the need for a cause and effect. (b) The user can define their own <em>cause</em> and <em>effect</em> and the guiding text only appears if they tap on the “Need an example?” (c) The user has to pick two conditions by filling in the blanks. (d) In addition to selecting scheduled or randomized sampling, and the length of their experiment, users can also revise the labels for their “effect” scale.</span> 

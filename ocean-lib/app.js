@@ -901,7 +901,11 @@ let cxt_menu_tgt = "#outer-container";
 
     document.querySelector(`[data-id='${a.id}']`).id = (a.id[0] == "#" ? a.id.substr(1) : a.id);
     
-    
+    if(a.body[0].purpose == "pre-bridge") {
+        document.dispatchEvent(new CustomEvent("createBookmark", { detail: {
+            id: a.id
+        }}));
+    }
     });
 
     r.on('deleteAnnotation', function (a) {
@@ -1109,6 +1113,10 @@ let cxt_menu_tgt = "#outer-container";
 
         // remove from dropdown
         $(`option[value="${src_annotation.id}"]`).remove();
+
+        document.dispatchEvent(new CustomEvent("createBridge", { detail: {
+            id: src_annotation.id
+        }}));
         
     }
 

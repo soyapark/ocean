@@ -24,7 +24,9 @@ var EVENT_TYPES_TO_LOG = {
   openMaterial: true,
   createNewTab: true,
   openInNewTab: true,
-  openTab: true
+  openTab: true,
+  createBookmark: true,
+  createBridge: true
 };
 
 // These event properties are copied to the log if present.

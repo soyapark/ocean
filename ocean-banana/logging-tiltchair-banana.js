@@ -18,6 +18,13 @@ var EVENT_TYPES_TO_LOG = {
   keydown: true,
   log: true,
   ctrlF: true,
+  openBridge: true,
+  openPreBridge: true,
+  openPreSelect: true,
+  openMaterial: true,
+  createNewTab: true,
+  openInNewTab: true,
+  openTab: true
 };
 
 // These event properties are copied to the log if present.

@@ -206,7 +206,10 @@ let cxt_menu_tgt = "#outer-container";
         if(e.target !== e.currentTarget) return;
 
         openTab( $(e.target).attr("tabID") );
-        
+
+        document.dispatchEvent(new CustomEvent("openTab", { detail: {
+            tabID: $(e.target).attr("tabID")
+        }}));
     });
 
     $("body").on("click", "span.close", function(e) {
@@ -312,6 +315,30 @@ let cxt_menu_tgt = "#outer-container";
             return b.purpose == 'material';
             }) : null;  
     
+        if(currentBridges)
+            document.dispatchEvent(new CustomEvent("openBridge", { detail: {
+                id: args.annotation.id,
+                created_by: currentBridges.author
+            }}));
+
+        else if(currentPreBridges)
+            document.dispatchEvent(new CustomEvent("openPreBridge", { detail: {
+                id: args.annotation.id,
+                created_by: currentPreBridges.author
+            }}));
+
+        else if(currentPreSelect)
+            document.dispatchEvent(new CustomEvent("openPreSelect", { detail: {
+                id: args.annotation.id,
+                created_by: currentPreSelect.author
+            }}));
+        
+        else if(currentMaterials)
+            document.dispatchEvent(new CustomEvent("openMaterial", { detail: {
+                id: args.annotation.id,
+                created_by: "ocean"
+            }}));
+
     // Triggers callbacks when they click the button
     var addTag = function(evt) {
         // args.onAppendBody({
@@ -376,8 +403,8 @@ let cxt_menu_tgt = "#outer-container";
                 createNewTab($(`[data-id="${tab_target}"]`).offset().top, new_tab_name, !clone);            
 
             $(".context-menu").toggle(100).css({
-                top: ($(tab_target).offset().top + 19) + "px",
-                left: $(tab_target).offset().left + "px"
+                top: ($(`[data-id="${tab_target}"]`).offset().top + 19) + "px",
+                left: $(`[data-id="${tab_target}"]`).offset().left + "px"
             });
 
             this.parentNode.removeChild(this);
@@ -385,6 +412,11 @@ let cxt_menu_tgt = "#outer-container";
             s.textContent = "A new tab is created!";
 
             container.appendChild(s);
+
+            document.dispatchEvent(new CustomEvent(clone? "createNewTab" : "openInNewTab", { detail: {
+                id: args.annotation.id,
+                created_by: currentPreBridges ? currentPreBridges.author: currentBridges.author
+            }}));
         });
         button.textContent = clone? "Create a new tab" : "Open in new tab";
         return button;

@@ -402,6 +402,13 @@ let cxt_menu_tgt = "#outer-container";
             else 
                 createNewTab($(`[data-id="${tab_target}"]`).offset().top, new_tab_name, !clone);            
 
+            // figure 1 heuristics 
+            if(tab_target == "#fig1")
+                $(".context-menu").toggle(100).css({
+                    top: ($(`.fig1-anchor`).offset().top + 19) + "px",
+                    left: $(`.fig1-anchor`).offset().left + "px"
+                });
+            else
             $(".context-menu").toggle(100).css({
                 top: ($(`[data-id="${tab_target}"]`).offset().top + 19) + "px",
                 left: $(`[data-id="${tab_target}"]`).offset().left + "px"

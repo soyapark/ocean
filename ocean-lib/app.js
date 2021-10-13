@@ -415,7 +415,7 @@ let cxt_menu_tgt = "#outer-container";
 
             document.dispatchEvent(new CustomEvent(clone? "createNewTab" : "openInNewTab", { detail: {
                 id: args.annotation.id,
-                created_by: currentPreBridges ? currentPreBridges.author: currentBridges.author
+                created_by: (currentBridges || currentPreBridges) ? (currentPreBridges ? currentPreBridges.author: currentBridges.author): "ocean"
             }}));
         });
         button.textContent = clone? "Create a new tab" : "Open in new tab";

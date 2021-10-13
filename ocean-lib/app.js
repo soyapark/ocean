@@ -862,7 +862,8 @@ let cxt_menu_tgt = "#outer-container";
                     r.removeAnnotation(change.doc.data());
             } else {
             // updated
-            r.addAnnotation(change.doc.data());
+            if((change.doc.data().body[0].author != session_id) && (change.doc.data().body[0].purpose == "bridge"))
+                r.addAnnotation(change.doc.data());
             }
         });
     });
